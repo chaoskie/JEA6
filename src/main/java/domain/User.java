@@ -1,9 +1,23 @@
 package domain;
 
+import org.hibernate.annotations.*;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.List;
+
+@XmlRootElement()
 @Entity
-public class User {
+@NamedQueries({
+    @NamedQuery(name = "users.findByName", query = "SELECT u FROM User u WHERE u.username = :name")
+})
+@Table(name = "users")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,18 +34,30 @@ public class User {
     @OneToMany
     private List<User> following;
 
-    @OneToMany
-    private List<User> followers;
+    public User() { }
 
-    protected User() { }
+    public User(String username, String password, Role role, String displayname, String profilePhoto, String bio, String location, String website) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.displayname = displayname;
+        this.profilePhoto = profilePhoto;
+        this.bio = bio;
+        this.location = location;
+        this.website = website;
+    }
 
     public int getId() {
         return id;
     }
 
+    public void setId(int id) { this.id = id; }
+
     public String getUsername() {
         return username;
     }
+
+    public void setUsername(String username) { this.username = username; }
 
     public String getPassword() {
         return password;
@@ -57,6 +83,10 @@ public class User {
         this.displayname = displayname;
     }
 
+    public String getProfilePhoto() { return profilePhoto; }
+
+    public void setProfilePhoto(String profilePhoto) { this.profilePhoto = profilePhoto; }
+
     public String getBio() {
         return bio;
     }
@@ -79,13 +109,5 @@ public class User {
 
     public void setWebsite(String website) {
         this.website = website;
-    }
-
-    public List<User> getFollowing() {
-        return following;
-    }
-
-    public List<User> getFollowers() {
-        return followers;
     }
 }
