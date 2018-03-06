@@ -51,6 +51,22 @@ public class Kweet {
         return likes;
     }
 
+    public void addLike(User user) {
+        if (this.likes.contains(user)) {
+            throw new IllegalArgumentException("User already liked this kweet");
+        }
+
+        this.likes.add(user);
+    }
+
+    public void removeLike(User user) {
+        if (!this.likes.contains(user)) {
+            throw new IllegalArgumentException("User didn't like this kweet");
+        }
+
+        this.likes.remove(user);
+    }
+
     public List<String> getHashtags() {
         List<String> hashtags = new ArrayList<>();
         String regexPattern = "(#\\w+)";
