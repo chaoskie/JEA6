@@ -23,7 +23,7 @@ public class User implements Serializable {
     private String location;
     private String website;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<User> following;
 
     public User() { }
