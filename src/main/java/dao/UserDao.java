@@ -35,7 +35,7 @@ public class UserDao {
         }
         catch(NoResultException e)
         {
-            return null;
+            return null
         }
     }
 
