@@ -4,8 +4,10 @@ import dao.JPA;
 import dao.KweetDao;
 import dao.UserDao;
 import domain.Kweet;
+import domain.User;
 
 import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 public class KweetService {
@@ -19,5 +21,15 @@ public class KweetService {
 
     public List<Kweet> getKweets() {
         return kweetDao.getKweets();
+    }
+
+    public List<Kweet> getKweetsByUser(String username) {
+        User user = userDao.getUserByName(username);
+
+        if (user == null) {
+            throw new NotFoundException("User " + username + " was not found");
+        }
+
+        return kweetDao.getKweetsByUser(user);
     }
 }

@@ -28,10 +28,10 @@ public class UserController extends Application {
     }
 
     @GET
-    @Path("{id}")
+    @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("id") int id) {
-        return userService.getUser(id);
+    public User getUser(@PathParam("username") String name) {
+        return userService.getUserByName(name);
     }
 
     @GET
