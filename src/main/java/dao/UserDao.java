@@ -39,7 +39,10 @@ public class UserDao {
         }
     }
 
-    public void createUser(User u) {
+    public User createUser(User u) {
         em.persist(u);
+        em.flush();
+
+        return u;
     }
 }

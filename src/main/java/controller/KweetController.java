@@ -39,4 +39,10 @@ public class KweetController extends Application {
     public Kweet createKweet(Kweet k) {
         return kweetService.createKweet(k.getUser(), k.getMessage());
     }
+
+    @DELETE
+    @Path("/{id}")
+    public void deleteKweet(@PathParam("id") int id) {
+        kweetService.deleteKweet(id);
+    }
 }

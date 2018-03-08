@@ -44,8 +44,8 @@ public class UserController extends Application {
     public String demoAdd() {
         User u = new User("JohnDoe", "password", Role.User, "John Doe", "", "", "", "");
         User u2 = new User("AliceWonderland", "password", Role.User, "Alice W.", "", "I'm Alice!", "Wonderland", "");
-        userService.createUser(u);
-        userService.createUser(u2);
+        u = userService.createUser(u);
+        u2 = userService.createUser(u2);
 
         kweetService.createKweet(u, "1 This is a test kweet by " + u.getDisplayname());
         kweetService.createKweet(u, "2 This is another test kweet by " + u.getDisplayname());

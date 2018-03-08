@@ -36,7 +36,7 @@ public class UserService {
         return user;
     }
 
-    public void createUser(User u) {
-        userDao.createUser(u);
+    public User createUser(User u) {
+        return userDao.createUser(u);
     }
 }

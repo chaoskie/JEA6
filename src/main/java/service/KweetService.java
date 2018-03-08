@@ -57,4 +57,17 @@ public class KweetService {
 
         return kweetDao.createKweet(kweet);
     }
+
+    public void deleteKweet(int id) {
+        Kweet k = kweetDao.getKweetById(id);
+
+        if (k == null) {
+            throw new IllegalArgumentException("Kweet does not exist");
+        }
+
+        // Check user in session
+        //
+
+        kweetDao.deleteKweet(k);
+    }
 }

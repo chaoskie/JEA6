@@ -50,4 +50,12 @@ public class KweetDao {
         em.persist(kweet);
         return kweet;
     }
+
+    public Kweet getKweetById(int id) {
+        return em.find(Kweet.class, id);
+    }
+
+    public void deleteKweet(Kweet k) {
+        em.remove(k);
+    }
 }
