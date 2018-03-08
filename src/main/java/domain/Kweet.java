@@ -15,7 +15,7 @@ public class Kweet implements Serializable {
     private int id;
 
     @OneToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private User user;
 
     @Column(nullable = false)
