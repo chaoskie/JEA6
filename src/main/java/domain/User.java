@@ -2,6 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,9 +17,15 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
-    private Role role;
+
+    @Column(nullable = false)
+    private Role role = Role.User;
     private String displayname;
     private String profilePhoto;
     private String bio;

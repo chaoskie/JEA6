@@ -15,9 +15,13 @@ public class Kweet implements Serializable {
     private int id;
 
     @OneToOne
+    @Column(nullable = false)
     private User user;
 
+    @Column(nullable = false)
     private Date date;
+
+    @Column(nullable = false, length = 140)
     private String message;
 
     @OneToMany(fetch = FetchType.LAZY)
