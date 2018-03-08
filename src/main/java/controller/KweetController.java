@@ -28,6 +28,13 @@ public class KweetController extends Application {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{username}")
+    public List<Kweet> getKweets(@PathParam("username") String username) {
+        return kweetService.getKweetsByUser(username);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/timeline")
     public List<Kweet> getTimeline(@PathParam("username") String username) {
         return kweetService.getTimeline(username);
