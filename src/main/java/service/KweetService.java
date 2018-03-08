@@ -7,7 +7,13 @@ import domain.Kweet;
 import domain.User;
 
 import javax.inject.Inject;
+import javax.print.attribute.standard.Media;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 public class KweetService {
@@ -55,6 +61,8 @@ public class KweetService {
 
         Kweet kweet = new Kweet(user, s);
 
+        // TODO: Process mentions
+
         return kweetDao.createKweet(kweet);
     }
 
@@ -65,9 +73,41 @@ public class KweetService {
             throw new IllegalArgumentException("Kweet does not exist");
         }
 
-        // Check user in session
+        // TODO: Check user in session
         //
 
         kweetDao.deleteKweet(k);
+    }
+
+    public int likeKweet(int kweetId) {
+        // TODO: Temporary, replace with user session
+        User u = userDao.getUser(1);
+        Kweet k = kweetDao.getKweetById(kweetId);
+
+        if (k == null) {
+            throw new NotFoundException("Kweet does not exist");
+        }
+
+        if (k.getLikes().contains(u)) {
+            throw new IllegalArgumentException("User already liked this kweet");
+        }
+
+        return kweetDao.likeKweet(k, u);
+    }
+
+    public int unlikeKweet(int kweetId) {
+        // TODO: Temporary, replace with user session
+        User u = userDao.getUser(1);
+        Kweet k = kweetDao.getKweetById(kweetId);
+
+        if (k == null) {
+            throw new NotFoundException("Kweet does not exist");
+        }
+
+        if (k.getLikes().contains(u)) {
+            throw new IllegalArgumentException("User didn't like this kweet");
+        }
+
+        return kweetDao.unlikeKweet(k, u);
     }
 }

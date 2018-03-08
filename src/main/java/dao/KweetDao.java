@@ -27,6 +27,10 @@ public class KweetDao {
         return query.getResultList();
     }
 
+    public Kweet getKweetById(int id) {
+        return em.find(Kweet.class, id);
+    }
+
     public List<Kweet> getKweetsByUser(User user) {
         TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k WHERE k.user = :user", Kweet.class);
         query.setParameter("user", user);
@@ -51,11 +55,21 @@ public class KweetDao {
         return kweet;
     }
 
-    public Kweet getKweetById(int id) {
-        return em.find(Kweet.class, id);
-    }
-
     public void deleteKweet(Kweet k) {
         em.remove(k);
+    }
+
+    public int likeKweet(Kweet k, User u) {
+        k.addLike(u);
+        em.merge(k);
+
+        return k.getLikes().size();
+    }
+
+    public int unlikeKweet(Kweet k, User u) {
+        k.removeLike(u);
+        em.merge(k);
+
+        return k.getLikes().size();
     }
 }

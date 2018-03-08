@@ -52,4 +52,20 @@ public class KweetController extends Application {
     public void deleteKweet(@PathParam("id") int id) {
         kweetService.deleteKweet(id);
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/{id}/like")
+    public int likeKweet(@PathParam("id") int id) {
+        return kweetService.likeKweet(id);
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/{id}/unlike")
+    public int unlikeKweet(@PathParam("id") int id) {
+        return kweetService.unlikeKweet(id);
+    }
 }
