@@ -18,7 +18,6 @@ public class KweetService {
     @Inject @JPA
     KweetDao kweetDao;
 
-
     public List<Kweet> getKweets() {
         return kweetDao.getKweets();
     }
@@ -31,5 +30,21 @@ public class KweetService {
         }
 
         return kweetDao.getKweetsByUser(user);
+    }
+
+    public List<Kweet> getTimeline(String username) {
+        User user = userDao.getUserByName(username);
+
+        if (user == null) {
+            throw new NotFoundException("User " + username + " was not found");
+        }
+
+        return kweetDao.getTimeline(user);
+    }
+
+    public Kweet createKweet(User u, String s) {
+        Kweet kweet = new Kweet(u, s);
+
+        return kweetDao.createKweet(kweet);
     }
 }

@@ -1,5 +1,6 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.regex.Pattern;
 import javax.persistence.*;
 
 @Entity
-public class Kweet {
+public class Kweet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -35,20 +36,40 @@ public class Kweet {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public List<User> getLikes() {
         return likes;
+    }
+
+    public void setLikes(List<User> likes) {
+        this.likes = likes;
     }
 
     public void addLike(User user) {

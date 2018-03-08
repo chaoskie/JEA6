@@ -2,6 +2,7 @@ package controller;
 
 import domain.Role;
 import domain.User;
+import service.KweetService;
 import service.UserService;
 
 import javax.ejb.Stateless;
@@ -21,6 +22,9 @@ public class UserController extends Application {
     @Inject
     UserService userService;
 
+    @Inject
+    KweetService kweetService;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getUsers() {
@@ -39,7 +43,14 @@ public class UserController extends Application {
     @Produces(MediaType.TEXT_PLAIN)
     public String demoAdd() {
         User u = new User("JohnDoe", "password", Role.User, "John Doe", "", "", "", "");
+        User u2 = new User("AliceWonderland", "password", Role.User, "Alice W.", "", "I'm Alice!", "Wonderland", "");
         userService.createUser(u);
+        userService.createUser(u2);
+
+        kweetService.createKweet(u, "1 This is a test kweet by " + u.getDisplayname());
+        kweetService.createKweet(u, "2 This is another test kweet by " + u.getDisplayname());
+        kweetService.createKweet(u2, "3 Hello I'm Alice");
+        kweetService.createKweet(u2, "4 How are you doing?");
 
         return "ok";
     }

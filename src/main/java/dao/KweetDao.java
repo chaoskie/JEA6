@@ -45,4 +45,9 @@ public class KweetDao {
 
         return query.getResultList();
     }
+
+    public Kweet createKweet(Kweet kweet) {
+        em.persist(kweet);
+        return kweet;
+    }
 }
