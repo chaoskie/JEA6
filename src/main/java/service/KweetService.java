@@ -43,7 +43,17 @@ public class KweetService {
     }
 
     public Kweet createKweet(User u, String s) {
-        Kweet kweet = new Kweet(u, s);
+        User user = userDao.getUser(u.getId());
+
+        if (user == null) {
+            throw new NotFoundException("User does not exist");
+        }
+
+        if (s.length() == 0 || s.length() > 140) {
+            throw new IllegalArgumentException("Message is invalid");
+        }
+
+        Kweet kweet = new Kweet(user, s);
 
         return kweetDao.createKweet(kweet);
     }

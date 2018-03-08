@@ -6,10 +6,7 @@ import service.KweetService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -36,5 +33,10 @@ public class KweetController extends Application {
         return kweetService.getTimeline(username);
     }
 
-
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Kweet createKweet(Kweet k) {
+        return kweetService.createKweet(k.getUser(), k.getMessage());
+    }
 }
