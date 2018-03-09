@@ -1,6 +1,7 @@
 package dao;
 
 import domain.User;
+import util.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -44,5 +45,23 @@ public class UserDao {
         em.flush();
 
         return u;
+    }
+
+    public boolean login(String username, String password) {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            return false;
+        }
+
+        try {
+            User user = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class).getSingleResult();
+            if (user != null) {
+                return true;
+            }
+        } catch (NoResultException e) {
+            Logger.log(e);
+            return false;
+        }
+
+        return false;
     }
 }

@@ -46,7 +46,11 @@ public class UserService {
         return userDao.createUser(u);
     }
 
-    private String generateSha512(String text) {
+    public boolean login(String username, String password) {
+        return userDao.login(username, generateSha512(password));
+    }
+
+    public String generateSha512(String text) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-512");
             byte[] hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
