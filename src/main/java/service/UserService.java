@@ -7,6 +7,10 @@ import domain.User;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 
 public class UserService {
@@ -37,6 +41,19 @@ public class UserService {
     }
 
     public User createUser(User u) {
+        u.setPassword(generateSha512(u.getPassword()));
+
         return userDao.createUser(u);
+    }
+
+    private String generateSha512(String text) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-512");
+            byte[] hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
+
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            return text;
+        }
     }
 }
