@@ -6,11 +6,10 @@ import service.KweetService;
 import service.UserService;
 
 import javax.ejb.Stateless;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -38,6 +37,21 @@ public class UserController extends Application {
         return userService.getUserByName(name);
     }
 
+    @POST
+    @Path("{username}/follow")
+    public void followUser(@PathParam("username") String username) {
+        User user = getUserFromSession();
+        userService.followUser(user, username);
+    }
+
+    @POST
+    @Path("{username}/unfollow")
+    public void unfollowUser(@PathParam("username") String username) {
+        User user = getUserFromSession();
+        userService.unfollowUser(user, username);
+    }
+
+
     @GET
     @Path("demoAdd")
     @Produces(MediaType.TEXT_PLAIN)
@@ -53,5 +67,17 @@ public class UserController extends Application {
         kweetService.createKweet(u2, "4 How are you doing?");
 
         return "ok";
+    }
+
+    private User getUserFromSession() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        Object user = externalContext.getSessionMap().get("user");
+
+        if (user == null || !(user instanceof User)) {
+            return null;
+        }
+
+        return (User) user;
     }
 }

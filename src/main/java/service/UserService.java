@@ -60,4 +60,24 @@ public class UserService {
             return text;
         }
     }
+
+    public void followUser(User user, String username) throws NotFoundException {
+        User toFollow = userDao.getUserByName(username);
+
+        if (toFollow == null) {
+            throw new NotFoundException("User " + username + " was not found");
+        }
+
+        user.followUser(toFollow);
+    }
+
+    public void unfollowUser(User user, String username) throws NotFoundException {
+        User toUnfollow = userDao.getUserByName(username);
+
+        if (toUnfollow == null) {
+            throw new NotFoundException("User " + username + " was not found");
+        }
+
+        user.unfollowUser(toUnfollow);
+    }
 }

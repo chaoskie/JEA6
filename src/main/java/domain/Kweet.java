@@ -76,7 +76,7 @@ public class Kweet implements Serializable {
         this.likes = likes;
     }
 
-    public void addLike(User user) {
+    public void addLike(User user) throws IllegalArgumentException {
         if (this.likes.contains(user)) {
             throw new IllegalArgumentException("User already liked this kweet");
         }
@@ -84,7 +84,7 @@ public class Kweet implements Serializable {
         this.likes.add(user);
     }
 
-    public void removeLike(User user) {
+    public void removeLike(User user) throws IllegalArgumentException {
         if (!this.likes.contains(user)) {
             throw new IllegalArgumentException("User didn't like this kweet");
         }

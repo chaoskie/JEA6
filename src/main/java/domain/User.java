@@ -121,4 +121,28 @@ public class User implements Serializable {
     public void setWebsite(String website) {
         this.website = website;
     }
+
+    public List<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<User> following) {
+        this.following = following;
+    }
+
+    public void followUser(User user) throws IllegalArgumentException {
+        if (this.following.contains(user)) {
+            throw new IllegalArgumentException("User already follows this user");
+        }
+
+        this.following.add(user);
+    }
+
+    public void unfollowUser(User user) throws IllegalArgumentException {
+        if (!this.following.contains(user)) {
+            throw new IllegalArgumentException("User didn't follow this user");
+        }
+
+        this.following.remove(user);
+    }
 }
