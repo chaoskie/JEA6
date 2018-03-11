@@ -44,7 +44,8 @@ public class KweetDao {
         LEFT JOIN users_users uu ON uu.following_ID = k.USER_ID
         WHERE k.USER_ID = 1 OR uu.User_ID = 1
          */
-        TypedQuery<Kweet> query = em.createQuery("SELECT k from Kweet k LEFT JOIN k.user u WHERE k.user = :user OR u = :user ORDER BY k.id DESC", Kweet.class);
+        //TypedQuery<Kweet> query = em.createQuery("SELECT k from Kweet k LEFT JOIN k.user u WHERE k.user = :user OR u = :user ORDER BY k.id DESC", Kweet.class);
+        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k LEFT JOIN k.user.following f WHERE k.user = :user OR f = :user", Kweet.class);
         query.setParameter("user", user);
 
         return query.getResultList();
