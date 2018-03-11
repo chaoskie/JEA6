@@ -10,10 +10,11 @@ import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Stateless
@@ -35,54 +36,113 @@ public class UserController extends Application {
     @GET
     @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("username") String name) {
-        return userService.getUserByName(name);
+    public Response getUser(@PathParam("username") String name) {
+        try {
+            User user = userService.getUserByName(name);
+            return Response.status(Response.Status.OK).entity(user).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @GET
     @Path("{username}/followers")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getFollowers(@PathParam("username") String name) {
-        return userService.getFollowers(name);
+    public Response getFollowers(@PathParam("username") String name) {
+        try {
+            List<User> followers = userService.getFollowers(name);
+            return Response.status(Response.Status.OK).entity(new GenericEntity<List<User>>(followers) {}).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch(Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @GET
     @Path("{username}/following")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getFollowing(@PathParam("username") String name) {
-        return userService.getFollowing(name);
+    public Response getFollowing(@PathParam("username") String name) {
+        try {
+            List<User> following = userService.getFollowing(name);
+            return Response.status(Response.Status.OK).entity(new GenericEntity<List<User>>(following) {}).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch(Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @POST
     @Path("{username}/follow")
-    public void followUser(@PathParam("username") String username) {
-        User user = getUserFromSession();
-        userService.followUser(user, username);
+    public Response followUser(@PathParam("username") String username) {
+        try {
+            User user = getUserFromSession();
+            userService.followUser(user, username);
+
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+
     }
 
     @POST
     @Path("{username}/unfollow")
-    public void unfollowUser(@PathParam("username") String username) {
-        User user = getUserFromSession();
-        userService.unfollowUser(user, username);
+    public Response unfollowUser(@PathParam("username") String username) {
+        try {
+            User user = getUserFromSession();
+            userService.unfollowUser(user, username);
+
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @PUT
-    @Path("{bio")
+    @Path("/bio")
     @Consumes(MediaType.TEXT_PLAIN)
-    public void updateBio(String bio) {
-        User user = getUserFromSession();
+    public Response updateBio(String bio) {
+        try {
+            User user = getUserFromSession();
+            userService.updateBio(user, bio);
 
-        userService.updateBio(user, bio);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @PUT
-    @Path("{location")
+    @Path("/location")
     @Consumes(MediaType.TEXT_PLAIN)
-    public void updateLocation(String location) {
-        User user = getUserFromSession();
+    public Response updateLocation(String location) {
+        try {
+            User user = getUserFromSession();
+            userService.updateLocation(user, location);
 
-        userService.updateLocation(user, location);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
 
