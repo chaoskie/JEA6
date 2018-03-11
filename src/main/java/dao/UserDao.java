@@ -40,6 +40,13 @@ public class UserDao {
         }
     }
 
+    public List<User> getFollowers(User user) {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE :user MEMBER OF u.following", User.class);
+        query.setParameter("user", user);
+
+        return query.getResultList();
+    }
+
     public User createUser(User u) {
         em.persist(u);
         em.flush();

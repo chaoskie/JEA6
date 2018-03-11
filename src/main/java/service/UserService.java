@@ -80,4 +80,24 @@ public class UserService {
 
         userDao.unfollowUser(user, toUnfollow);
     }
+
+    public List<User> getFollowers(String name) {
+        User user = userDao.getUserByName(name);
+
+        if (user == null) {
+            throw new NotFoundException("User " + name + " was not found");
+        }
+
+        return userDao.getFollowers(user);
+    }
+
+    public List<User> getFollowing(String name) {
+        User user = userDao.getUserByName(name);
+
+        if (user == null) {
+            throw new NotFoundException("User " + name + " was not found");
+        }
+
+        return user.getFollowing();
+    }
 }

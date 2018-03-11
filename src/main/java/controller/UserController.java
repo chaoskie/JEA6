@@ -37,6 +37,20 @@ public class UserController extends Application {
         return userService.getUserByName(name);
     }
 
+    @GET
+    @Path("{username}/followers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> getFollowers(@PathParam("username") String name) {
+        return userService.getFollowers(name);
+    }
+
+    @GET
+    @Path("{username}/following")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> getFollowing(@PathParam("username") String name) {
+        return userService.getFollowing(name);
+    }
+
     @POST
     @Path("{username}/follow")
     public void followUser(@PathParam("username") String username) {
