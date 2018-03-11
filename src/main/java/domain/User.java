@@ -37,8 +37,6 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     private List<User> following;
 
-    public User() { }
-
     public User(String username, String password, Role role, String displayname, String profilePhoto, String bio, String location, String website) {
         this.username = username;
         this.password = password;

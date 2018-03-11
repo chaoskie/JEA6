@@ -23,6 +23,8 @@ public class KweetService {
         return kweetDao.getKweets();
     }
 
+    public List<Kweet> searchKweets(String c) throws NotFoundException { return kweetDao.searchKweets(c);}
+
     public List<Kweet> getKweetsByUser(String username) throws NotFoundException {
         User user = userDao.getUserByName(username);
 
