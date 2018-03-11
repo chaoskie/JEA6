@@ -68,7 +68,7 @@ public class UserService {
             throw new NotFoundException("User " + username + " was not found");
         }
 
-        user.followUser(toFollow);
+        userDao.followUser(user, toFollow);
     }
 
     public void unfollowUser(User user, String username) throws NotFoundException {
@@ -78,6 +78,6 @@ public class UserService {
             throw new NotFoundException("User " + username + " was not found");
         }
 
-        user.unfollowUser(toUnfollow);
+        userDao.unfollowUser(user, toUnfollow);
     }
 }

@@ -47,6 +47,16 @@ public class UserDao {
         return u;
     }
 
+    public void followUser(User u, User toFollow) {
+        u.followUser(toFollow);
+        em.merge(u);
+    }
+
+    public void unfollowUser(User u, User toUnfollow) {
+        u.unfollowUser(toUnfollow);
+        em.merge(u);
+    }
+
     public boolean login(String username, String password) {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
             return false;
