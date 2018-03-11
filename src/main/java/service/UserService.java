@@ -100,4 +100,12 @@ public class UserService {
 
         return user.getFollowing();
     }
+
+    public void updateBio(User user, String bio) {
+        userDao.updateBio(user, bio);
+    }
+
+    public void updateLocation(User user, String location) {
+        userDao.updateLocation(user, location);
+    }
 }

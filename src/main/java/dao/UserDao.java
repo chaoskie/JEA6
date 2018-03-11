@@ -81,4 +81,14 @@ public class UserDao {
 
         return false;
     }
+
+    public void updateBio(User user, String bio) {
+        user.setBio(bio);
+        em.merge(user);
+    }
+
+    public void updateLocation(User user, String location) {
+        user.setLocation(location);
+        em.merge(user);
+    }
 }

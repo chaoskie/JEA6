@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -64,6 +65,24 @@ public class UserController extends Application {
     public void unfollowUser(@PathParam("username") String username) {
         User user = getUserFromSession();
         userService.unfollowUser(user, username);
+    }
+
+    @PUT
+    @Path("{bio")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public void updateBio(String bio) {
+        User user = getUserFromSession();
+
+        userService.updateBio(user, bio);
+    }
+
+    @PUT
+    @Path("{location")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public void updateLocation(String location) {
+        User user = getUserFromSession();
+
+        userService.updateLocation(user, location);
     }
 
 
