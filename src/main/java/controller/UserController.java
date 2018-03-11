@@ -1,5 +1,6 @@
 package controller;
 
+import domain.Kweet;
 import domain.Role;
 import domain.User;
 import service.KweetService;
@@ -75,10 +76,15 @@ public class UserController extends Application {
         u = userService.createUser(u);
         u2 = userService.createUser(u2);
 
-        kweetService.createKweet(u, "1 This is a test kweet by " + u.getDisplayname());
-        kweetService.createKweet(u, "2 This is another test kweet by " + u.getDisplayname());
-        kweetService.createKweet(u2, "3 Hello I'm Alice");
-        kweetService.createKweet(u2, "4 How are you doing?");
+        Kweet k1 = kweetService.createKweet(u, "1 This is a test kweet by " + u.getDisplayname());
+        Kweet k2 = kweetService.createKweet(u, "2 This is another test kweet by " + u.getDisplayname());
+        Kweet k3 = kweetService.createKweet(u2, "3 Hello I'm Alice");
+        Kweet k4 = kweetService.createKweet(u2, "4 How are you doing?");
+
+        userService.followUser(u, u2.getUsername());
+
+        kweetService.likeKweet(u, k1.getId());
+        kweetService.likeKweet(u2, k1.getId());
 
         return "ok";
     }

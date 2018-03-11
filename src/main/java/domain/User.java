@@ -1,6 +1,7 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.Nullable;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "users.findByName", query = "SELECT u FROM User u WHERE u.username = :name")
 })
+@JsonIgnoreProperties({"password", "following"})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,12 +66,10 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
-    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
