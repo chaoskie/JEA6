@@ -8,6 +8,7 @@ import domain.Role;
 import domain.User;
 
 import javax.inject.Inject;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class KweetService {
         return kweetDao.createKweet(kweet);
     }
 
-    public void deleteKweet(User user, int id) throws IllegalArgumentException, NotFoundException {
+    public void deleteKweet(User user, int id) throws NotAuthorizedException, NotFoundException {
         Kweet k = kweetDao.getKweetById(id);
 
         if (k == null) {
@@ -72,7 +73,7 @@ public class KweetService {
         if (k.getUser().getId() != user.getId() && user.getRole().equals(Role.User)) {
             // Moderators and Administrators are allowed to delete all kweets regardless of ownership
             // Users however can only delete their own kweets
-            throw new IllegalArgumentException("User is not allowed to delete this kweet");
+            throw new NotAuthorizedException("User is not allowed to delete this kweet");
         }
 
         kweetDao.deleteKweet(k);
