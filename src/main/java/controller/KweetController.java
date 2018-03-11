@@ -5,6 +5,8 @@ import domain.User;
 import service.KweetService;
 
 import javax.ejb.Stateless;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
@@ -21,9 +23,7 @@ public class KweetController extends Application {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Kweet> getKweets() {
-
-        List<Kweet> kweets = kweetService.getKweets();
-        return kweets;
+        return kweetService.getKweets();
     }
 
     @GET
@@ -44,13 +44,17 @@ public class KweetController extends Application {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Kweet createKweet(Kweet k) {
-        return kweetService.createKweet(k.getUser(), k.getMessage());
+        User user = getUserFromSession();
+
+        return kweetService.createKweet(user, k.getMessage());
     }
 
     @DELETE
     @Path("/{id}")
     public void deleteKweet(@PathParam("id") int id) {
-        kweetService.deleteKweet(id);
+        User user = getUserFromSession();
+
+        kweetService.deleteKweet(user, id);
     }
 
     @POST
@@ -58,7 +62,9 @@ public class KweetController extends Application {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}/like")
     public int likeKweet(@PathParam("id") int id) {
-        return kweetService.likeKweet(id);
+        User user = getUserFromSession();
+
+        return kweetService.likeKweet(user, id);
     }
 
     @POST
@@ -66,6 +72,20 @@ public class KweetController extends Application {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}/unlike")
     public int unlikeKweet(@PathParam("id") int id) {
-        return kweetService.unlikeKweet(id);
+        User user = getUserFromSession();
+
+        return kweetService.unlikeKweet(user, id);
+    }
+
+    private User getUserFromSession() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        Object user = externalContext.getSessionMap().get("user");
+
+        if (user == null || !(user instanceof User)) {
+            return null;
+        }
+
+        return (User) user;
     }
 }

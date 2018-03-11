@@ -59,8 +59,9 @@ public class IndexController {
                 User user = userService.getUserByName(username);
                 externalContext.getSessionMap().put("user", user);
                 externalContext.redirect(originalURL);
+
             } catch (ServletException e) {
-                // Handle unknown username/password in request.login()
+                // Handle unknown username / password in request.login()
                 Logger.log(e);
                 context.addMessage(null, new FacesMessage("A user with this username or password could not be found"));
             }
