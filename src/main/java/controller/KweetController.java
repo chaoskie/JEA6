@@ -10,7 +10,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Stateless
@@ -29,52 +31,100 @@ public class KweetController extends Application {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}")
-    public List<Kweet> getKweets(@PathParam("username") String username) {
-        return kweetService.getKweetsByUser(username);
+    public Response getKweets(@PathParam("username") String username) {
+        try {
+            return Response.status(Response.Status.OK).entity(new GenericEntity<List<Kweet>>(kweetService.getKweetsByUser(username)) {}).build();
+        }  catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/timeline")
-    public List<Kweet> getTimeline(@PathParam("username") String username) {
-        return kweetService.getTimeline(username);
+    public Response getTimeline(@PathParam("username") String username) {
+        try {
+            return Response.status(Response.Status.OK).entity(new GenericEntity<List<Kweet>>(kweetService.getTimeline(username)) {}).build();
+        }  catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Kweet createKweet(Kweet k) {
-        User user = getUserFromSession();
+    public Response createKweet(Kweet k) {
+        try {
+            User user = getUserFromSession();
+            Kweet result =  kweetService.createKweet(user, k.getMessage());
 
-        return kweetService.createKweet(user, k.getMessage());
+            return Response.status(Response.Status.CREATED).entity(result).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @DELETE
     @Path("/{id}")
-    public void deleteKweet(@PathParam("id") int id) {
-        User user = getUserFromSession();
+    public Response deleteKweet(@PathParam("id") int id) {
+        try {
+            User user = getUserFromSession();
+            kweetService.deleteKweet(user, id);
 
-        kweetService.deleteKweet(user, id);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (NotAuthorizedException e) {
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}/like")
-    public int likeKweet(@PathParam("id") int id) {
-        User user = getUserFromSession();
+    public Response likeKweet(@PathParam("id") int id) {
+        try {
+            User user = getUserFromSession();
+            int count =  kweetService.likeKweet(user, id);
 
-        return kweetService.likeKweet(user, id);
+            return Response.status(Response.Status.OK).entity(count).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}/unlike")
-    public int unlikeKweet(@PathParam("id") int id) {
-        User user = getUserFromSession();
+    public Response unlikeKweet(@PathParam("id") int id) {
+        try {
+            User user = getUserFromSession();
+            int count =  kweetService.unlikeKweet(user, id);
 
-        return kweetService.unlikeKweet(user, id);
+            return Response.status(Response.Status.OK).entity(count).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
     }
 
     private User getUserFromSession() {
