@@ -1,5 +1,6 @@
 package service;
 
+import com.sun.net.httpserver.Authenticator;
 import dao.KweetDao;
 import dao.UserDao;
 import java.sql.Connection;
@@ -91,15 +92,10 @@ public class KweetServiceTest {
     }
 
     @Test
-    public void getKweetsByUserTest(){
+    public void getKweetsByUserTest() throws UserNotFoundException{
         searchDAOs();
-        List<Kweet> result = new ArrayList<>();
-        try {
-            result = kweetService.getKweetsByUser(userA.getUsername());
-        }
-        catch(Exception e){
-            fail("woops this shouldn't happen: "+ e);
-        }
+        List<Kweet> result = kweetService.getKweetsByUser(userA.getUsername());
+
         List<Kweet> check = new ArrayList<>();
         for (Kweet k : kweets) {
             if (k.getUser().equals(userA)) {
@@ -107,28 +103,32 @@ public class KweetServiceTest {
             }
         }
         assertEquals(check, result);
-        try {
-            result = kweetService.getKweetsByUser(userC.getUsername());
-        }
-        catch(Exception e){
-            fail("woops this shouldn't happen: "+ e);
-        }
+
+        result = kweetService.getKweetsByUser(userC.getUsername());
+
         //list should not be returned empty
         assertEquals(result.size(), 2);
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void getKweetsbyUserTest2(){
+    public void getKweetsbyUserTest2()throws UserNotFoundException{
         when(userDao.getUserByName(anyString())).thenReturn(null);
         kweetService.getKweetsByUser("Jantje");
         //list should be returned empty
-       // assertEquals(result.size(), 0);
+        // assertEquals(result.size(), 0);
     }
 
     @Test
-    public void getTimelineTest(){
-        searchDAOs();
+    public void getKweetsbyUserTest3()throws UserNotFoundException{
+        when(userDao.getUserByName(anyString())).thenReturn(null);
+        List<Kweet> result = kweetService.getKweetsByUser("Jantje");
+        //list should be returned empty
+        assertEquals(result.size(), 0);
+    }
 
+    @Test
+    public void getTimelineTest() throws UserNotFoundException{
+        searchDAOs();
         List<Kweet> result =  kweetService.getKweetsByUser(userC.getUsername());
         List<Kweet> check = new ArrayList<>();
         for (Kweet k : kweets) {
@@ -167,7 +167,7 @@ public class KweetServiceTest {
     }
 
     @Test
-    public void createKweetTest(){
+    public void createKweetTest() throws UserNotFoundException, KweetNotValidException{
         String toLong = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         String exactLength = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         String content =   "aaaaaaaaaa";
@@ -179,41 +179,119 @@ public class KweetServiceTest {
                return null;
            }
            return userC;
-
         });
         when(kweetDao.createKweet(anyObject())).thenReturn(testKweet);
 
         assertEquals(kweetService.createKweet(userC, content), testKweet);
-        assertNotEquals(kweetService.createKweet(userA, content), testKweet);
+        //assertNotEquals(kweetService.createKweet(userA, content), testKweet);
     }
 
-    @Test(expected = NotFoundException.class)
-    public void createKweetTest2(){
-        User x = null;
-        when(userDao.getUser(anyInt())).thenReturn(x);
+    @Test
+    public void createKweetTest2() throws KweetNotValidException, UserNotFoundException{
+        String exactLength = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        Kweet testKweet = new Kweet(userC, exactLength);
+        when(userDao.getUser(anyInt())).thenReturn(userC);
+        when(kweetDao.createKweet(anyObject())).thenReturn(testKweet);
+
+        assertEquals(kweetService.createKweet(userC, exactLength), testKweet);
+        //assertNotEquals(kweetService.createKweet(userA, content), testKweet);
+    }
+
+    @Test(expected = KweetNotValidException.class)
+    public void createKweetTest3() throws KweetNotValidException, UserNotFoundException{
+        String exactLength = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        when(userDao.getUser(anyInt())).thenReturn(userC);
+        when(kweetDao.createKweet(anyObject())).thenReturn(kweetB);
+        kweetService.createKweet(userA, exactLength);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void createKweetTest4() throws UserNotFoundException, KweetNotValidException{
+        when(userDao.getUser(anyInt())).thenReturn(userEmpty);
         when(kweetDao.createKweet(anyObject())).thenReturn(kweetB);
         kweetService.createKweet(userA, "testshouldfail");
 
     }
 
-
     @Test
-    public void deleteKweetTest(){
+    public void deleteKweetTest()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetC);
+        doNothing().when(kweetDao).deleteKweet(anyObject());
+        kweetService.deleteKweet(userC, kweetC.getId());
+    }
 
+    @Test(expected = InvalidActionException.class)
+    public void deleteKweetTest2()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetC);
+        doNothing().when(kweetDao).deleteKweet(anyObject());
+        kweetService.deleteKweet(userB, kweetC.getId());
     }
 
     @Test
-    public void likeKweetTest(){
+    public void deleteKweetTest2a()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetC);
+        doNothing().when(kweetDao).deleteKweet(anyObject());
+        kweetService.deleteKweet(userA, kweetC.getId());
+    }
 
+    @Test(expected = KweetNotFoundException.class)
+    public void deleteKweetTest3()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(null);
+        doNothing().when(kweetDao).deleteKweet(anyObject());
+        kweetService.deleteKweet(userB, kweetC.getId());
     }
 
     @Test
-    public void unlikeKweetTest(){
+    public void likeKweetTest()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetB);
+        when(kweetDao.likeKweet(anyObject(), anyObject())).thenReturn(1);
+        int likesBefore = kweetB.getLikes().size();
+        int afterLike = kweetService.likeKweet(userC, kweetB.getId());
+        assertTrue(likesBefore<afterLike);
+    }
 
+    @Test(expected = KweetNotFoundException.class)
+    public void likeKweetTest2()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(null);
+        when(kweetDao.likeKweet(anyObject(), anyObject())).thenReturn(1);
+        kweetService.deleteKweet(userB, kweetC.getId());
+    }
+
+    @Test(expected = InvalidActionException.class)
+    public void likeKweetTest3()throws InvalidActionException, KweetNotFoundException{
+        kweetD.addLike(userB);
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetD);
+        when(kweetDao.likeKweet(anyObject(), anyObject())).thenReturn(1);
+        kweetService.likeKweet(userB, kweetD.getId());
+    }
+
+    @Test
+    public void unlikeKweetTest()throws InvalidActionException, KweetNotFoundException{
+        kweetD.addLike(userB);
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetD);
+        when(kweetDao.unlikeKweet(anyObject(), anyObject())).thenReturn(kweetD.getLikes().size()-1);
+        int likesBefore = kweetD.getLikes().size();
+        int afterLike = kweetService.unlikeKweet(userB, kweetD.getId());
+        assertTrue(likesBefore>afterLike);
+    }
+
+    @Test(expected = KweetNotFoundException.class)
+    public void unlikeKweetTest2()throws InvalidActionException, KweetNotFoundException{
+        when(kweetDao.getKweetById(anyInt())).thenReturn(null);
+        when(kweetDao.unlikeKweet(anyObject(), anyObject())).thenReturn(0);
+        kweetService.unlikeKweet(userB, kweetC.getId());
+    }
+
+    @Test(expected = InvalidActionException.class)
+    public void unlikeKweetTest3()throws InvalidActionException, KweetNotFoundException{
+        //kweetD.addLike(userB);
+        when(kweetDao.getKweetById(anyInt())).thenReturn(kweetD);
+        when(kweetDao.unlikeKweet(anyObject(), anyObject())).thenReturn(0);
+        kweetService.unlikeKweet(userB, kweetD.getId());
     }
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
     }
 
     @AfterClass
@@ -239,6 +317,7 @@ public class KweetServiceTest {
     User userA;
     User userB;
     User userC;
+    User userEmpty;
 
     @Before
     public void setup() {
@@ -262,6 +341,7 @@ public class KweetServiceTest {
          userB.setId(222);
          userC = new User("Tijgetje", "Stuiterstaart", Role.User, "Tijgetje Stuiterstaart",  photo, "Boink Boink", "Honderdbunderbos", "boink.com" );
          userC.setId(333);
+         userEmpty = null;
      }
      catch(Exception ex){
          fail(ex.getMessage());

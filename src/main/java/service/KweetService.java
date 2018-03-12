@@ -6,7 +6,7 @@ import dao.UserDao;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
-import Exceptions.UserNotFoundException;
+import Exceptions.*;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
@@ -47,7 +47,7 @@ public class KweetService {
         return kweetDao.getTimeline(user);
     }
 
-    public Kweet createKweet(User u, String s) throws IllegalArgumentException, UserNotFoundException {
+    public Kweet createKweet(User u, String s) throws KweetNotValidException, UserNotFoundException {
         User user = userDao.getUser(u.getId());
 
         if (user == null) {
@@ -55,7 +55,7 @@ public class KweetService {
         }
 
         if (s.length() == 0 || s.length() > 140) {
-            throw new IllegalArgumentException("Message is invalid");
+            throw new KweetNotValidException("Message is invalid");
         }
 
         Kweet kweet = new Kweet(user, s);
@@ -66,45 +66,45 @@ public class KweetService {
         return kweetDao.createKweet(kweet);
     }
 
-    public void deleteKweet(User user, int id) throws NotAuthorizedException, NotFoundException {
+    public void deleteKweet(User user, int id) throws InvalidActionException, KweetNotFoundException {
         Kweet k = kweetDao.getKweetById(id);
 
         if (k == null) {
-            throw new NotFoundException("Kweet does not exist");
+            throw new KweetNotFoundException("Kweet does not exist");
         }
 
         if (k.getUser().getId() != user.getId() && user.getRole().equals(Role.User)) {
             // Moderators and Administrators are allowed to delete all kweets regardless of ownership
             // Users however can only delete their own kweets
-            throw new NotAuthorizedException("User is not allowed to delete this kweet");
+            throw new InvalidActionException("User is not allowed to delete this kweet");
         }
 
         kweetDao.deleteKweet(k);
     }
 
-    public int likeKweet(User user, int kweetId) throws IllegalArgumentException, NotFoundException {
+    public int likeKweet(User user, int kweetId) throws InvalidActionException, KweetNotFoundException {
         Kweet k = kweetDao.getKweetById(kweetId);
 
         if (k == null) {
-            throw new NotFoundException("Kweet does not exist");
+            throw new KweetNotFoundException("Kweet does not exist");
         }
 
         if (k.getLikes().contains(user)) {
-            throw new IllegalArgumentException("User already liked this kweet");
+            throw new InvalidActionException("User already liked this kweet");
         }
 
         return kweetDao.likeKweet(k, user);
     }
 
-    public int unlikeKweet(User user, int kweetId) throws IllegalArgumentException, NotFoundException {
+    public int unlikeKweet(User user, int kweetId) throws InvalidActionException, KweetNotFoundException {
         Kweet k = kweetDao.getKweetById(kweetId);
 
         if (k == null) {
-            throw new NotFoundException("Kweet does not exist");
+            throw new KweetNotFoundException("Kweet does not exist");
         }
 
-        if (k.getLikes().contains(user)) {
-            throw new IllegalArgumentException("User didn't like this kweet");
+        if (!k.getLikes().contains(user)) {
+            throw new InvalidActionException("User didn't like this kweet");
         }
 
         return kweetDao.unlikeKweet(k, user);
