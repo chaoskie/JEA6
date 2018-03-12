@@ -6,6 +6,7 @@ import dao.UserDao;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
+import Exceptions.UserNotFoundException;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -25,31 +26,31 @@ public class KweetService {
 
     public List<Kweet> searchKweets(String c) throws NotFoundException { return kweetDao.searchKweets(c);}
 
-    public List<Kweet> getKweetsByUser(String username) throws NotFoundException {
+    public List<Kweet> getKweetsByUser(String username) throws UserNotFoundException {
         User user = userDao.getUserByName(username);
 
         if (user == null) {
-            throw new NotFoundException("User " + username + " was not found");
+            throw new UserNotFoundException("User " + username + " was not found");
         }
 
         return kweetDao.getKweetsByUser(user);
     }
 
-    public List<Kweet> getTimeline(String username) throws NotFoundException {
+    public List<Kweet> getTimeline(String username) throws UserNotFoundException {
         User user = userDao.getUserByName(username);
 
         if (user == null) {
-            throw new NotFoundException("User " + username + " was not found");
+            throw new UserNotFoundException("User " + username + " was not found");
         }
 
         return kweetDao.getTimeline(user);
     }
 
-    public Kweet createKweet(User u, String s) throws IllegalArgumentException, NotFoundException {
+    public Kweet createKweet(User u, String s) throws IllegalArgumentException, UserNotFoundException {
         User user = userDao.getUser(u.getId());
 
         if (user == null) {
-            throw new NotFoundException("User does not exist");
+            throw new UserNotFoundException("User does not exist");
         }
 
         if (s.length() == 0 || s.length() > 140) {

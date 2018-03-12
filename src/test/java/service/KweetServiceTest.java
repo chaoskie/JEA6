@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import javax.persistence.NoResultException;
 import javax.sql.DataSource;
 import javax.ws.rs.NotFoundException;
+import Exceptions.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -92,8 +93,13 @@ public class KweetServiceTest {
     @Test
     public void getKweetsByUserTest(){
         searchDAOs();
-
-        List<Kweet> result =  kweetService.getKweetsByUser(userA.getUsername());
+        List<Kweet> result = new ArrayList<>();
+        try {
+            result = kweetService.getKweetsByUser(userA.getUsername());
+        }
+        catch(Exception e){
+            fail("woops this shouldn't happen: "+ e);
+        }
         List<Kweet> check = new ArrayList<>();
         for (Kweet k : kweets) {
             if (k.getUser().equals(userA)) {
@@ -101,18 +107,22 @@ public class KweetServiceTest {
             }
         }
         assertEquals(check, result);
-
-        result = kweetService.getKweetsByUser(userC.getUsername());
+        try {
+            result = kweetService.getKweetsByUser(userC.getUsername());
+        }
+        catch(Exception e){
+            fail("woops this shouldn't happen: "+ e);
+        }
         //list should not be returned empty
         assertEquals(result.size(), 2);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = UserNotFoundException.class)
     public void getKweetsbyUserTest2(){
-        when(userDao.getUserByName(anyString())).thenThrow(NotFoundException.class);
-        List<Kweet> result = kweetService.getKweetsByUser("Jantje");
+        when(userDao.getUserByName(anyString())).thenReturn(null);
+        kweetService.getKweetsByUser("Jantje");
         //list should be returned empty
-        assertEquals(result.size(), 0);
+       // assertEquals(result.size(), 0);
     }
 
     @Test
@@ -156,7 +166,51 @@ public class KweetServiceTest {
         });
     }
 
+    @Test
+    public void createKweetTest(){
+        String toLong = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        String exactLength = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        String content =   "aaaaaaaaaa";
+        Kweet testKweet = new Kweet(userC, content);
 
+        when(userDao.getUser(anyInt())).thenAnswer((Answer<User>) invocation -> {
+           Object[] args = invocation.getArguments();
+           if((int)args[0] < 100){
+               return null;
+           }
+           return userC;
+
+        });
+        when(kweetDao.createKweet(anyObject())).thenReturn(testKweet);
+
+        assertEquals(kweetService.createKweet(userC, content), testKweet);
+        assertNotEquals(kweetService.createKweet(userA, content), testKweet);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void createKweetTest2(){
+        User x = null;
+        when(userDao.getUser(anyInt())).thenReturn(x);
+        when(kweetDao.createKweet(anyObject())).thenReturn(kweetB);
+        kweetService.createKweet(userA, "testshouldfail");
+
+    }
+
+
+    @Test
+    public void deleteKweetTest(){
+
+    }
+
+    @Test
+    public void likeKweetTest(){
+
+    }
+
+    @Test
+    public void unlikeKweetTest(){
+
+    }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -194,8 +248,6 @@ public class KweetServiceTest {
         //mockUserDao = mock(UserDao.class);
         //
         //when(mockKweetService.getKweets()).thenReturn(kweets);
-
-
 }
 
 
