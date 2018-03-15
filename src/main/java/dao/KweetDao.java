@@ -27,6 +27,12 @@ public class KweetDao {
         return query.getResultList();
     }
 
+    public List<Kweet> searchKweets(String content) {
+        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k WHERE k.message LIKE :content", Kweet.class);
+        query.setParameter("content", content);
+        return query.getResultList();
+    }
+
     public Kweet getKweetById(int id) {
         return em.find(Kweet.class, id);
     }

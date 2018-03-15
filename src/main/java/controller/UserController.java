@@ -1,5 +1,9 @@
 package controller;
 
+import Exceptions.InvalidActionException;
+import Exceptions.KweetNotFoundException;
+import Exceptions.KweetNotValidException;
+import Exceptions.UserNotFoundException;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
@@ -149,7 +153,7 @@ public class UserController extends Application {
     @GET
     @Path("demoAdd")
     @Produces(MediaType.TEXT_PLAIN)
-    public String demoAdd() {
+    public String demoAdd() throws UserNotFoundException, KweetNotValidException, InvalidActionException, KweetNotFoundException{
         User u = new User("JohnDoe", "password", Role.User, "John Doe", "", "", "", "");
         User u2 = new User("AliceWonderland", "password", Role.User, "Alice W.", "", "I'm Alice!", "Wonderland", "");
         u = userService.createUser(u);

@@ -27,8 +27,6 @@ public class Kweet implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     private List<User> likes;
 
-    public Kweet() { }
-
     public Kweet(User user, String message) {
         this.user = user;
         this.date = new Date();
