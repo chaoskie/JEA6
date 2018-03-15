@@ -70,7 +70,12 @@ public class UserDao {
         }
 
         try {
-            User user = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class).getSingleResult();
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+
+            User user = query.getSingleResult();
+
             if (user != null) {
                 return true;
             }

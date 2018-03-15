@@ -4,7 +4,6 @@ import dao.JPA;
 import dao.KweetDao;
 import dao.UserDao;
 import domain.User;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;

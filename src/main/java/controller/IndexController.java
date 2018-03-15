@@ -47,9 +47,10 @@ public class IndexController {
             HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
             try {
-                request.login(username, password);
+                boolean a = userService.login(username, password);
+                request.login(username, userService.generateSha512(password));
 
-                if (!userService.login(username, userService.generateSha512(password))) {
+                if (!userService.login(username, password)) {
                     // Login failed, return this to the user and stop
                     context.addMessage(null, new FacesMessage("A user with this username or password could not be found"));
                     return;
