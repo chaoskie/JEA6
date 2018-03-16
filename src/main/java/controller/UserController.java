@@ -11,20 +11,17 @@ import service.KweetService;
 import service.UserService;
 
 import javax.ejb.Stateless;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.Date;
 import java.util.List;
 
 @Stateless
 @Path("users")
 public class UserController extends Application {
+    @Context private HttpServletRequest servletRequest;
 
     @Inject
     UserService userService;
@@ -168,7 +165,7 @@ public class UserController extends Application {
         k1.setDate(new Date(1));
         k2.setDate(new Date(100));
         k3.setDate(new Date(1000));
-        k4.setDate(new Date(10000));
+        k4.setDate(new Date(1));
 
         userService.followUser(u, u2.getUsername());
 
@@ -179,9 +176,7 @@ public class UserController extends Application {
     }
 
     private User getUserFromSession() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = context.getExternalContext();
-        Object user = externalContext.getSessionMap().get("user");
+        Object user = servletRequest.getSession().getAttribute("user");
 
         if (user == null || !(user instanceof User)) {
             return null;

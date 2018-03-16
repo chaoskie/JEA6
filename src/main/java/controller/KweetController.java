@@ -5,19 +5,16 @@ import domain.User;
 import service.KweetService;
 
 import javax.ejb.Stateless;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 @Stateless
 @Path("kweets")
 public class KweetController extends Application {
+    @Context private HttpServletRequest servletRequest;
 
     @Inject
     KweetService kweetService;
@@ -128,9 +125,7 @@ public class KweetController extends Application {
     }
 
     private User getUserFromSession() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = context.getExternalContext();
-        Object user = externalContext.getSessionMap().get("user");
+        Object user = servletRequest.getSession().getAttribute("user");
 
         if (user == null || !(user instanceof User)) {
             return null;
