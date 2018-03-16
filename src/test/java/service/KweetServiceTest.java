@@ -118,13 +118,13 @@ public class KweetServiceTest {
         // assertEquals(result.size(), 0);
     }
 
-    @Test
-    public void getKweetsbyUserTest3()throws UserNotFoundException{
-        when(userDao.getUserByName(anyString())).thenReturn(null);
-        List<Kweet> result = kweetService.getKweetsByUser("Jantje");
-        //list should be returned empty
-        assertEquals(result.size(), 0);
-    }
+//    @Test
+//    public void getKweetsbyUserTest3() throws UserNotFoundException {
+//        when(userDao.getUserByName(anyString())).thenReturn(null);
+//        List<Kweet> result = kweetService.getKweetsByUser("Jantje");
+//        //list should be returned empty
+//        assertEquals(result.size(), 0);
+//    }
 
     @Test
     public void getTimelineTest() throws UserNotFoundException{
