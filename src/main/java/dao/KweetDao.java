@@ -51,10 +51,19 @@ public class KweetDao {
         WHERE k.USER_ID = 1 OR uu.User_ID = 1
          */
         //TypedQuery<Kweet> query = em.createQuery("SELECT k from Kweet k LEFT JOIN k.user u WHERE k.user = :user OR u = :user ORDER BY k.id DESC", Kweet.class);
-        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k LEFT JOIN k.user.following uu WHERE k.user = :user OR uu = :user", Kweet.class);
-        query.setParameter("user", user);
+        //TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k LEFT JOIN k.user.following uu WHERE k.user = :user OR uu = :user", Kweet.class);
+        //TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k JOIN k.user user LEFT JOIN user.following uu WHERE user = :user OR uu = :user", Kweet.class);
+        //TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k LEFT JOIN k.user.following uu WHERE k.user = :user OR uu IN k.user.following", Kweet.class);
 
-        return query.getResultList();
+        List<Kweet> kweets = getKweetsByUser(user);
+        for(User u : user.getFollowing()) {
+            kweets.addAll(getKweetsByUser(u));
+        }
+
+        // Sort by date in reverse order
+        kweets.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+
+        return kweets;
     }
 
     public Kweet createKweet(Kweet kweet) {

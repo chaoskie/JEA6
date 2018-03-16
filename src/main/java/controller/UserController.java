@@ -19,6 +19,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -163,6 +164,11 @@ public class UserController extends Application {
         Kweet k2 = kweetService.createKweet(u, "2 This is another test kweet by " + u.getDisplayname());
         Kweet k3 = kweetService.createKweet(u2, "3 Hello I'm Alice");
         Kweet k4 = kweetService.createKweet(u2, "4 How are you doing?");
+
+        k1.setDate(new Date(1));
+        k2.setDate(new Date(100));
+        k3.setDate(new Date(1000));
+        k4.setDate(new Date(10000));
 
         userService.followUser(u, u2.getUsername());
 
