@@ -59,7 +59,7 @@ public class UserService {
             throw new IllegalArgumentException("Required fields (username, password) were invalid");
         }
 
-        u.setPassword(generateSha512(u.getPassword()));
+        u.setPassword(generateSha256(u.getPassword()));
 
         return userDao.createUser(u);
     }
@@ -121,12 +121,12 @@ public class UserService {
     }
 
     public boolean login(String username, String password) {
-        return userDao.login(username, generateSha512(password));
+        return userDao.login(username, generateSha256(password));
     }
 
-    public String generateSha512(String text) {
+    public String generateSha256(String text) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-512");
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
 
             return Base64.getEncoder().encodeToString(hash);

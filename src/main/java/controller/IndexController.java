@@ -17,7 +17,6 @@ import java.io.IOException;
 public class IndexController {
     private String username;
     private String password;
-    private String originalURL;
 
     @Inject
     UserService userService;
@@ -47,8 +46,7 @@ public class IndexController {
             HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
             try {
-                boolean a = userService.login(username, password);
-                request.login(username, userService.generateSha512(password));
+                request.login(username, password);
 
                 if (!userService.login(username, password)) {
                     // Login failed, return this to the user and stop
@@ -59,7 +57,7 @@ public class IndexController {
                 // We can safely fetch this now because the login function has returned true at this point
                 User user = userService.getUserByName(username);
                 externalContext.getSessionMap().put("user", user);
-                externalContext.redirect(originalURL);
+                externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml");
 
             } catch (ServletException e) {
                 // Handle unknown username / password in request.login()
@@ -76,7 +74,7 @@ public class IndexController {
         try {
             ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
             externalContext.invalidateSession();
-            externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml");
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error.xhtml");
         }
         catch (Exception x) {
             Logger.log(x);
