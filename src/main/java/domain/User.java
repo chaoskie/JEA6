@@ -1,5 +1,7 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;
@@ -9,24 +11,30 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "users.findByName", query = "SELECT u FROM User u WHERE u.username = :name")
 })
+@JsonIgnoreProperties({"password", "following"})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
-    private Role role;
+
+    @Column(nullable = false)
+    private Role role = Role.User;
     private String displayname;
     private String profilePhoto;
     private String bio;
     private String location;
     private String website;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<User> following;
 
-    public User() { }
+    protected User() { }
 
     public User(String username, String password, Role role, String displayname, String profilePhoto, String bio, String location, String website) {
         this.username = username;
@@ -109,5 +117,29 @@ public class User implements Serializable {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public List<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<User> following) {
+        this.following = following;
+    }
+
+    public void followUser(User user) throws IllegalArgumentException {
+        if (this.following.contains(user)) {
+            throw new IllegalArgumentException("User already follows this user");
+        }
+
+        this.following.add(user);
+    }
+
+    public void unfollowUser(User user) throws IllegalArgumentException {
+        if (!this.following.contains(user)) {
+            throw new IllegalArgumentException("User didn't follow this user");
+        }
+
+        this.following.remove(user);
     }
 }

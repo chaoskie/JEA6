@@ -1,28 +1,26 @@
 package dao;
 
 import domain.Kweet;
+import domain.User;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 
-@JPA
-@Transactional
-public class KweetDao {
+public interface KweetDao {
+    public List<Kweet> getKweets();
 
-    @Inject @JPA
-    private UserDao userDao;
+    public List<Kweet> searchKweets(String content);
 
-    @PersistenceContext(unitName = "kwetterPU")
-    EntityManager em;
+    public Kweet getKweetById(int id);
 
-    public KweetDao() { }
+    public List<Kweet> getKweetsByUser(User user);
 
-    public List<Kweet> getKweets() {
-        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k", Kweet.class);
-        return query.getResultList();
-    }
+    public List<Kweet> getTimeline(User user);
+
+    public Kweet createKweet(Kweet kweet);
+
+    public void deleteKweet(Kweet k);
+
+    public int likeKweet(Kweet k, User u);
+
+    public int unlikeKweet(Kweet k, User u);
 }

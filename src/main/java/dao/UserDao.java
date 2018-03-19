@@ -2,29 +2,26 @@ package dao;
 
 import domain.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.List;
 
-@JPA
-@Transactional
-public class UserDao {
+public interface UserDao {
+    public List<User> getUsers();
 
-    @PersistenceContext(unitName = "kwetterPU")
-    private EntityManager em;
+    public User getUser(int id);
 
-    public UserDao() { }
+    public User getUserByName(String name);
 
-    public List<User> getUsers() {
-        return em.createQuery("SELECT u FROM User u", User.class).getResultList();
-    }
+    public List<User> getFollowers(User user);
 
-    public User getUser(int id) {
-        return em.find(User.class, id);
-    }
+    public User createUser(User u);
 
-    public void createUser(User u) {
-        em.persist(u);
-    }
+    public void followUser(User u, User toFollow);
+
+    public void unfollowUser(User u, User toUnfollow);
+
+    public boolean login(String username, String password);
+
+    public void updateBio(User user, String bio);
+
+    public void updateLocation(User user, String location);
 }
