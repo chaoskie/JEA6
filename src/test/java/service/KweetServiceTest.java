@@ -1,47 +1,28 @@
 package service;
 
-import com.sun.net.httpserver.Authenticator;
-import dao.KweetDao;
-import dao.UserDao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.persistence.NoResultException;
-import javax.sql.DataSource;
-import javax.ws.rs.NotFoundException;
+import dao.KweetDaoJPA;
+import dao.UserDaoJPA;
 import Exceptions.*;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import domain.Kweet;
 import domain.Role;
-import static domain.Role.User;
 import domain.User;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyList;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.OngoingStubbing;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -300,10 +281,10 @@ public class KweetServiceTest {
     }
 
     @Mock
-    private KweetDao kweetDao;
+    private KweetDaoJPA kweetDao;
 
     @Mock
-    private UserDao userDao;
+    private UserDaoJPA userDao;
 
     @InjectMocks
     private KweetService kweetService;
@@ -324,8 +305,8 @@ public class KweetServiceTest {
     public void setup() {
         createItems();
         MockitoAnnotations.initMocks(this);
-        //mockKweetDao = mock(KweetDao.class);
-        //mockUserDao = mock(UserDao.class);
+        //mockKweetDao = mock(KweetDaoJPA.class);
+        //mockUserDao = mock(UserDaoJPA.class);
         //
         //when(mockKweetService.getKweets()).thenReturn(kweets);
 }
@@ -379,10 +360,10 @@ public class KweetServiceTest {
 /*//Currently commented out due to restructuring.
 
     @InjectMocks
-    KweetDao mockKweetDao;
+    KweetDaoJPA mockKweetDao;
 
     @InjectMocks
-    UserDao mockUserDao;
+    UserDaoJPA mockUserDao;
 
     @Mock
     DataSource mockDataSource;

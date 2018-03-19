@@ -1,8 +1,6 @@
 package service;
 
-import dao.JPA;
-import dao.KweetDao;
-import dao.UserDao;
+import dao.*;
 import domain.User;
 
 import javax.inject.Inject;

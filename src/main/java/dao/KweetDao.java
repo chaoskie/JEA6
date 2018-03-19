@@ -3,89 +3,24 @@ package dao;
 import domain.Kweet;
 import domain.User;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 
-@JPA
-@Transactional
-public class KweetDao {
+public interface KweetDao {
+    public List<Kweet> getKweets();
 
-    @Inject @JPA
-    private UserDao userDao;
+    public List<Kweet> searchKweets(String content);
 
-    @PersistenceContext(unitName = "kwetterPU")
-    private EntityManager em;
+    public Kweet getKweetById(int id);
 
-    public KweetDao() { }
+    public List<Kweet> getKweetsByUser(User user);
 
-    public List<Kweet> getKweets() {
-        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k", Kweet.class);
-        return query.getResultList();
-    }
+    public List<Kweet> getTimeline(User user);
 
-    public List<Kweet> searchKweets(String content) {
-        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k WHERE k.message LIKE :content", Kweet.class);
-        query.setParameter("content", content);
-        return query.getResultList();
-    }
+    public Kweet createKweet(Kweet kweet);
 
-    public Kweet getKweetById(int id) {
-        return em.find(Kweet.class, id);
-    }
+    public void deleteKweet(Kweet k);
 
-    public List<Kweet> getKweetsByUser(User user) {
-        TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k WHERE k.user = :user", Kweet.class);
-        query.setParameter("user", user);
+    public int likeKweet(Kweet k, User u);
 
-        return query.getResultList();
-    }
-
-    public List<Kweet> getTimeline(User user) {
-        /*
-        SELECT k.*, uu.* FROM kweet k
-        LEFT JOIN users_users uu ON uu.following_ID = k.USER_ID
-        WHERE k.USER_ID = 1 OR uu.User_ID = 1
-         */
-        //TypedQuery<Kweet> query = em.createQuery("SELECT k from Kweet k LEFT JOIN k.user u WHERE k.user = :user OR u = :user ORDER BY k.id DESC", Kweet.class);
-        //TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k LEFT JOIN k.user.following uu WHERE k.user = :user OR uu = :user", Kweet.class);
-        //TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k JOIN k.user user LEFT JOIN user.following uu WHERE user = :user OR uu = :user", Kweet.class);
-        //TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k LEFT JOIN k.user.following uu WHERE k.user = :user OR uu IN k.user.following", Kweet.class);
-
-        List<Kweet> kweets = getKweetsByUser(user);
-        for(User u : user.getFollowing()) {
-            kweets.addAll(getKweetsByUser(u));
-        }
-
-        // Sort by date in reverse order
-        kweets.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
-
-        return kweets;
-    }
-
-    public Kweet createKweet(Kweet kweet) {
-        em.persist(kweet);
-        return kweet;
-    }
-
-    public void deleteKweet(Kweet k) {
-        em.remove(k);
-    }
-
-    public int likeKweet(Kweet k, User u) {
-        k.addLike(u);
-        em.merge(k);
-
-        return k.getLikes().size();
-    }
-
-    public int unlikeKweet(Kweet k, User u) {
-        k.removeLike(u);
-        em.merge(k);
-
-        return k.getLikes().size();
-    }
+    public int unlikeKweet(Kweet k, User u);
 }

@@ -1,15 +1,12 @@
 package service;
 
-import dao.JPA;
-import dao.KweetDao;
-import dao.UserDao;
+import dao.*;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
 import Exceptions.*;
 
 import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 
