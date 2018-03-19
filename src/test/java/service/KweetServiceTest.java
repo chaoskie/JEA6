@@ -118,6 +118,7 @@ public class KweetServiceTest {
         // assertEquals(result.size(), 0);
     }
 
+    // TODO: Go go gadget fix
 //    @Test
 //    public void getKweetsbyUserTest3() throws UserNotFoundException {
 //        when(userDao.getUserByName(anyString())).thenReturn(null);

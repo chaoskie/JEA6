@@ -165,7 +165,7 @@ public class UserController extends Application {
         k1.setDate(new Date(1));
         k2.setDate(new Date(100));
         k3.setDate(new Date(1000));
-        k4.setDate(new Date(1));
+        k4.setDate(new Date(10000));
 
         userService.followUser(u, u2.getUsername());
 
