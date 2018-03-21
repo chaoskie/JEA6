@@ -74,7 +74,7 @@ public class IndexController {
         try {
             ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
             externalContext.invalidateSession();
-            externalContext.redirect(externalContext.getRequestContextPath() + "/error.xhtml");
+            externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml");
         }
         catch (Exception x) {
             Logger.log(x);
