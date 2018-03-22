@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class IndexController {
         this.password = password;
     }
 
-    public void login() throws IOException {
+    public void login(ActionEvent event) throws IOException {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             ExternalContext externalContext = context.getExternalContext();
@@ -50,7 +51,7 @@ public class IndexController {
 
                 if (!userService.login(username, password)) {
                     // Login failed, return this to the user and stop
-                    context.addMessage(null, new FacesMessage("A user with this username or password could not be found"));
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Login", "A user with this username or password could not be found"));
                     return;
                 }
 
@@ -62,7 +63,7 @@ public class IndexController {
             } catch (ServletException e) {
                 // Handle unknown username / password in request.login()
                 Logger.log(e);
-                context.addMessage(null, new FacesMessage("A user with this username or password could not be found"));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Login", "A user with this username or password could not be found"));
             }
         }
         catch (Exception ex) {

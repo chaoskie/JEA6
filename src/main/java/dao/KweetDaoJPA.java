@@ -64,6 +64,10 @@ public class KweetDaoJPA implements KweetDao {
     }
 
     public void deleteKweet(Kweet k) {
+        if (!em.contains(k)) {
+            k = em.merge(k);
+        }
+
         em.remove(k);
     }
 
