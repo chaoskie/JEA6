@@ -70,7 +70,7 @@ public class KweetService {
             throw new KweetNotFoundException("Kweet does not exist");
         }
 
-        if (k.getUser().getId() != user.getId() && user.getRole().equals(Role.User)) {
+        if (k.getUser().getId() != user.getId() && !user.getRole().contains(Role.Moderator)) {
             // Moderators and Administrators are allowed to delete all kweets regardless of ownership
             // Users however can only delete their own kweets
             throw new InvalidActionException("User is not allowed to delete this kweet");

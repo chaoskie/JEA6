@@ -16,17 +16,17 @@
 
         <c:if test="${sessionScope.user == null}" >
             <h:form>
-                <h:commandButton value="Login" action="/login.xhtml" />
+                <p:commandButton value="Login" action="/login.xhtml" />
             </h:form>
         </c:if>
         <c:if test="${sessionScope.user != null}">
             <h:outputText value="Hello #{sessionScope.user.getUsername()}!" /> <br />
-            <h:outputText value="You role is: #{sessionScope.user.getRole()}!" /> <br />
+            <h:outputText value="You are a user: #{request.isUserInRole('User')}!" /> <br />
+            <h:outputText value="You are a moderator: #{request.isUserInRole('Moderator')}!" /> <br />
+            <h:outputText value="You are an administrator: #{request.isUserInRole('Administrator')}!" /> <br />
 
             <h1>Moderator panel</h1>
             <h:outputText value="Name: #{sessionScope.user.getUsername()}" />
-            <br/>
-            <h:outputText value="Role: #{sessionScope.user.getRole()}" />
             <br />
             <h:form>
                 <p:commandButton value="Logout" action="#{indexController.logout()}" />
@@ -50,7 +50,9 @@
                     <h:outputText value="#{user.username}" />
                 </p:column>
                 <p:column headerText="Role">
-                    <h:outputText value="#{user.role}" />
+                    <c:forEach var="role" items="#{user.role}">
+                        #{role}
+                    </c:forEach>
                 </p:column>
             </p:dataTable>
             <br />

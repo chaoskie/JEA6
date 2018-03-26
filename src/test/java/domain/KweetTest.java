@@ -2,6 +2,7 @@ package domain;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,8 +13,8 @@ public class KweetTest {
     public KweetTest() {
     }
 
-    private User userA = new User("Alice", "password", Role.User, "Alice", "", "", "", "") {{ setId(1); }};
-    private User userB = new User("John", "password", Role.User,"John Doe", "", "", "", "") {{ setId(2); }};
+    private User userA = new User("Alice", "password", new ArrayList<Role>(){{add(Role.User); }}, "Alice", "", "", "", "") {{ setId(1); }};
+    private User userB = new User("John", "password", new ArrayList<Role>(){{add(Role.User); }},"John Doe", "", "", "", "") {{ setId(2); }};
 
     @Test
     public void dummyTest() {

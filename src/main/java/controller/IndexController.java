@@ -1,5 +1,6 @@
 package controller;
 
+import domain.Role;
 import domain.User;
 import service.UserService;
 import util.Logger;
@@ -10,9 +11,16 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
+import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.Principal;
+import java.util.Set;
 
 @ManagedBean(name = "indexController", eager = true)
 public class IndexController {
@@ -57,6 +65,7 @@ public class IndexController {
 
                 // We can safely fetch this now because the login function has returned true at this point
                 User user = userService.getUserByName(username);
+
                 externalContext.getSessionMap().put("user", user);
                 externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml");
 

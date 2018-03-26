@@ -4,17 +4,17 @@
 
     <security-role-mapping>
         <role-name>Administrator</role-name>
-        <group-name>ADMINISTRATOR</group-name>
+        <group-name>Administrator</group-name>
     </security-role-mapping>
 
     <security-role-mapping>
         <role-name>Moderator</role-name>
-        <group-name>MODERATOR</group-name>
+        <group-name>Moderator</group-name>
     </security-role-mapping>
 
     <security-role-mapping>
         <role-name>User</role-name>
-        <group-name>USER</group-name>
+        <group-name>User</group-name>
     </security-role-mapping>
 
     <class-loader delegate="true" />
