@@ -317,11 +317,11 @@ public class KweetServiceTest {
      users = new ArrayList<>();
      String photo = "http://photo.com/test.jpg";
      try {
-         userA = new User("Janneman", "GekkeOudeBeer", Role.Administrator, "Robinson",  photo, "Oohh Pooh", "Treehouse", "Robin.son");
+         userA = new User("Janneman", "GekkeOudeBeer", new ArrayList<Role>(){{add(Role.User); add(Role.Moderator); add(Role.Administrator);}}, "Robinson",  photo, "Oohh Pooh", "Treehouse", "Robin.son");
          userA.setId(111);
-         userB = new User("Pooh", "Honing", Role.User, "Winnie the Pooh",  photo, "I love Hunny", "Robinson's room", "Hunny.xxx");
+         userB = new User("Pooh", "Honing", new ArrayList<Role>(){{add(Role.User); }}, "Winnie the Pooh",  photo, "I love Hunny", "Robinson's room", "Hunny.xxx");
          userB.setId(222);
-         userC = new User("Tijgetje", "Stuiterstaart", Role.User, "Tijgetje Stuiterstaart",  photo, "Boink Boink", "Honderdbunderbos", "boink.com" );
+         userC = new User("Tijgetje", "Stuiterstaart", new ArrayList<Role>(){{add(Role.User); }}, "Tijgetje Stuiterstaart",  photo, "Boink Boink", "Honderdbunderbos", "boink.com" );
          userC.setId(333);
          userEmpty = null;
      }

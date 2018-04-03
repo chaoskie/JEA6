@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -152,8 +153,8 @@ public class UserController extends Application {
     @Path("demoAdd")
     @Produces(MediaType.TEXT_PLAIN)
     public String demoAdd() throws UserNotFoundException, KweetNotValidException, InvalidActionException, KweetNotFoundException{
-        User u = new User("JohnDoe", "password", Role.User, "John Doe", "", "", "", "");
-        User u2 = new User("AliceWonderland", "password", Role.User, "Alice W.", "", "I'm Alice!", "Wonderland", "");
+        User u = new User("JohnDoe", "password", new ArrayList<Role>(){{add(Role.User); add(Role.Moderator); }}, "John Doe", "", "", "", "");
+        User u2 = new User("AliceWonderland", "password", new ArrayList<Role>(){{add(Role.User); }}, "Alice W.", "", "I'm Alice!", "Wonderland", "");
         u = userService.createUser(u);
         u2 = userService.createUser(u2);
 

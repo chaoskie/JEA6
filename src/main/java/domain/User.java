@@ -3,6 +3,7 @@ package domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -23,8 +24,9 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private Role role = Role.User;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<Role> roles = new ArrayList<Role>() {{ add(Role.User); }};
     private String displayname;
     private String profilePhoto;
     private String bio;
@@ -36,10 +38,10 @@ public class User implements Serializable {
 
     protected User() { }
 
-    public User(String username, String password, Role role, String displayname, String profilePhoto, String bio, String location, String website) {
+    public User(String username, String password, List<Role> roles, String displayname, String profilePhoto, String bio, String location, String website) {
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
         this.displayname = displayname;
         this.profilePhoto = profilePhoto;
         this.bio = bio;
@@ -71,12 +73,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public List<Role> getRole() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public String getDisplayname() {
