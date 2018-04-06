@@ -1,23 +1,30 @@
 package controller;
 
+import controller.annotation.Secured;
 import domain.Kweet;
 import domain.User;
 import service.KweetService;
+import service.UserService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.security.Principal;
 import java.util.List;
 
 @Stateless
 @Path("kweets")
 public class KweetController extends Application {
     @Context private HttpServletRequest servletRequest;
+    @Context SecurityContext securityContext;
 
     @Inject
     KweetService kweetService;
+
+    @Inject
+    UserService userService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,9 +61,10 @@ public class KweetController extends Application {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Secured
     public Response createKweet(Kweet k) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             Kweet result =  kweetService.createKweet(user, k.getMessage());
 
             return Response.status(Response.Status.CREATED).entity(result).build();
@@ -71,9 +79,10 @@ public class KweetController extends Application {
 
     @DELETE
     @Path("/{id}")
+    @Secured
     public Response deleteKweet(@PathParam("id") int id) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             kweetService.deleteKweet(user, id);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -90,9 +99,10 @@ public class KweetController extends Application {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}/like")
+    @Secured
     public Response likeKweet(@PathParam("id") int id) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             int count =  kweetService.likeKweet(user, id);
 
             return Response.status(Response.Status.OK).entity(count).build();
@@ -109,9 +119,10 @@ public class KweetController extends Application {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}/unlike")
+    @Secured
     public Response unlikeKweet(@PathParam("id") int id) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             int count =  kweetService.unlikeKweet(user, id);
 
             return Response.status(Response.Status.OK).entity(count).build();
@@ -124,13 +135,10 @@ public class KweetController extends Application {
         }
     }
 
-    private User getUserFromSession() {
-        Object user = servletRequest.getSession().getAttribute("user");
+    private User getUserFromToken() {
+        Principal principal = securityContext.getUserPrincipal();
+        String username = principal.getName();
 
-        if (user == null || !(user instanceof User)) {
-            return null;
-        }
-
-        return (User) user;
+        return userService.getUserByName(username);
     }
 }

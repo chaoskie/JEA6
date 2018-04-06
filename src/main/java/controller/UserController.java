@@ -4,6 +4,7 @@ import Exceptions.InvalidActionException;
 import Exceptions.KweetNotFoundException;
 import Exceptions.KweetNotValidException;
 import Exceptions.UserNotFoundException;
+import controller.annotation.Secured;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
 @Path("users")
 public class UserController extends Application {
     @Context private HttpServletRequest servletRequest;
+    @Context SecurityContext securityContext;
 
     @Inject
     UserService userService;
@@ -82,9 +85,10 @@ public class UserController extends Application {
 
     @POST
     @Path("{username}/follow")
+    @Secured
     public Response followUser(@PathParam("username") String username) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.followUser(user, username);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -101,9 +105,10 @@ public class UserController extends Application {
 
     @POST
     @Path("{username}/unfollow")
+    @Secured
     public Response unfollowUser(@PathParam("username") String username) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.unfollowUser(user, username);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -119,9 +124,10 @@ public class UserController extends Application {
     @PUT
     @Path("/bio")
     @Consumes(MediaType.TEXT_PLAIN)
+    @Secured
     public Response updateBio(String bio) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.updateBio(user, bio);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -135,9 +141,10 @@ public class UserController extends Application {
     @PUT
     @Path("/location")
     @Consumes(MediaType.TEXT_PLAIN)
+    @Secured
     public Response updateLocation(String location) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.updateLocation(user, location);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -146,6 +153,19 @@ public class UserController extends Application {
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
         }
+    }
+
+    @GET
+    @Path("checkClaims")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Secured
+    public String checkClaims(@Context SecurityContext securityContext) {
+        String result = "";
+        result += "Username: " + securityContext.getUserPrincipal().getName();
+        result += "\r\nModerator: " + securityContext.isUserInRole("moderator");
+        result += "\r\nAdministrator: " + securityContext.isUserInRole("administrator");
+
+        return result;
     }
 
 
@@ -176,13 +196,10 @@ public class UserController extends Application {
         return "ok";
     }
 
-    private User getUserFromSession() {
-        Object user = servletRequest.getSession().getAttribute("user");
+    private User getUserFromToken() {
+        Principal principal = securityContext.getUserPrincipal();
+        String username = principal.getName();
 
-        if (user == null || !(user instanceof User)) {
-            return null;
-        }
-
-        return (User) user;
+        return userService.getUserByName(username);
     }
 }
