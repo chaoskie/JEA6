@@ -4,8 +4,6 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
     <h:head>
         <title>Start Page</title>
@@ -20,67 +18,10 @@
             </h:form>
         </c:if>
         <c:if test="${sessionScope.user != null}">
-            <h:outputText value="Hello #{sessionScope.user.getUsername()}!" /> <br />
-            <h:outputText value="You are a user: #{request.isUserInRole('User')}!" /> <br />
-            <h:outputText value="You are a moderator: #{request.isUserInRole('Moderator')}!" /> <br />
-            <h:outputText value="You are an administrator: #{request.isUserInRole('Administrator')}!" /> <br />
 
-            <h1>Moderator panel</h1>
-            <h:outputText value="Name: #{sessionScope.user.getUsername()}" />
-            <br />
-            <h:form>
-                <p:commandButton value="Logout" action="#{loginBean.logout()}" />
-            </h:form>
-            <br/>
-
-            <h:form id="form">
-            <p:growl id="msgs" showDetail="true" />
-            <div class="ui-g">
-                <div class="ui-g-10">
-                <p:dataTable id="usersDT" var="user" value="#{moderatorBean.users}" selectionMode="single" selection="#{moderatorBean.selectedUser}" rowKey="#{user.id}">
-                <f:facet name="header">
-                    Select user
-                </f:facet>
-                <p:ajax event="rowSelect" listener="#{moderatorBean.onRowSelect}" update=":form:kweetDT" />
-                <p:ajax event="rowUnselect" listener="#{moderatorBean.onRowUnselect}" update=":form:msgs" />
-                <p:column headerText="Id">
-                    <h:outputText value="#{user.id}" />
-                </p:column>
-                <p:column headerText="Username">
-                    <h:outputText value="#{user.username}" />
-                </p:column>
-                <p:column headerText="Role">
-                    <c:forEach var="role" items="#{user.role}">
-                        #{role}
-                    </c:forEach>
-                </p:column>
-            </p:dataTable>
-            <br />
-            <p:dataTable id="kweetDT" var="kweet" value="#{moderatorBean.selectedUserKweets}" selectionMode="single" rowKey="#{kweet.id}" paginator="true" rows="10"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
-                <f:facet name="header">
-                    Kweets
-                </f:facet>
-                <p:column headerText="Id" style="width:40px; text-align:center;">
-                    <h:outputText value="#{kweet.id}" />
-                </p:column>
-                <p:column headerText="Message">
-                    <h:outputText value="#{kweet.message}" />
-                </p:column>
-                <p:column style="width:32px; text-align: center;">
-                    <p:commandButton icon="ui-icon-trash"
-                                     title="Delete this actor"
-                                     actionListener="#{moderatorBean.deleteKweet(kweet)}"
-                                     ajax="true"
-                                     update="kweetDT :form:msgs"
-                                        />
-                </p:column>
-            </p:dataTable>
-                </div>
-            </div>
-            </h:form>
-
+        <h:form>
+            <p:commandButton value="Logout" action="#{loginBean.logout()}" />
+        </h:form>
 
         </c:if>
 

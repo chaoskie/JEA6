@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 
 import javax.annotation.Priority;
-import javax.validation.constraints.Null;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
