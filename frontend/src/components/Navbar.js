@@ -5,6 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
+import Snackbar from 'material-ui/Snackbar';
 
 import {loginUser, logoutUser} from '../actions/authentication.js'
 
@@ -13,7 +14,8 @@ import { connect } from 'react-redux';
 const mapStateToProps = (state) => {
     return {
         isFetching: state.authentication.isFetching,
-        isAuthenticated: state.authentication.isAuthenticated
+        isAuthenticated: state.authentication.isAuthenticated,
+        errorMessage: state.authentication.errorMessage
     };
 };
 
@@ -43,6 +45,16 @@ class Navbar extends React.Component {
       handleClose = () => {
         this.setState({showLoginDialog: false});
       };
+
+      componentWillReceiveProps(props) {
+          if (!props.isAuthenticated && props.errorMessage) {
+            console.log(props.errorMessage);
+          }
+
+          if (props.isAuthenticated) {
+            this.handleClose();
+          }
+      }
     
       render() {
         const actions = [
@@ -58,7 +70,6 @@ class Navbar extends React.Component {
               onClick={(e) => { 
                   this.setState({credentials: {username: "", password: ""}});
                   this.props.dispatch(loginUser(this.state.credentials));
-                  this.handleClose();
                 }}
             />,
           ];
@@ -71,7 +82,10 @@ class Navbar extends React.Component {
             </ToolbarGroup>
             <ToolbarGroup>
               <ToolbarSeparator />
-              <RaisedButton label="Login" primary={true} onClick={() => this.handleOpen() } />
+              {!this.props.isAuthenticated
+                ? <RaisedButton label="Login" primary={true} onClick={() => this.handleOpen() } />
+                : <RaisedButton label="Logout" primary={true} onClick={() => this.props.dispatch(logoutUser()) } />
+              }
             </ToolbarGroup>
 
             <Dialog title="Login" actions={actions} modal={true} open={this.state.showLoginDialog}>
@@ -89,7 +103,11 @@ class Navbar extends React.Component {
                 value={this.state.credentials.password}
             />
             </Dialog>
-
+            <Snackbar
+              open={this.props.errorMessage && !this.state.credentials.username && !this.state.credentials.password}
+              message={this.props.errorMessage}
+              autoHideDuration={4000}
+            />
           </Toolbar>
         );
       }

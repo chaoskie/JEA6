@@ -20,13 +20,14 @@ export const Kweet = ({kweet}) => (
         />
         <CardText>
         {kweet.message}
-            <div style={{
-                position: 'relative',
-                top: '-90px',
-                right: '-340px',
-                color: 'rgba(0, 0, 0, 0.54)'}}>
-                    {dateDisplay(new Date(kweet.date))}
-                </div>
+        <div style={{
+            position: 'relative',
+            top: '-90px',
+            right: '-340px',
+            color: 'rgba(0, 0, 0, 0.54)'}}>
+                {dateDisplay(new Date(kweet.date))}
+        </div>
+        
         </CardText>
         <CardActions>
             <RaisedButton label="Like" secondary={true} icon={<ActionFavorite color={pinkA100}/>} />
