@@ -28,7 +28,7 @@ public class AuthenticationController {
 
         // Authenticate the user using the credentials provided
         if (!authenticate(username, password)) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Invalid login").build();
         }
 
         // Issue a token for the user
