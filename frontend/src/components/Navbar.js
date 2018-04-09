@@ -6,12 +6,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 
+import {loginUser, logoutUser} from '../actions/authentication.js'
+
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
     return {
-        isFetching: state.isFetching,
-        isAuthenticated: state.isAuthenticated
+        isFetching: state.authentication.isFetching,
+        isAuthenticated: state.authentication.isAuthenticated
     };
 };
 
@@ -54,8 +56,8 @@ class Navbar extends React.Component {
               primary={true}
               disabled={!(this.state.credentials.username && this.state.credentials.password)}
               onClick={(e) => { 
-                  console.log(this.state.credentials);
-                  this.setState({credentials: {username: "", password: ""}})
+                  this.setState({credentials: {username: "", password: ""}});
+                  this.props.dispatch(loginUser(this.state.credentials));
                   this.handleClose();
                 }}
             />,
@@ -95,4 +97,4 @@ class Navbar extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default connect(mapStateToProps, null)(Navbar);

@@ -6,6 +6,7 @@ export function kweetsHasErrored(state = false, action) {
             return state;
     }
 }
+
 export function kweetsIsLoading(state = false, action) {
     switch (action.type) {
         case 'KWEETS_IS_LOADING':
@@ -14,6 +15,7 @@ export function kweetsIsLoading(state = false, action) {
             return state;
     }
 }
+
 export function kweets(state = [], action) {
     switch (action.type) {
         case 'KWEETS_FETCH_DATA_SUCCESS':
