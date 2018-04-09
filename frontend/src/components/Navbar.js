@@ -19,12 +19,6 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        //fetchData: (url) => dispatch(usersFetchData(url))
-    };
-}
-
 class Navbar extends React.Component {
     constructor(props) {
         super(props);
@@ -47,9 +41,10 @@ class Navbar extends React.Component {
       };
 
       componentWillReceiveProps(props) {
-          if (!props.isAuthenticated && props.errorMessage) {
-            console.log(props.errorMessage);
-          }
+          // if (!props.isAuthenticated && props.errorMessage) {
+          // Display error message
+          //   console.log(props.errorMessage);
+          // }
 
           if (props.isAuthenticated) {
             this.handleClose();
@@ -104,8 +99,8 @@ class Navbar extends React.Component {
             />
             </Dialog>
             <Snackbar
-              open={this.props.errorMessage && !this.state.credentials.username && !this.state.credentials.password}
-              message={this.props.errorMessage}
+              open={this.props.errorMessage !== undefined && this.props.errorMessage.length > 0 && !this.state.credentials.username && !this.state.credentials.password}
+              message={this.props.errorMessage ? this.props.errorMessage : ''}
               autoHideDuration={4000}
             />
           </Toolbar>

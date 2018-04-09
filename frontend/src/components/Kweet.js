@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import {pinkA100} from 'material-ui/styles/colors';
 import Avatar from 'material-ui/Avatar';
+import { getUsernameFromJwt } from '../actions/users';
 
 let dateDisplay = (date) => {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString('en');
