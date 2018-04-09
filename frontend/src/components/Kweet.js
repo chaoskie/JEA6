@@ -14,7 +14,7 @@ let dateDisplay = (date) => {
 export const Kweet = ({kweet}) => (
     <Card style={{width: '500px', marginBottom: 20}}>
                             <CardHeader
-                                avatar={<Avatar>{kweet.user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
+                                avatar={kweet.user.profilePhoto ? <Avatar src={kweet.user.profilePhoto}></Avatar> : <Avatar>{kweet.user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
                                 title={kweet.user.displayname}
                                 subtitle={'@'+kweet.user.username}
         />

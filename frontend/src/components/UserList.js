@@ -49,7 +49,7 @@ class UserList extends Component {
                     <div key={user.id}>
                         <Card style={{width: '500px', marginBottom: 20}}>
                             <CardHeader
-                                avatar={<Avatar>{user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
+                                avatar={user.profilePhoto ? <Avatar src={user.profilePhoto}></Avatar> : <Avatar>{user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
                                 title={user.displayname}
                                 subtitle={'@'+user.username}
                                 actAsExpander={true}
@@ -57,7 +57,6 @@ class UserList extends Component {
                             />
                             <CardActions>
                                 <RaisedButton label="Follow" />
-                                <RaisedButton label="Action2" />
                             </CardActions>
                             <CardText expandable={true}>
                                 <p>{user.bio}</p>
