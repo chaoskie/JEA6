@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class UserList extends Component {
     componentDidMount() {
-        this.props.fetchData('http://localhost:8080/Kwetter-Beta/api/v1/users');
+        this.props.fetchData('http://localhost:8080/Kwetter-Gamma/api/v1/users');
     }
 
     render() {

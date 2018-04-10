@@ -4,7 +4,7 @@
 
     <groupId>nl.fontys</groupId>
     <artifactId>Kwetter</artifactId>
-    <version>Beta</version>
+    <version>Gamma</version>
     <packaging>war</packaging>
 
     <name>Kwetter</name>
