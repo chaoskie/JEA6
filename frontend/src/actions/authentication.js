@@ -1,3 +1,5 @@
+import { callApiPost } from '../middleware/api';
+
 export function requestLogin(creds) {
     return {
       type: 'LOGIN_REQUEST',
@@ -43,31 +45,30 @@ export function requestLogin(creds) {
 
    export function loginUser(creds) {
 
-    let config = {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify(creds)
-    }
+    // let config = {
+    //   method: 'POST',
+    //   headers: { 'Content-Type':'application/json' },
+    //   body: JSON.stringify(creds)
+    // }
   
     return dispatch => {
       // We dispatch requestLogin to kickoff the call to the API
       dispatch(requestLogin(creds))
   
-      return fetch('http://localhost:8080/Kwetter-Beta/api/v1/authentication', config)
+      return callApiPost('authentication', false, creds)
       .then(response =>
         response.text().then(token => ({ token, response }))
             ).then(({ token, response }) =>  {
         if (!response.ok) {
           // If there was a problem, we want to
           // dispatch the error condition
-          dispatch(loginError(token))
-          return Promise.reject(token)
+          dispatch(loginError(token));
+          return Promise.reject(token);
         } else {
           // If login was successful, set the token in local storage
-          localStorage.setItem('id_token', token)
-          localStorage.setItem('id_token', token)
+          localStorage.setItem('id_token', token);
           // Dispatch the success action
-          dispatch(receiveLogin(token))
+          dispatch(receiveLogin(token));
         }
       }).catch(err => console.log("Error: ", err))
   }
@@ -75,9 +76,8 @@ export function requestLogin(creds) {
 
   export function logoutUser() {
     return dispatch => {
-      dispatch(requestLogout())
-      localStorage.removeItem('id_token')
-      localStorage.removeItem('access_token')
-      dispatch(receiveLogout())
+      dispatch(requestLogout());
+      localStorage.removeItem('id_token');
+      dispatch(receiveLogout());
     }
   }

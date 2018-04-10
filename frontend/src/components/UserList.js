@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import { usersFetchData } from '../actions/users';
+import { usersFetchAll } from '../actions/users';
 import Avatar from 'material-ui/Avatar';
 import DeviceGPS from 'material-ui/svg-icons/device/gps-fixed';
 import Website from 'material-ui/svg-icons/action/language';
@@ -24,16 +24,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchData: (url) => dispatch(usersFetchData(url))
-    };
-}
-
-
 class UserList extends Component {
     componentDidMount() {
-        this.props.fetchData('http://localhost:8080/Kwetter-Gamma/api/v1/users');
+        this.props.dispatch(usersFetchAll());
     }
 
     render() {
@@ -86,4 +79,4 @@ class UserList extends Component {
         );
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserList);
+export default connect(mapStateToProps, null)(UserList);

@@ -1,3 +1,5 @@
+import { callApiGet } from '../middleware/api';
+
 export function usersHasErrored(bool) {
     return {
         type: 'USERS_HAS_ERRORED',
@@ -19,10 +21,10 @@ export function usersFetchDataSuccess(users) {
     };
 }
 
-export function usersFetchData(url) {
+export function usersFetchAll() {
     return (dispatch) => {
         dispatch(usersIsLoading(true));
-        fetch(url)
+        callApiGet('users', false)
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);

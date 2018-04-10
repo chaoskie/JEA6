@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import { kweetsFetchData } from '../actions/kweets';
+import { kweetsFetchAll } from '../actions/kweets';
 import { Kweet } from './Kweet';
 
 
@@ -22,16 +22,16 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchData: (url) => dispatch(kweetsFetchData(url))
-    };
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         fetchData: dispatch(kweetsFetchAll())
+//     };
+// }
 
 
 class UserList extends Component {
     componentDidMount() {
-        this.props.fetchData('http://localhost:8080/Kwetter-Gamma/api/v1/kweets');
+        this.props.dispatch(kweetsFetchAll());
     }
 
     render() {
@@ -52,4 +52,4 @@ class UserList extends Component {
         );
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(UserList);
+export default connect(mapStateToProps, null)(UserList);
