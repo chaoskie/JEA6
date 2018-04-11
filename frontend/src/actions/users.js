@@ -1,4 +1,4 @@
-import { callApiGet } from '../middleware/api';
+import { callApiGet, callApiPut } from '../middleware/api';
 
 export function usersHasErrored(bool) {
     return {
@@ -19,6 +19,98 @@ export function usersFetchDataSuccess(users) {
         type: 'USERS_FETCH_DATA_SUCCESS',
         payload: users
     };
+}
+
+export function userUpdateBioSuccess(user) {
+    return {
+        type: 'USERS_UPDATE_BIO_SUCCESS',
+        payload: user
+    }
+}
+
+export function userUpdateLocationSuccess(user) {
+    return {
+        type: 'USERS_UPDATE_LOCATION_SUCCESS',
+        payload: user
+    }
+}
+
+export function userUpdateDisplaynameSuccess(user) {
+    return {
+        type: 'USERS_UPDATE_DISPLAYNAME_SUCCESS',
+        payload: user
+    }
+}
+
+export function userUpdateWebsiteSuccess(user) {
+    return {
+        type: 'USERS_UPDATE_WEBSITE_SUCCESS',
+        payload: user
+    }
+}
+
+export function userUpdateWebsite(user) {
+    return (dispatch) => {
+        callApiPut('users/website', true, user.website)
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            return response;
+        })
+        .then((response) => response.json())
+        .then((u) => dispatch(userUpdateWebsiteSuccess(u)))
+        .catch((error) => { console.log(error); })
+    }
+}
+
+export function userUpdateLocation(user) {
+    return (dispatch) => {
+        callApiPut('users/location', true, user.location)
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            return response;
+        })
+        .then((response) => response.json())
+        .then((u) => dispatch(userUpdateLocationSuccess(u)))
+        .catch((error) => { console.log(error); })
+    }
+}
+
+export function userUpdateDisplayname(user) {
+    return (dispatch) => {
+        callApiPut('users/displayname', true, user.displayname)
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            return response;
+        })
+        .then((response) => response.json())
+        .then((u) => dispatch(userUpdateDisplaynameSuccess(u)))
+        .catch((error) => { console.log(error); })
+    }
+}
+
+export function userUpdateBio(user) {
+    return (dispatch) => {
+        callApiPut('users/bio', true, user.bio)
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            return response;
+        })
+        .then((response) => response.json())
+        .then((u) => dispatch(userUpdateBioSuccess(u)))
+        .catch((error) => { console.log(error); })
+    }
 }
 
 export function usersFetchAll() {

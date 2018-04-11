@@ -29,7 +29,7 @@ const mapStateToProps = (state) => {
 // }
 
 
-class UserList extends Component {
+class KweetList extends Component {
     componentDidMount() {
         this.props.dispatch(kweetsFetchAll());
     }
@@ -52,4 +52,4 @@ class UserList extends Component {
         );
     }
 }
-export default connect(mapStateToProps, null)(UserList);
+export default connect(mapStateToProps, null)(KweetList);

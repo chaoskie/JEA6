@@ -33,7 +33,7 @@ export function callApiPost(endpoint, authenticated, body) {
     let config = {
         headers: { 'Content-Type':'application/json' },
         method: "POST",
-        body: JSON.stringify(body)
+        body: (typeof body === 'string') ? body : JSON.stringify(body)
     };
 
     return callApi(endpoint, authenticated, config);
@@ -43,7 +43,7 @@ export function callApiDelete(endpoint, authenticated, body) {
     let config = {
         headers: { 'Content-Type':'application/json' },
         method: "DELETE",
-        body: JSON.stringify(body)
+        body: (typeof body === 'string') ? body : JSON.stringify(body)
     };
 
     return callApi(endpoint, authenticated, config);
@@ -53,7 +53,7 @@ export function callApiPut(endpoint, authenticated, body) {
     let config = {
         headers: { 'Content-Type':'application/json' },
         method: "PUT",
-        body: JSON.stringify(body)
+        body: (typeof body === 'string') ? body : JSON.stringify(body)
     };
 
     return callApi(endpoint, authenticated, config);

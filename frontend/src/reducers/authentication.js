@@ -7,7 +7,8 @@ export function authentication(state = {
       return { ...state, 
         isFetching: true,
         isAuthenticated: false,
-        username: action.creds.username
+        username: action.creds.username,
+        errorMessage: ''
       }
     case 'LOGIN_SUCCESS':
       return {...state, 
@@ -24,7 +25,8 @@ export function authentication(state = {
     case 'LOGOUT_SUCCESS':
       return {...state,
         isFetching: true,
-        isAuthenticated: false
+        isAuthenticated: false,
+        errorMessage: ''
       }
     default:
       return state
