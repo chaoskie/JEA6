@@ -23,7 +23,7 @@ export const Kweet = ({kweet}) => (
         />
         <CardText>
         {kweet.message}
-        <div class="kweetDate">
+        <div className="kweetDate">
             {dateDisplay(new Date(kweet.date))}
         </div>
         

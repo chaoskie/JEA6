@@ -3,7 +3,11 @@ import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import { usersFetchAll, getUsernameFromJwt, userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname } from '../actions/users';
+import {
+    usersFetchAll, getUsernameFromJwt,
+    userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
+    followUser, unfollowUser
+} from '../actions/users';
 import Avatar from 'material-ui/Avatar';
 import DeviceGPS from 'material-ui/svg-icons/device/gps-fixed';
 import Website from 'material-ui/svg-icons/action/language';
@@ -29,6 +33,7 @@ class Profile extends Component {
         };
 
         this.handleEditProfile = this.handleEditProfile.bind(this);
+        this.handleFollow = this.handleFollow.bind(this);
       }
     
     componentDidMount() {
@@ -59,10 +64,7 @@ class Profile extends Component {
             };
 
             this.setState({editing: true, editingValues});
-            console.log(editingValues);
         } else {
-            console.log(this.state.editingValues);
-            
             if (this.state.editingValues.displayname !== this.props.user.displayname) {
                 console.log("Display name changed");
                 let user = { ...this.props.user, displayname: this.state.editingValues.displayname };
@@ -91,6 +93,16 @@ class Profile extends Component {
         }
     }
 
+    handleFollow() {
+        if (this.userIsFollowing()) {
+            // Unfollow
+            this.props.dispatch(unfollowUser(this.props.user));
+        } else {
+            // Follow
+            this.props.dispatch(followUser(this.props.user));
+        }
+    }
+
     render() {
         if (this.props.hasErrored || !this.props.user) {
             return <p>Sorry! There was an error loading the profile</p>;
@@ -113,11 +125,12 @@ class Profile extends Component {
                         subtitle={'@' + this.props.user.username}
                     />
                     <CardActions>
-                        <RaisedButton label={this.userIsFollowing() ? "Unfollow" : "Follow" } disabled={
-                            !this.props.isAuthenticated 
-                            || this.userIsMyself()
-                            || this.userIsFollowing()
-                            } />
+                        <RaisedButton
+                            label={this.userIsFollowing() ? "Unfollow" : "Follow" }
+                            disabled={!this.props.isAuthenticated || this.userIsMyself()}
+                            onClick={this.handleFollow}
+                            />
+
                         {this.userIsMyself() &&
                             <RaisedButton label={this.state.editing ? "Save profile" : "Edit profile"} onClick={this.handleEditProfile} />
                         }

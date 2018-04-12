@@ -1,4 +1,4 @@
-import { callApiGet, callApiPut } from '../middleware/api';
+import { callApiGet, callApiPut, callApiPost } from '../middleware/api';
 
 export function usersHasErrored(bool) {
     return {
@@ -46,6 +46,32 @@ export function userUpdateWebsiteSuccess(user) {
     return {
         type: 'USERS_UPDATE_WEBSITE_SUCCESS',
         payload: user
+    }
+}
+
+export function userFollowedSuccess(username, userFollowed) {
+    return {
+        type: 'USER_FOLLOW_SUCCESS',
+        payload: { username, userFollowed }
+    }
+}
+
+export function userFollowedFailed() {
+    return {
+        type: 'USER_FOLLOW_FAILED'
+    }
+}
+
+export function userUnfollowedSuccess(username, userUnfollowed) {
+    return {
+        type: 'USER_UNFOLLOW_SUCCESS',
+        payload: { username, userUnfollowed }
+    }
+}
+
+export function userUnfollowedFailed() {
+    return {
+        type: 'USER_UNFOLLOW_FAILED'
     }
 }
 
@@ -128,6 +154,34 @@ export function usersFetchAll() {
             .then((users) => dispatch(usersFetchDataSuccess(users)))
             .catch(() => dispatch(usersHasErrored(true)));
     };
+}
+
+export function followUser(userToFollow) {
+    return (dispatch) => {
+        callApiPost(`users/${userToFollow.username}/follow`, true, null)
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            dispatch(userFollowedSuccess(getUsernameFromJwt(), userToFollow));
+        })
+        .catch(() => dispatch(userFollowedFailed()));
+    }
+}
+
+export function unfollowUser(userToUnfollow) {
+    return (dispatch) => {
+        callApiPost(`users/${userToUnfollow.username}/unfollow`, true, null)
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            dispatch(userUnfollowedSuccess(getUsernameFromJwt(), userToUnfollow));
+        })
+        .catch(() => dispatch(userUnfollowedFailed()));
+    }
 }
 
 export function getUsernameFromJwt() {
