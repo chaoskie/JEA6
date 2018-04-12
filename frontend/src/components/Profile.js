@@ -101,7 +101,7 @@ class Profile extends Component {
         return (
 
             <div key={this.props.user.id}>
-                <Card style={{ width: '500px', marginBottom: 20 }}>
+                <Card className="profileCard">
                     <CardHeader
                         avatar={this.props.user.profilePhoto ? <Avatar src={this.props.user.profilePhoto}></Avatar> : <Avatar>{this.props.user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
                         title={this.state.editing
@@ -139,11 +139,11 @@ class Profile extends Component {
                                 {this.state.editing
                                 ? <TextField
                                     id={'edit-location-field'}
-                                    style={{marginLeft: '5px'}}
+                                    className="profileEditField"
                                     value={this.state.editingValues.location}
                                     onChange={(e, v) => {let editingValues = {...this.state.editingValues, location: v }; this.setState({editingValues}); }}
                                   />
-                                : <p style={{ display: 'inline', verticalAlign: 'super', marginLeft: '5px' }}>
+                                : <p className="profileField">
                                     {this.props.user.location}
                                   </p>
                                 }
@@ -156,11 +156,11 @@ class Profile extends Component {
                                 {this.state.editing
                                 ? <TextField
                                     id={'edit-website-field'}
-                                    style={{marginLeft: '5px'}}
+                                    className="profileEditField"
                                     value={this.state.editingValues.website}
                                     onChange={(e, v) => {let editingValues = {...this.state.editingValues, website: v }; this.setState({editingValues}); }}
                                   />
-                                : <p style={{ display: 'inline', verticalAlign: 'super', marginLeft: '5px' }}>
+                                : <p className="profileField">
                                     {this.props.user.website}
                                   </p>
                                 }
