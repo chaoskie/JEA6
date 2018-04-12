@@ -20,7 +20,7 @@ function callApi(endpoint, authenticated, config) {
             throw "No token saved!"
         }
     }
-
+    
     return fetch(BASE_URL + endpoint, config);
 }
 

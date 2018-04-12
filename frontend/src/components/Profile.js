@@ -59,16 +59,19 @@ class Profile extends Component {
             };
 
             this.setState({editing: true, editingValues});
+            console.log(editingValues);
         } else {
+            console.log(this.state.editingValues);
+            
             if (this.state.editingValues.displayname !== this.props.user.displayname) {
                 console.log("Display name changed");
-                let user = { ...this.props.user, location: this.state.editingValues.displayname };
+                let user = { ...this.props.user, displayname: this.state.editingValues.displayname };
                 this.props.dispatch(userUpdateDisplayname(user))
             }
 
             if (this.state.editingValues.bio !== this.props.user.bio) {
                 console.log("Bio changed");
-                let user = { ...this.props.user, location: this.state.editingValues.bio };
+                let user = { ...this.props.user, bio: this.state.editingValues.bio };
                 this.props.dispatch(userUpdateBio(user))
             }
 
@@ -101,7 +104,12 @@ class Profile extends Component {
                 <Card style={{ width: '500px', marginBottom: 20 }}>
                     <CardHeader
                         avatar={this.props.user.profilePhoto ? <Avatar src={this.props.user.profilePhoto}></Avatar> : <Avatar>{this.props.user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
-                        title={this.props.user.displayname}
+                        title={this.state.editing
+                            ? <TextField
+                                id={'edit-displayname-field'}
+                                value={this.state.editingValues.displayname}
+                                onChange={(e, v) => {let editingValues = {...this.state.editingValues, displayname: v}; this.setState({editingValues}); }} /> 
+                            : this.props.user.displayname}
                         subtitle={'@' + this.props.user.username}
                     />
                     <CardActions>
