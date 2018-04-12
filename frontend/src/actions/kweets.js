@@ -29,7 +29,7 @@ export function kweetCreatedSuccess(kweet) {
 }
 
 export function kweetCreation(kweet){
-    console.log('kweet creation');
+    //console.log('kweet creation');
     return (dispatch) => {
        // dispatch(kweetsIsLoading(true));
         callApiPost('kweets', true, kweet)

@@ -118,6 +118,22 @@ public class UserService {
         userDao.updateLocation(user, location);
     }
 
+    public void updateWebsite(User user, String website) {
+        if (user == null || user.getId() <= 0) {
+            throw new IllegalArgumentException("User was invalid");
+        }
+
+        userDao.updateWebsite(user, website);
+    }
+
+    public void updateDisplayname(User user, String displayname) {
+        if (user == null || user.getId() <= 0 || displayname.isEmpty()) {
+            throw new IllegalArgumentException("User was invalid");
+        }
+
+        userDao.updateDisplayname(user, displayname);
+    }
+
     public boolean login(String username, String password) {
         return userDao.login(username, generateSha256(password));
     }

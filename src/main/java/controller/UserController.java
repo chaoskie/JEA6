@@ -123,14 +123,57 @@ public class UserController extends Application {
 
     @PUT
     @Path("/bio")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Secured
     public Response updateBio(String bio) {
         try {
             User user = getUserFromToken();
             userService.updateBio(user, bio);
 
-            return Response.status(Response.Status.NO_CONTENT).build();
+            user.setBio(bio);
+
+            return Response.ok().entity(user).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @PUT
+    @Path("/website")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
+    public Response updateWebsite(String website) {
+        try {
+            User user = getUserFromToken();
+            userService.updateWebsite(user, website);
+
+            user.setWebsite(website);
+
+            return Response.ok().entity(user).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @PUT
+    @Path("/displayname")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
+    public Response updateDisplayname(String displayname) {
+        try {
+            User user = getUserFromToken();
+            userService.updateDisplayname(user, displayname);
+
+            user.setDisplayname(displayname);
+
+            return Response.ok().entity(user).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
@@ -140,14 +183,17 @@ public class UserController extends Application {
 
     @PUT
     @Path("/location")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Secured
     public Response updateLocation(String location) {
         try {
             User user = getUserFromToken();
             userService.updateLocation(user, location);
 
-            return Response.status(Response.Status.NO_CONTENT).build();
+            user.setLocation(location);
+
+            return Response.ok().entity(user).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {

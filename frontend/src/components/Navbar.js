@@ -24,7 +24,6 @@ class Navbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          value: 3,
           searchValue: "",
           showLoginDialog: false,
           credentials: {username: "", password: ""}
@@ -78,10 +77,14 @@ class Navbar extends React.Component {
           ];
 
         return (
-          <Toolbar>
+          /*<Toolbar>
             <ToolbarGroup firstChild={true} style={{width: '100%'}}>
                 <TextField hintText="Search kweets" style={{paddingLeft: 10}} fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({searchValue: v})} />
-                <FlatButton icon={<ActionSearch />} onClick={() => this.createKweet()}/>
+                <FlatButton icon={<ActionSearch />} onClick={() => this.createKweet()}/>*/
+          <Toolbar className="navbar">
+            <ToolbarGroup className="navbarSearch" firstChild={true}>
+                <TextField hintText="Search kweets" fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({searchValue: v})} />
+                <FlatButton icon={<ActionSearch />} onClick={() => console.log(this.state.searchValue)}/>
             </ToolbarGroup>
             <ToolbarGroup>
               <ToolbarSeparator />

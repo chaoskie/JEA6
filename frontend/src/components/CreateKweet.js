@@ -4,7 +4,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import ActionSearch from 'material-ui/svg-icons/action/search';
+import ActionSend from 'material-ui/svg-icons/content/send'
+//import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
 import {kweetCreation} from '../actions/kweets';
 
@@ -21,25 +22,26 @@ const mapStateToProps = (state) => {
 };
 
 class CreateKweet extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
-          value: 3,
-          kweetValue: "",
-          showLoginDialog: false,
-          credentials: {username: "", password: ""}
+          open:false,
+          kweetValue: ""
+         // showLoginDialog: false,
+         // credentials: {username: "", password: ""}
         };
       }
     
       handleChange = (event, index, value) => this.setState({value});
 
-      handleOpen = () => {
+     /* handleOpen = () => {
         this.setState({showLoginDialog: true});
       };
     
       handleClose = () => {
         this.setState({showLoginDialog: false});
-      };
+      };*/
 
       componentWillReceiveProps(props) {
           // if (!props.isAuthenticated && props.errorMessage) {
@@ -53,68 +55,35 @@ class CreateKweet extends React.Component {
       }
 
       createKweet() {
-        console.log("woop");
-        let kweet= {message:this.state.searchValue};
+       // console.log("woop");
+        let kweet= {message:this.state.kweetValue};
         this.props.dispatch(kweetCreation(kweet));
-        
       }
-    
-      render() {
+
+  render() {
         const actions = [
             <FlatButton
-              label="Cancel"
+              label="Send"
               primary={true}
               onClick={this.handleClose}
             />,
-            <FlatButton
-              label="Submit"
-              primary={true}
-              disabled={!(this.state.credentials.username && this.state.credentials.password)}
-              onClick={(e) => { 
-                  this.setState({credentials: {username: "", password: ""}});
-                  this.props.dispatch(loginUser(this.state.credentials));
-                }}
-            />,
+            <TextField
+            hintText="Share what's on your mind!"
+          />
           ];
 
         return (
-          <Toolbar>
-            <ToolbarGroup firstChild={true} style={{width: '100%'}}>
-                <TextField hintText="Start typing..." style={{paddingLeft: 10}} fullWidth={true} value={this.state.kweetValue} onChange={(e, v) => this.setState({kweetValue: v})} />
-                <FlatButton icon={<ActionSearch />} onClick={() => this.createKweet()}/>
-            </ToolbarGroup>
-            <ToolbarGroup>
-              <ToolbarSeparator />
-              {!this.props.isAuthenticated
-                ? <RaisedButton label="Login" primary={true} onClick={() => this.handleOpen() } />
-                : <RaisedButton label="Logout" primary={true} onClick={() => this.props.dispatch(logoutUser()) } />
-              }
-            </ToolbarGroup>
+          <div class='kweetCreate'>
+                <TextField hintText={"Share what's on your mind!"} 
+                style={{paddingLeft: 10}}
+                fullWidth={false}
+                value={this.state.kweetValue} 
+                onChange={(e, v) => this.setState({kweetValue: v})} />
 
-            <Dialog title="Login" actions={actions} modal={true} open={this.state.showLoginDialog}>
-            <TextField
-                floatingLabelText="Username"
-                onChange={(e,v) => {let creds = {...this.state.credentials, username: v}; this.setState({credentials: creds})}}
-                value={this.state.credentials.username}
-            /> <br />
-            
-            <TextField
-                hintText="Password"
-                floatingLabelText="Password"
-                type="password"
-                onChange={(e,v) => {let creds = {...this.state.credentials, password: v}; this.setState({credentials: creds})}}
-                value={this.state.credentials.password}
-            />
-            </Dialog>
-            <Snackbar
-              open={this.props.errorMessage !== undefined && this.props.errorMessage.length > 0 && !this.state.credentials.username && !this.state.credentials.password}
-              message={this.props.errorMessage ? this.props.errorMessage : ''}
-              autoHideDuration={4000}
-            />
-          </Toolbar>
+                <FlatButton icon={<ActionSend/>} onClick={() => this.createKweet()}/>
+          </div>
         );
-      }
-    
+      }    
 }
 
 

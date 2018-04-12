@@ -98,4 +98,16 @@ public class UserDaoJPA implements UserDao {
         user.setLocation(location);
         em.merge(user);
     }
+
+    @Override
+    public void updateWebsite(User user, String website) {
+        user.setWebsite(website);
+        em.merge(user);
+    }
+
+    @Override
+    public void updateDisplayname(User user, String displayname) {
+        user.setDisplayname(displayname);
+        em.merge(user);
+    }
 }

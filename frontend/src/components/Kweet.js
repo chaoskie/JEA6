@@ -13,20 +13,18 @@ let dateDisplay = (date) => {
 }
 
 export const Kweet = ({kweet}) => (
-    <Card style={{width: '500px', marginBottom: 20}}>
-                            <CardHeader
-                                avatar={kweet.user.profilePhoto ? <Avatar src={kweet.user.profilePhoto}></Avatar> : <Avatar>{kweet.user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
-                                title={kweet.user.displayname}
-                                subtitle={'@'+kweet.user.username}
+    <Card className="kweetCard">
+        <CardHeader
+            avatar={kweet.user.profilePhoto
+                ? <Avatar src={kweet.user.profilePhoto}></Avatar>
+                : <Avatar>{kweet.user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
+            title={kweet.user.displayname}
+            subtitle={'@'+kweet.user.username}
         />
         <CardText>
         {kweet.message}
-        <div style={{
-            position: 'relative',
-            top: '-90px',
-            right: '-340px',
-            color: 'rgba(0, 0, 0, 0.54)'}}>
-                {dateDisplay(new Date(kweet.date))}
+        <div className="kweetDate">
+            {dateDisplay(new Date(kweet.date))}
         </div>
         
         </CardText>
