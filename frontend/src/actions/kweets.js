@@ -1,4 +1,4 @@
-import { callApiGet } from '../middleware/api';
+import { callApiGet, callApiPost } from '../middleware/api';
 
 export function kweetsHasErrored(bool) {
     return {
@@ -18,6 +18,24 @@ export function kweetsFetchDataSuccess(kweets) {
     return {
         type: 'KWEETS_FETCH_DATA_SUCCESS',
         payload: kweets
+    };
+}
+
+export function kweetCreatedSuccess(kweet) {
+    return {
+        type: 'KWEET_CREATED_SUCCESS',
+        payload: kweet
+    };
+}
+
+export function kweetCreation(kweet){
+    console.log('kweet creation');
+    return (dispatch) => {
+       // dispatch(kweetsIsLoading(true));
+        callApiPost('kweets', true, kweet)
+        .then(response => {console.log('response'); /*dispatch(kweetsIsLoading(false)); */return response.json(); })
+        .then(json => { dispatch(kweetCreatedSuccess(json))})
+        .catch(error => { console.log(error); /*dispatch(kweetsHasErrored(true))*/ });
     };
 }
 

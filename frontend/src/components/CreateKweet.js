@@ -20,12 +20,12 @@ const mapStateToProps = (state) => {
     };
 };
 
-class Navbar extends React.Component {
+class CreateKweet extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           value: 3,
-          searchValue: "",
+          kweetValue: "",
           showLoginDialog: false,
           credentials: {username: "", password: ""}
         };
@@ -80,7 +80,7 @@ class Navbar extends React.Component {
         return (
           <Toolbar>
             <ToolbarGroup firstChild={true} style={{width: '100%'}}>
-                <TextField hintText="Search kweets" style={{paddingLeft: 10}} fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({searchValue: v})} />
+                <TextField hintText="Start typing..." style={{paddingLeft: 10}} fullWidth={true} value={this.state.kweetValue} onChange={(e, v) => this.setState({kweetValue: v})} />
                 <FlatButton icon={<ActionSearch />} onClick={() => this.createKweet()}/>
             </ToolbarGroup>
             <ToolbarGroup>
@@ -118,4 +118,4 @@ class Navbar extends React.Component {
 }
 
 
-export default connect(mapStateToProps, null)(Navbar);
+export default connect(mapStateToProps, null)(CreateKweet);

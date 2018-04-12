@@ -20,6 +20,8 @@ export function kweets(state = [], action) {
     switch (action.type) {
         case 'KWEETS_FETCH_DATA_SUCCESS':
             return action.payload;
+        case 'KWEET_CREATED_SUCCESS':
+            return [action.payload, ...state];
         default:
             return state;
     }
