@@ -15,7 +15,7 @@ class App extends Component {
         <Profile />
         <UserList />
         <KweetList />
-        <CreateKweet />
+        <CreateKweet />        
       </div>
     );
   }

@@ -28,6 +28,13 @@ export function kweetCreatedSuccess(kweet) {
     };
 }
 
+export function kweetLikedSuccess(kweet) {
+    return {
+        type: 'KWEET_LIKED_SUCCESS',
+        payload: kweet
+    };
+}
+
 export function kweetCreation(kweet){
     //console.log('kweet creation');
     return (dispatch) => {
@@ -36,6 +43,15 @@ export function kweetCreation(kweet){
         .then(response => {console.log('response'); /*dispatch(kweetsIsLoading(false)); */return response.json(); })
         .then(json => { dispatch(kweetCreatedSuccess(json))})
         .catch(error => { console.log(error); /*dispatch(kweetsHasErrored(true))*/ });
+    };
+}
+
+export function likeTheKweet(kweet){
+    return (dispatch) => {
+        callApiPost('kweets', true, kweet)
+        .then(response => {console.log('response'); return response.json(); })
+        .then(json => { dispatch(kweetLikedSuccess(json))})
+        .catch(error => { console.log(error); });
     };
 }
 

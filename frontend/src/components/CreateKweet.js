@@ -56,9 +56,15 @@ class CreateKweet extends React.Component {
 
       createKweet() {
        // console.log("woop");
+       
+        if(this.state.kweetValue.length<=140){ 
         let kweet= {message:this.state.kweetValue};
         this.props.dispatch(kweetCreation(kweet));
+        }else{
+          alert("we currently do not support messages longer as 140 characters. Don't blame the developers, we didn't ask for this ristriction.");
+        }
       }
+
 
   render() {
         const actions = [

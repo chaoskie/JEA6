@@ -7,10 +7,11 @@ import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import {pinkA100} from 'material-ui/styles/colors';
 import Avatar from 'material-ui/Avatar';
 import { getUsernameFromJwt } from '../actions/users';
+import {likeTheKweet} from '../actions/users';
 
 let dateDisplay = (date) => {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString('en');
-}
+} 
 
 export const Kweet = ({kweet}) => (
     <Card className="kweetCard">
@@ -26,10 +27,19 @@ export const Kweet = ({kweet}) => (
         <div className="kweetDate">
             {dateDisplay(new Date(kweet.date))}
         </div>
+
         
         </CardText>
         <CardActions>
-            <RaisedButton label="Like" secondary={true} icon={<ActionFavorite color={pinkA100}/>} />
+            <RaisedButton label="Like" secondary={true} icon={<ActionFavorite color={pinkA100}/>} onClick={() => this.likeKweet()} />
         </CardActions>
     </Card>
 );
+
+class Likes extends React.Component{
+    likeKweet(){
+        //let kweet= {kweet};
+        //like
+        this.props.dispatch(likeTheKweet(kweet));
+    }
+}
