@@ -4,11 +4,10 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import {
-    usersFetchAll,usersFetchFollowers, getUsernameFromJwt,
+    usersFetchFollowers, getUsernameFromJwt,
     userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
     followUser, unfollowUser
 } from '../actions/users';
-import { kweetsFetchUser, kweetsFetchAll } from '../actions/kweets';
 import { Kweet } from './Kweet';
 import UserList from './UserList';
 import Avatar from 'material-ui/Avatar';

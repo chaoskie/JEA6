@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
-import { connect } from 'react-redux';
-import { usersFetchAll } from '../actions/users';
+import {Card, CardHeader} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
-import DeviceGPS from 'material-ui/svg-icons/device/gps-fixed';
-import Website from 'material-ui/svg-icons/action/language';
 
 export default class UserList extends Component {
-    // componentDidMount() {
-    //     this.props.dispatch(usersFetchAll());
-    // }
-
     render() {
         if (this.props.hasErrored) {
             return <p>Sorry! There was an error loading the users</p>;
@@ -36,4 +27,3 @@ export default class UserList extends Component {
         );
     }
 }
-// export default connect(mapStateToProps, null)(UserList);

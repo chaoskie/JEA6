@@ -1,15 +1,8 @@
 import React from 'react';
-import {Toolbar, ToolbarGroup, ToolbarSeparator} from 'material-ui/Toolbar';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSend from 'material-ui/svg-icons/content/send'
-//import ActionSearch from 'material-ui/svg-icons/action/search';
-import Snackbar from 'material-ui/Snackbar';
 import {kweetCreation} from '../actions/kweets';
-
-import {loginUser, logoutUser} from '../actions/authentication.js'
 
 import { connect } from 'react-redux';
 
@@ -26,61 +19,35 @@ class CreateKweet extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          open:false,
           kweetValue: ""
-         // showLoginDialog: false,
-         // credentials: {username: "", password: ""}
         };
       }
     
       handleChange = (event, index, value) => this.setState({value});
 
-     /* handleOpen = () => {
-        this.setState({showLoginDialog: true});
-      };
-    
-      handleClose = () => {
-        this.setState({showLoginDialog: false});
-      };*/
-
       componentWillReceiveProps(props) {
-          // if (!props.isAuthenticated && props.errorMessage) {
-          // Display error message
-          //   console.log(props.errorMessage);
-          // }
-
           if (props.isAuthenticated) {
             this.handleClose();
           }
       }
 
       createKweet() {
-       // console.log("woop");
         let kweet= {message:this.state.kweetValue};
         this.props.dispatch(kweetCreation(kweet));
       }
 
   render() {
-        const actions = [
-            <FlatButton
-              label="Send"
-              primary={true}
-              onClick={this.handleClose}
-            />,
-            <TextField
-            hintText="Share what's on your mind!"
-          />
-          ];
-
         return (
-          <div class='kweetCreate'>
-                <TextField hintText={"Share what's on your mind!"} 
+          <div className='kweetCreate'>
+                <TextField
+                hintText={"Share what's on your mind!"} 
+                errorText={this.state.kweetValue.length > 140 ? "Maximum length is 140 characters!" : ""}
                 style={{paddingLeft: 10}}
                 fullWidth={false}
                 value={this.state.kweetValue} 
                 onChange={(e, v) => this.setState({kweetValue: v})} />
 
-                <FlatButton icon={<ActionSend/>} onClick={() => this.createKweet()}/>
+                <FlatButton icon={<ActionSend/>} onClick={() => this.createKweet()} disabled={this.state.kweetValue.length > 140 || !this.state.kweetValue} />
           </div>
         );
       }    

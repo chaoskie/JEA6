@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import UserList from './components/UserList';
-import KweetList from './components/KweetList';
 import Navbar from './components/Navbar';
 import CreateKweet from './components/CreateKweet';
 import Profile from './components/Profile';
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import { connect } from 'react-redux';
-import {
-  usersFetchAll,usersFetchFollowers, getUsernameFromJwt,
-  userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
-  followUser, unfollowUser
-} from './actions/users';
-import { kweetsFetchUser, kweetsFetchAll } from './actions/kweets';
+import { usersFetchAll } from './actions/users';
+import { kweetsFetchAll } from './actions/kweets';
 
 const mapStateToProps = (state) => {
   return state;
