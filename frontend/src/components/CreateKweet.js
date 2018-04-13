@@ -30,8 +30,6 @@ class CreateKweet extends React.Component {
         this.props.dispatch(kweetCreation(kweet));
         this.setState({kweetValue:""});
         }
-      
-
 
   render() {
         return (

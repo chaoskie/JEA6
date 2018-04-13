@@ -5,6 +5,7 @@ import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import {pinkA100} from 'material-ui/styles/colors';
 import Avatar from 'material-ui/Avatar';
 import { getUsernameFromJwt } from '../actions/users';
+import { Link } from 'react-router-dom';
 
 
 let dateDisplay = (date) => {
@@ -21,7 +22,10 @@ export const Kweet = ({kweet, likeKweet, canLike, loggedIn}) => (
             subtitle={'@'+kweet.user.username}
         />
         <CardText>
-        {kweet.message}
+
+            
+        { kweet.message.replace(/#(\S*)/g, <Link to={`#$1`} activeClassName="active">$1</Link>)
+            /*kweet.message  + '  ' + <link to={'https://www.google.com'}> 'crap' </link>*/ } 
         <div className="kweetDate">
             {dateDisplay(new Date(kweet.date))}
         </div>
