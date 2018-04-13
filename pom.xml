@@ -98,15 +98,10 @@ because we want to be to able to execute mvn sonar:sonar without passing a profi
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
+            <version>8.0</version>
             <scope>provided</scope>
         </dependency>
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-            <!--<artifactId>jackson-core</artifactId>-->
-            <!--<version>2.9.4</version>-->
-        <!--</dependency>-->
+
         <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -126,13 +121,6 @@ because we want to be to able to execute mvn sonar:sonar without passing a profi
             <!--<artifactId>all-themes</artifactId>-->
             <!--<version>1.0.10</version>-->
         <!--</dependency>-->
-
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.9.4</version>
-        </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

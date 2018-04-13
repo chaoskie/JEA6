@@ -1,18 +1,16 @@
 package domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "users")
 @NamedQueries({
         @NamedQuery(name = "users.findByName", query = "SELECT u FROM User u WHERE u.username = :name")
 })
-@JsonIgnoreProperties({"password", "following"})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +18,7 @@ public class User implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String username;
+
 
     @Column(nullable = false)
     private String password;
@@ -33,7 +32,7 @@ public class User implements Serializable {
     private String location;
     private String website;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<User> following;
 
     protected User() { }
@@ -65,6 +64,7 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    @XmlTransient
     public String getPassword() {
         return password;
     }
@@ -121,6 +121,7 @@ public class User implements Serializable {
         this.website = website;
     }
 
+    //@XmlTransient
     public List<User> getFollowing() {
         return following;
     }
