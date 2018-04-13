@@ -7,27 +7,10 @@ import Avatar from 'material-ui/Avatar';
 import DeviceGPS from 'material-ui/svg-icons/device/gps-fixed';
 import Website from 'material-ui/svg-icons/action/language';
 
-
-const styles = theme => ({
-    root: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
-    }),
-});
-
-const mapStateToProps = (state) => {
-    return {
-        users: state.users,
-        hasErrored: state.usersHasErrored,
-        isLoading: state.usersIsLoading
-    };
-};
-
-class UserList extends Component {
-    componentDidMount() {
-        this.props.dispatch(usersFetchAll());
-    }
+export default class UserList extends Component {
+    // componentDidMount() {
+    //     this.props.dispatch(usersFetchAll());
+    // }
 
     render() {
         if (this.props.hasErrored) {
@@ -38,45 +21,19 @@ class UserList extends Component {
         }
         return (
             <div>
-                {this.props.users.map((user) => (
-                    <div key={user.id}>
-                        <Card style={{width: '500px', marginBottom: 20}}>
+                {this.props.users.map((u) => (
+                    <div key={u.id}>
+                        <Card>
                             <CardHeader
-                                avatar={user.profilePhoto ? <Avatar src={user.profilePhoto}></Avatar> : <Avatar>{user.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
-                                title={user.displayname}
-                                subtitle={'@'+user.username}
-                                actAsExpander={true}
-                                showExpandableButton={true}
+                                avatar={u.profilePhoto ? <Avatar src={u.profilePhoto}></Avatar> : <Avatar>{u.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
+                                title={u.displayname}
+                                subtitle={'@'+u.username}
                             />
-                            <CardActions>
-                                <RaisedButton label="Follow" />
-                            </CardActions>
-                            <CardText expandable={true}>
-                                <p>{user.bio}</p>
-                                {user.location &&
-                                    <div>
-                                        <DeviceGPS style={{color: 'rgba(0, 0, 0, 0.54)'}} />
-                                        <p style={{display: 'inline', verticalAlign: 'super', marginLeft: '5px'}}>
-                                            {user.location}
-                                        </p>
-                                    </div>
-                                }
-                                {user.website &&
-                                    <div>
-                                        <Website style={{color: 'rgba(0,0,0, 0.54'}} />
-                                        <p style={{display: 'inline', verticalAlign: 'super', marginLeft: '5px'}}>
-                                            {user.website}
-                                        </p>
-                                    </div>
-                                }
-                                <pre>{JSON.stringify({...user, following: []}, null, 2)}</pre>
-                            </CardText>
                         </Card>
-
                     </div>
                 ))}
             </div>
         );
     }
 }
-export default connect(mapStateToProps, null)(UserList);
+// export default connect(mapStateToProps, null)(UserList);

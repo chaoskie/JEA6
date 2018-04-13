@@ -21,6 +21,27 @@ export function usersFetchDataSuccess(users) {
     };
 }
 
+export function followersIsLoading(bool) {
+    return {
+        type: 'FOLLOWERS_IS_LOADING',
+        isLoading: bool
+    }
+}
+
+export function followersHasErrored(bool) {
+    return {
+        type: 'FOLLOWERS_HAS_ERRORED',
+        hasErrored: bool
+    }
+}
+
+export function followersFetchDataSuccess(user, followers) {
+    return {
+        type: 'FOLLOWERS_FETCH_DATA_SUCCESS',
+        payload: { user, followers }
+    }
+}
+
 export function userUpdateBioSuccess(user) {
     return {
         type: 'USERS_UPDATE_BIO_SUCCESS',
@@ -154,6 +175,24 @@ export function usersFetchAll() {
             .then((users) => dispatch(usersFetchDataSuccess(users)))
             .catch(() => dispatch(usersHasErrored(true)));
     };
+}
+
+export function usersFetchFollowers(user) {
+    return (dispatch) => {
+        dispatch(followersIsLoading(true));
+        callApiGet(`users/${user.username}/followers`, false) 
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            dispatch(followersIsLoading(false));
+            return response;
+        })
+        .then((response) => response.json())
+        .then((followers) => dispatch(followersFetchDataSuccess(user, followers)))
+        .catch(() => dispatch(followersHasErrored(true)));
+    }
 }
 
 export function followUser(userToFollow) {

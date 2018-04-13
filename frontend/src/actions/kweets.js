@@ -28,18 +28,15 @@ export function kweetsFetchAll() {
         .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
         .then(json => { dispatch(kweetsFetchDataSuccess(json))})
         .catch(error => { dispatch(kweetsHasErrored(true)) });
-        
-
-        // fetch(url)
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw Error(response.statusText);
-        //         }
-        //         dispatch(kweetsIsLoading(false));
-        //         return response;
-        //     })
-        //     .then((response) => response.json())
-        //     .then((kweets) => dispatch(kweetsFetchDataSuccess(kweets)))
-        //     .catch(() => dispatch(kweetsHasErrored(true)));
     };
+}
+
+export function kweetsFetchUser(user) {
+    return (dispatch) => {
+        dispatch(kweetsIsLoading(true));
+        callApiGet('kweets/' + user.username, false)
+        .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
+        .then(json => { dispatch(kweetsFetchDataSuccess(json))})
+        .catch(error => { dispatch(kweetsHasErrored(true)) });
+    }
 }
