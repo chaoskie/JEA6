@@ -28,11 +28,12 @@ public class User implements Serializable {
     private List<Role> roles = new ArrayList<Role>() {{ add(Role.User); }};
     private String displayname;
     private String profilePhoto;
+    private String email;
     private String bio;
     private String location;
     private String website;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<User> following;
 
     protected User() { }
@@ -144,5 +145,14 @@ public class User implements Serializable {
         }
 
         this.following.remove(user);
+    }
+
+    @XmlTransient
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

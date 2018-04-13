@@ -1,7 +1,11 @@
 package service;
 
 import dao.*;
+import domain.Role;
 import domain.User;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -19,6 +23,7 @@ public class UserService {
     @Inject @JPA
     KweetDao kweetDao;
 
+    private String secretKey = "kwetterSecretKeyDeluxe";
 
     public List<User> getUsers() {
         return userDao.getUsers();
@@ -147,5 +152,21 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             return text;
         }
+    }
+
+    public String issueToken(String username) {
+        User user = getUserByName(username);
+
+        JwtBuilder builder = Jwts.builder().claim("username", username).signWith(SignatureAlgorithm.HS512, secretKey);
+
+        if(user.getRole().contains(Role.Moderator)) {
+            builder.claim("moderator", true);
+        }
+
+        if(user.getRole().contains(Role.Administrator)) {
+            builder.claim("administrator", true);
+        }
+
+        return builder.compact();
     }
 }

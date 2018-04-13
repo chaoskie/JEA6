@@ -14,8 +14,6 @@ import java.io.Serializable;
 
 @Path("/authentication")
 public class AuthenticationController {
-    private String secretKey = "kwetterSecretKeyDeluxe";
-
     @Inject
     UserService userService;
 
@@ -32,7 +30,7 @@ public class AuthenticationController {
         }
 
         // Issue a token for the user
-        String token = issueToken(username);
+        String token = userService.issueToken(username);
 
         // Return the token on the response
         return Response.ok(token).build();
@@ -42,21 +40,6 @@ public class AuthenticationController {
         return userService.login(username, password);
     }
 
-    private String issueToken(String username) {
-        User user = userService.getUserByName(username);
-
-        JwtBuilder builder = Jwts.builder().claim("username", username).signWith(SignatureAlgorithm.HS512, secretKey);
-
-        if(user.getRole().contains(Role.Moderator)) {
-            builder.claim("moderator", true);
-        }
-
-        if(user.getRole().contains(Role.Administrator)) {
-            builder.claim("administrator", true);
-        }
-
-        return builder.compact();
-    }
 }
 
 class Credentials implements Serializable {

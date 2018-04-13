@@ -9,13 +9,17 @@ import domain.Kweet;
 import domain.Role;
 import domain.User;
 import service.KweetService;
+import service.MailService;
 import service.UserService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +36,9 @@ public class UserController extends Application {
 
     @Inject
     KweetService kweetService;
+
+    @Inject
+    MailService mailService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +86,26 @@ public class UserController extends Application {
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch(Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registerUser(UserRegisterRequest request) {
+        try {
+            User u = new User(request.getUsername(), request.getPassword(), new ArrayList<Role>(){{add(Role.User); }}, request.getUsername(), "", "", "", "");
+            u.setEmail(request.getEmail());
+            userService.createUser(u);
+
+            // Email user
+            mailService.sendEmail(request.getEmail(), "Account successfully created", "Welcome to Kwetter " + u.getUsername() + "!");
+
+            String token = userService.issueToken(u.getUsername());
+            return Response.status(Response.Status.CREATED).entity(token).build();
+
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
         }
     }
@@ -214,6 +241,13 @@ public class UserController extends Application {
         return result;
     }
 
+    @GET
+    @Path("demoMail/{email}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String demoMail(@PathParam("email") String email) throws UnsupportedEncodingException, MessagingException {
+        mailService.sendEmail(email, "Test Email from Kwetter", "This is a test email from Kwetter");
+        return "ok";
+    }
 
     @GET
     @Path("demoAdd")
@@ -247,5 +281,35 @@ public class UserController extends Application {
         String username = principal.getName();
 
         return userService.getUserByName(username);
+    }
+}
+
+class UserRegisterRequest implements Serializable {
+    private String username;
+    private String password;
+    private String email;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
