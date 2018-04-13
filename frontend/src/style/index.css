@@ -49,3 +49,15 @@ body {
   right: -340px;
   color: rgba(0, 0, 0, 0.54);
 }
+
+.kweetCreate {
+  background-color:#fff;
+  font:bold 14px;
+  color:#1E88E5;
+  width:100%;
+  height:auto;
+  padding:1%;
+  border-top:1px solid #1E88E5;
+  bottom: 0; 
+  position: fixed;  
+}

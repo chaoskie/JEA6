@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
+import {kweetCreation} from '../actions/kweets';
 
 import {loginUser, logoutUser} from '../actions/authentication.js'
 
@@ -49,6 +50,13 @@ class Navbar extends React.Component {
             this.handleClose();
           }
       }
+
+      createKweet() {
+        console.log("woop");
+        let kweet= {message:this.state.searchValue};
+        this.props.dispatch(kweetCreation(kweet));
+        
+      }
     
       render() {
         const actions = [
@@ -69,6 +77,10 @@ class Navbar extends React.Component {
           ];
 
         return (
+          /*<Toolbar>
+            <ToolbarGroup firstChild={true} style={{width: '100%'}}>
+                <TextField hintText="Search kweets" style={{paddingLeft: 10}} fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({searchValue: v})} />
+                <FlatButton icon={<ActionSearch />} onClick={() => this.createKweet()}/>*/
           <Toolbar className="navbar">
             <ToolbarGroup className="navbarSearch" firstChild={true}>
                 <TextField hintText="Search kweets" fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({searchValue: v})} />

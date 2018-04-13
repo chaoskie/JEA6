@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import UserList from './components/UserList';
 import KweetList from './components/KweetList';
 import Navbar from './components/Navbar';
+import CreateKweet from './components/CreateKweet';
 import Profile from './components/Profile';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import { connect } from 'react-redux';
@@ -30,6 +31,7 @@ class App extends Component {
       <div>
         <Navbar />
         <Profile user={this.props.users[0]} />
+        <CreateKweet />
       </div>
     );
   }
