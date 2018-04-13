@@ -37,7 +37,9 @@ export function followersIsLoading(state = false, action) {
 export function users(state = [], action) {
     switch (action.type) {
         case 'USERS_FETCH_DATA_SUCCESS':
+        {
             return action.payload;
+        }
 
         case 'FOLLOWERS_FETCH_DATA_SUCCESS':
         {

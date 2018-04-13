@@ -23,13 +23,7 @@ class CreateKweet extends React.Component {
         };
       }
     
-      handleChange = (event, index, value) => this.setState({value});
-
-      componentWillReceiveProps(props) {
-          if (props.isAuthenticated) {
-            this.handleClose();
-          }
-      }
+      componentWillReceiveProps(props) { }
 
       createKweet() {
         let kweet= {message:this.state.kweetValue};

@@ -28,15 +28,17 @@ class Navbar extends React.Component {
           showLoginDialog: false,
           credentials: {username: "", password: ""}
         };
+
+        this.handleClose = this.handleClose.bind(this);
       }
     
       handleChange = (event, index, value) => this.setState({value});
 
-      handleOpen = () => {
+      handleOpen() {
         this.setState({showLoginDialog: true});
       };
     
-      handleClose = () => {
+      handleClose() {
         this.setState({showLoginDialog: false});
       };
 
@@ -52,7 +54,6 @@ class Navbar extends React.Component {
       }
 
       createKweet() {
-        console.log("woop");
         let kweet= {message:this.state.searchValue};
         this.props.dispatch(kweetCreation(kweet));
         

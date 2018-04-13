@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { usersFetchAll } from './actions/users';
 import { kweetsFetchAll } from './actions/kweets';
 
-const mapStateToProps = (state) => {
-  return state;
+const mapStateToProps = (state, ownProps) => {
+  return {...state};
 };
 
 class App extends Component {
@@ -23,7 +23,7 @@ class App extends Component {
     return (
       <div>
         <Navbar />
-        <Profile user={this.props.users[0]} />
+        <Profile user={this.props.users.find(u => u.username === this.props.router.location.pathname.substring(1))} />
         <CreateKweet />
       </div>
     );
