@@ -97,15 +97,15 @@ public class KweetController extends Application {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/like")
     @Secured
     public Response likeKweet(@PathParam("id") int id) {
         try {
             User user = getUserFromToken();
-            int count =  kweetService.likeKweet(user, id);
+            Kweet kweet =  kweetService.likeKweet(user, id);
 
-            return Response.status(Response.Status.OK).entity(count).build();
+            return Response.status(Response.Status.OK).entity(kweet).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (IllegalArgumentException e) {
@@ -117,15 +117,15 @@ public class KweetController extends Application {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/unlike")
     @Secured
     public Response unlikeKweet(@PathParam("id") int id) {
         try {
             User user = getUserFromToken();
-            int count =  kweetService.unlikeKweet(user, id);
+            Kweet kweet =  kweetService.unlikeKweet(user, id);
 
-            return Response.status(Response.Status.OK).entity(count).build();
+            return Response.status(Response.Status.OK).entity(kweet).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (IllegalArgumentException e) {

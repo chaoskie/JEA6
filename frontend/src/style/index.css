@@ -1,8 +1,12 @@
-/* body {
-  margin: 0;
-  padding: 0;
+body {
   font-family: sans-serif;
-} */
+  overflow-y: scroll;
+} 
+
+#root > div {
+  margin: 0 auto;
+  width: 75%;
+}
 
 .navbarSearch {
   width: 100%
@@ -13,9 +17,10 @@
 }
 
 .profileCard {
-  width: 500px;
+  width: 75%;
+  margin: 0 auto;
   margin-top: 10px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .profileEditField {
@@ -28,15 +33,21 @@
   margin-left: 5px;
 }
 
+.profileTabs {
+  width: 75%;
+  margin: 0 auto;
+}
+
 .kweetCard {
-  width: 500px;
+  /* width: 75%; */
+  margin: 0 auto;
   margin-bottom: 20px;
 }
 
 .kweetDate {
-  position: 'relative';
+  position: relative;
   top: -90px;
-  right: -340px;
+  right: -87%;
   color: rgba(0, 0, 0, 0.54);
 }
 

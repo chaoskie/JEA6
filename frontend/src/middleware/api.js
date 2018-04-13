@@ -17,7 +17,7 @@ function callApi(endpoint, authenticated, config) {
             }
         }
         else {
-            throw "No token saved!"
+            throw new Error("No token saved!");
         }
     }
     

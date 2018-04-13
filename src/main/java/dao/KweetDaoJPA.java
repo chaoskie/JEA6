@@ -71,17 +71,17 @@ public class KweetDaoJPA implements KweetDao {
         em.remove(k);
     }
 
-    public int likeKweet(Kweet k, User u) {
+    public Kweet likeKweet(Kweet k, User u) {
         k.addLike(u);
         em.merge(k);
 
-        return k.getLikes().size();
+        return k;
     }
 
-    public int unlikeKweet(Kweet k, User u) {
+    public Kweet unlikeKweet(Kweet k, User u) {
         k.removeLike(u);
         em.merge(k);
 
-        return k.getLikes().size();
+        return k;
     }
 }

@@ -28,10 +28,17 @@ export function kweetCreatedSuccess(kweet) {
     };
 }
 
-export function kweetLikedSuccess(kweet) {
+export function kweetUnlikedSuccess(kweet, user) {
+    return {
+        type: 'KWEET_UNLIKED_SUCCESS',
+        payload: {kweet, user}
+    };
+}
+
+export function kweetLikedSuccess(kweet, user) {
     return {
         type: 'KWEET_LIKED_SUCCESS',
-        payload: kweet
+        payload: {kweet,user}
     };
 }
 
@@ -46,11 +53,20 @@ export function kweetCreation(kweet){
     };
 }
 
-export function likeTheKweet(kweet){
+export function unlikeTheKweet(kweet, user){
     return (dispatch) => {
-        callApiPost('kweets', true, kweet)
+        callApiPost(`kweets/${kweet.id}/unlike`, true, null)
         .then(response => {console.log('response'); return response.json(); })
-        .then(json => { dispatch(kweetLikedSuccess(json))})
+        .then(json => { dispatch(kweetUnlikedSuccess(json, user))})
+        .catch(error => { console.log(error); });
+    };
+}
+
+export function likeTheKweet(kweet, user){
+    return (dispatch) => {
+        callApiPost(`kweets/${kweet.id}/like`, true, null)
+        .then(response => {console.log('response'); return response.json(); })
+        .then(json => { dispatch(kweetLikedSuccess(json, user))})
         .catch(error => { console.log(error); });
     };
 }
@@ -62,18 +78,15 @@ export function kweetsFetchAll() {
         .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
         .then(json => { dispatch(kweetsFetchDataSuccess(json))})
         .catch(error => { dispatch(kweetsHasErrored(true)) });
-        
-
-        // fetch(url)
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw Error(response.statusText);
-        //         }
-        //         dispatch(kweetsIsLoading(false));
-        //         return response;
-        //     })
-        //     .then((response) => response.json())
-        //     .then((kweets) => dispatch(kweetsFetchDataSuccess(kweets)))
-        //     .catch(() => dispatch(kweetsHasErrored(true)));
     };
+}
+
+export function kweetsFetchUser(user) {
+    return (dispatch) => {
+        dispatch(kweetsIsLoading(true));
+        callApiGet('kweets/' + user.username, false)
+        .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
+        .then(json => { dispatch(kweetsFetchDataSuccess(json))})
+        .catch(error => { dispatch(kweetsHasErrored(true)) });
+    }
 }

@@ -4,19 +4,27 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import {
-    usersFetchAll, getUsernameFromJwt,
+    usersFetchFollowers, getUsernameFromJwt,
     userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
     followUser, unfollowUser
 } from '../actions/users';
+import { Kweet } from './Kweet';
+import UserList from './UserList';
 import Avatar from 'material-ui/Avatar';
 import DeviceGPS from 'material-ui/svg-icons/device/gps-fixed';
 import Website from 'material-ui/svg-icons/action/language';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import Message from 'material-ui/svg-icons/communication/message';
+import People from 'material-ui/svg-icons/social/people';
+import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
+import {likeTheKweet, unlikeTheKweet} from '../actions/kweets';
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
     return {
         users: state.users,
-        user: state.users[1],
+        user: ownProps.user,
+        kweets: state.kweets,
         hasErrored: state.usersHasErrored,
         isLoading: state.usersIsLoading,
         isAuthenticated: state.authentication.isAuthenticated,
@@ -28,30 +36,43 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          editing: false,
-          editingValues: {displayName: '', bio: '', website: '', location: ''}
+            editing: false,
+            editingValues: { displayName: '', bio: '', website: '', location: '' }
         };
 
         this.handleEditProfile = this.handleEditProfile.bind(this);
         this.handleFollow = this.handleFollow.bind(this);
-      }
-    
-    componentDidMount() {
-        if (!this.props.users) {
-            this.props.dispatch(usersFetchAll());
+    }
+
+    componentDidMount() { }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (!nextProps) { return null; }
+
+        if (nextProps.user && !nextProps.user.followers) {
+            console.log('Fetching followers');
+            nextProps.dispatch(usersFetchFollowers(nextProps.user));
+            return null;
         }
-    }
 
-    userIsFollowing() {
+        return null;
+      }
+
+    userIsFollowing(user) {
         return (
-            this.props.isAuthenticated 
-            && this.props.users.find(u => u.username === this.props.username)
-               .following.find(f => f.username === this.props.user.username)
-            ? true : false)
+            this.props.isAuthenticated
+                && this.props.users.find(u => u.username === this.props.username)
+                    .following.find(f => f.username === user.username)
+                ? true : false)
     }
 
-    userIsMyself() {
-        return this.props.isAuthenticated && this.props.username === this.props.user.username;
+    userIsMyself(user) {
+        return this.props.isAuthenticated && this.props.username === user.username;
+    }
+
+    getUserKweets() {
+        let kweets = this.props.kweets.filter(kweet => kweet.user.id === this.props.user.id);
+        return kweets;
     }
 
     handleEditProfile() {
@@ -63,7 +84,7 @@ class Profile extends Component {
                 location: this.props.user.location
             };
 
-            this.setState({editing: true, editingValues});
+            this.setState({ editing: true, editingValues });
         } else {
             if (this.state.editingValues.displayname !== this.props.user.displayname) {
                 console.log("Display name changed");
@@ -89,18 +110,36 @@ class Profile extends Component {
                 this.props.dispatch(userUpdateWebsite(user))
             }
 
-            this.setState({editing: false});
+            this.setState({ editing: false });
         }
     }
 
-    handleFollow() {
+    handleFollow(user) {
         if (this.userIsFollowing()) {
             // Unfollow
-            this.props.dispatch(unfollowUser(this.props.user));
+            this.props.dispatch(unfollowUser(user));
         } else {
             // Follow
-            this.props.dispatch(followUser(this.props.user));
+            this.props.dispatch(followUser(user));
         }
+    }
+
+    handleLike(kweet) {
+        if (this.userAlreadyLike(kweet)) {
+            // unlike
+           
+            this.props.dispatch(unlikeTheKweet(kweet, this.props.users.find(u => u.username===this.props.username)));
+        } else {
+            // like
+            this.props.dispatch(likeTheKweet(kweet, this.props.users.find(u => u.username===this.props.username)));
+        }
+    }
+
+    userAlreadyLike(kweet) {
+        return (
+            this.props.isAuthenticated
+                && kweet.likes.find(u => u.username === this.props.username)                    
+                ? true : false)
     }
 
     render() {
@@ -120,68 +159,99 @@ class Profile extends Component {
                             ? <TextField
                                 id={'edit-displayname-field'}
                                 value={this.state.editingValues.displayname}
-                                onChange={(e, v) => {let editingValues = {...this.state.editingValues, displayname: v}; this.setState({editingValues}); }} /> 
+                                onChange={(e, v) => { let editingValues = { ...this.state.editingValues, displayname: v }; this.setState({ editingValues }); }} />
                             : this.props.user.displayname}
                         subtitle={'@' + this.props.user.username}
                     />
                     <CardActions>
                         <RaisedButton
-                            label={this.userIsFollowing() ? "Unfollow" : "Follow" }
-                            disabled={!this.props.isAuthenticated || this.userIsMyself()}
-                            onClick={this.handleFollow}
-                            />
+                            label={this.userIsFollowing(this.props.user) ? "Unfollow" : "Follow"}
+                            disabled={!this.props.isAuthenticated || this.userIsMyself(this.props.user)}
+                            onClick={() => this.handleFollow(this.props.user)}
+                        />
 
-                        {this.userIsMyself() &&
+                        {this.userIsMyself(this.props.user) &&
                             <RaisedButton label={this.state.editing ? "Save profile" : "Edit profile"} onClick={this.handleEditProfile} />
                         }
                     </CardActions>
                     <CardText>
                         {this.state.editing
-                        ? <TextField
-                            id={'edit-bio-field'}
-                            multiLine={true}
-                            value={this.state.editingValues.bio}
-                            onChange={(e, v) => { let editingValues = {...this.state.editingValues, bio: v}; this.setState({editingValues}); }}
-                          />
-                        : <p>{this.props.user.bio}</p>
+                            ? <TextField
+                                id={'edit-bio-field'}
+                                multiLine={true}
+                                value={this.state.editingValues.bio}
+                                onChange={(e, v) => { let editingValues = { ...this.state.editingValues, bio: v }; this.setState({ editingValues }); }}
+                            />
+                            : <p>{this.props.user.bio}</p>
                         }
-                        
-                        {(this.props.user.location || this.userIsMyself()) &&
+
+                        {(this.props.user.location || this.userIsMyself(this.props.user)) &&
                             <div>
                                 <DeviceGPS style={{ color: 'rgba(0, 0, 0, 0.54)' }} />
                                 {this.state.editing
-                                ? <TextField
-                                    id={'edit-location-field'}
-                                    className="profileEditField"
-                                    value={this.state.editingValues.location}
-                                    onChange={(e, v) => {let editingValues = {...this.state.editingValues, location: v }; this.setState({editingValues}); }}
-                                  />
-                                : <p className="profileField">
-                                    {this.props.user.location}
-                                  </p>
+                                    ? <TextField
+                                        id={'edit-location-field'}
+                                        className="profileEditField"
+                                        value={this.state.editingValues.location}
+                                        onChange={(e, v) => { let editingValues = { ...this.state.editingValues, location: v }; this.setState({ editingValues }); }}
+                                    />
+                                    : <p className="profileField">
+                                        {this.props.user.location}
+                                    </p>
                                 }
-                                
+
                             </div>
                         }
-                        {(this.props.user.website || this.userIsMyself()) &&
+                        {(this.props.user.website || this.userIsMyself(this.props.user)) &&
                             <div>
                                 <Website style={{ color: 'rgba(0,0,0, 0.54' }} />
                                 {this.state.editing
-                                ? <TextField
-                                    id={'edit-website-field'}
-                                    className="profileEditField"
-                                    value={this.state.editingValues.website}
-                                    onChange={(e, v) => {let editingValues = {...this.state.editingValues, website: v }; this.setState({editingValues}); }}
-                                  />
-                                : <p className="profileField">
-                                    {this.props.user.website}
-                                  </p>
+                                    ? <TextField
+                                        id={'edit-website-field'}
+                                        className="profileEditField"
+                                        value={this.state.editingValues.website}
+                                        onChange={(e, v) => { let editingValues = { ...this.state.editingValues, website: v }; this.setState({ editingValues }); }}
+                                    />
+                                    : <p className="profileField">
+                                        {this.props.user.website}
+                                    </p>
                                 }
                             </div>
                         }
                     </CardText>
                 </Card>
-
+                <Tabs className="profileTabs">
+                    <Tab
+                        icon={<Message />}
+                        label={`Kweets (${this.getUserKweets().length})`}>
+                        {this.getUserKweets().map(kweet => 
+                            <Kweet key={kweet.id} 
+                            canLike={() => this.userAlreadyLike(kweet)} 
+                            kweet={kweet} 
+                            likeKweet={() => {                               
+                                this.handleLike(kweet);                                
+                            }}
+                            loggedIn={this.props.isAuthenticated} 
+                            />
+                        )}
+                        
+                    </Tab>
+                    <Tab
+                        icon={<People />}
+                        label={`Following (${this.props.user.following.length})`}>
+                        {this.props.user.following.length > 0
+                        ? <UserList users={this.props.user.following} />
+                        : <h1>This user does not follow anyone!</h1> }
+                        </Tab>
+                    <Tab
+                        icon={<PeopleOutline />}
+                        label={`Followers (${this.props.user.followers ? this.props.user.followers.length : 0})`}>
+                        {(this.props.user.followers && this.props.user.followers.length > 0)
+                        ? <UserList users={this.props.user.followers} />
+                        : <h1>This user has no followers!</h1> }
+                        </Tab>
+                    
+                </Tabs>
             </div>
 
         );

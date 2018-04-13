@@ -22,6 +22,11 @@ export function kweets(state = [], action) {
             return action.payload;
         case 'KWEET_CREATED_SUCCESS':
             return [action.payload, ...state];
+        case 'KWEET_LIKED_SUCCESS':
+        case 'KWEET_UNLIKED_SUCCESS':
+        {
+            return state.map(k => k.id === action.payload.kweet.id ? action.payload.kweet : k);
+        }        
         default:
             return state;
     }

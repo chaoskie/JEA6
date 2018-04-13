@@ -1,19 +1,17 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { connect } from "react-redux";
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import {pinkA100} from 'material-ui/styles/colors';
 import Avatar from 'material-ui/Avatar';
 import { getUsernameFromJwt } from '../actions/users';
-import {likeTheKweet} from '../actions/users';
+
 
 let dateDisplay = (date) => {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString('en');
 } 
 
-export const Kweet = ({kweet}) => (
+export const Kweet = ({kweet, likeKweet, canLike, loggedIn}) => (
     <Card className="kweetCard">
         <CardHeader
             avatar={kweet.user.profilePhoto
@@ -31,15 +29,8 @@ export const Kweet = ({kweet}) => (
         
         </CardText>
         <CardActions>
-            <RaisedButton label="Like" secondary={true} icon={<ActionFavorite color={pinkA100}/>} onClick={() => this.likeKweet()} />
+            <RaisedButton label={canLike() ? "Unlike":"Like"} secondary={true} icon={<ActionFavorite color={pinkA100}/>} onClick={likeKweet} disabled={!loggedIn}  />
         </CardActions>
     </Card>
 );
 
-class Likes extends React.Component{
-    likeKweet(){
-        //let kweet= {kweet};
-        //like
-        this.props.dispatch(likeTheKweet(kweet));
-    }
-}
