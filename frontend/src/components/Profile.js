@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {
     usersFetchFollowers, getUsernameFromJwt,
     userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
-    followUser, unfollowUser
+    followUser, unfollowUser, isModeratorFromJwt
 } from '../actions/users';
 import { Kweet } from './Kweet';
 import UserList from './UserList';
@@ -17,7 +17,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import Message from 'material-ui/svg-icons/communication/message';
 import People from 'material-ui/svg-icons/social/people';
 import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
-import {likeTheKweet, unlikeTheKweet} from '../actions/kweets';
+import {likeTheKweet, unlikeTheKweet, deleteTheKweet} from '../actions/kweets';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -135,6 +135,20 @@ class Profile extends Component {
         }
     }
 
+    deleteKweet(kweet){
+        console.log('starting delete procedure');
+        if(this.userOwnKweet(kweet)){
+            this.props.dispatch(deleteTheKweet(kweet));
+        }
+    }
+
+    userOwnKweet(kweet){
+        console.log('Do I own this '+isModeratorFromJwt());        
+        return (            
+            this.props.isAuthenticated && ( kweet.user.username===this.props.username || isModeratorFromJwt())
+        );
+    }
+
     userAlreadyLike(kweet) {
         return (
             this.props.isAuthenticated
@@ -232,9 +246,11 @@ class Profile extends Component {
                                 this.handleLike(kweet);                                
                             }}
                             loggedIn={this.props.isAuthenticated} 
+                            deleteKweet={() => {   
+                                this.deleteKweet(kweet);                                
+                            }} 
                             />
-                        )}
-                        
+                        )}                        
                     </Tab>
                     <Tab
                         icon={<People />}

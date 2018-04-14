@@ -1,4 +1,4 @@
-import { callApiGet, callApiPost } from '../middleware/api';
+import { callApiGet, callApiPost, callApiDelete } from '../middleware/api';
 
 export function kweetsHasErrored(bool) {
     return {
@@ -42,6 +42,14 @@ export function kweetLikedSuccess(kweet, user) {
     };
 }
 
+export function kweetDeleteSuccess(kweet, user) {
+    return {
+        type: 'KWEET_DELETE_SUCCESS',
+        payload: {kweet,user}
+    };
+}
+
+
 export function kweetCreation(kweet){
     //console.log('kweet creation');
     return (dispatch) => {
@@ -50,6 +58,22 @@ export function kweetCreation(kweet){
         .then(response => {console.log('response'); /*dispatch(kweetsIsLoading(false)); */return response.json(); })
         .then(json => { dispatch(kweetCreatedSuccess(json))})
         .catch(error => { console.log(error); /*dispatch(kweetsHasErrored(true))*/ });
+    };
+}
+
+export function deleteTheKweet(kweet, user){
+    console.log('action delete');
+    return (dispatch) => {
+        callApiPost(`kweets/del/${kweet.id}`, true, null)
+        //.then(response => {return response.json(); })
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+
+            dispatch(kweetDeleteSuccess(kweet, user));
+        })
+        .catch(error => { console.log(error); });
     };
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import ActionSend from 'material-ui/svg-icons/content/send'
+import ActionSend from 'material-ui/svg-icons/content/send';
 import {kweetCreation} from '../actions/kweets';
 
 import { connect } from 'react-redux';
