@@ -18,6 +18,7 @@ import Message from 'material-ui/svg-icons/communication/message';
 import People from 'material-ui/svg-icons/social/people';
 import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
 import {likeTheKweet, unlikeTheKweet, deleteTheKweet} from '../actions/kweets';
+import { Link } from 'react-router-dom'
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -174,7 +175,7 @@ class Profile extends Component {
                                 id={'edit-displayname-field'}
                                 value={this.state.editingValues.displayname}
                                 onChange={(e, v) => { let editingValues = { ...this.state.editingValues, displayname: v }; this.setState({ editingValues }); }} />
-                            : this.props.user.displayname}
+                            : <Link className="profileLink" to={`/${this.props.user.username}`}>{this.props.user.displayname}</Link>}
                         subtitle={'@' + this.props.user.username}
                     />
                     <CardActions>

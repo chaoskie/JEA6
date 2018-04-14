@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Card, CardHeader} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
+import { Link } from 'react-router-dom';
 
 export default class UserList extends Component {
     render() {
@@ -17,7 +18,7 @@ export default class UserList extends Component {
                         <Card>
                             <CardHeader
                                 avatar={u.profilePhoto ? <Avatar src={u.profilePhoto}></Avatar> : <Avatar>{u.displayname.split(' ').map(s => s[0]).join('')}</Avatar>}
-                                title={u.displayname}
+                                title={<Link className="profileLink" to={`/${u.username}`}>{u.displayname}</Link>}
                                 subtitle={'@'+u.username}
                             />
                         </Card>
