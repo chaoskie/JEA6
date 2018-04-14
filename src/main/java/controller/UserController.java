@@ -91,20 +91,18 @@ public class UserController extends Application {
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserRegisterRequest request) {
         try {
             User u = new User(request.getUsername(), request.getPassword(), new ArrayList<Role>(){{add(Role.User); }}, request.getUsername(), "", "", "", "");
             u.setEmail(request.getEmail());
-            userService.createUser(u);
+            u = userService.createUser(u);
 
             // Email user
             mailService.sendEmail(request.getEmail(), "Account successfully created", "Welcome to Kwetter " + u.getUsername() + "!");
 
-            String token = userService.issueToken(u.getUsername());
-            return Response.status(Response.Status.CREATED).entity(token).build();
-
+            return Response.status(Response.Status.CREATED).entity(u).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
         }
