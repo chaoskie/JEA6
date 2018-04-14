@@ -105,6 +105,16 @@ export function kweetsFetchAll() {
     };
 }
 
+export function findKweet(s){
+    return(dispatch) => {
+        dispatch(kweetsIsLoading(true));
+        callApiGet('kweets/search?v=' + s, false)
+        .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
+        .then(json => { dispatch(kweetsFetchDataSuccess(json))})
+        .catch(error => { dispatch(kweetsHasErrored(true)) });
+    };
+}
+
 export function kweetsFetchUser(user) {
     return (dispatch) => {
         dispatch(kweetsIsLoading(true));

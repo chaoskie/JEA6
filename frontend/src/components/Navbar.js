@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
-import { kweetCreation } from '../actions/kweets';
+import { kweetCreation, findKweet } from '../actions/kweets';
 
 import { loginUser, logoutUser } from '../actions/authentication';
 import { registerUser } from '../actions/users';
@@ -25,6 +25,7 @@ class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+     // kweets: state.kweets,
       searchValue: "",
       showLoginDialog: false,
       showRegisterDialog: false,
@@ -61,10 +62,13 @@ class Navbar extends React.Component {
     }
   }
 
-  createKweet() {
+ /* createKweet() {
     let kweet = { message: this.state.searchValue };
     this.props.dispatch(kweetCreation(kweet));
+  }*/
 
+  searchKweets(s){
+    this.props.dispatch(findKweet(this.state.searchValue));
   }
 
   render() {
@@ -106,7 +110,7 @@ class Navbar extends React.Component {
       <Toolbar className="navbar">
         <ToolbarGroup className="navbarSearch" firstChild={true}>
           <TextField hintText="Search kweets" fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({ searchValue: v })} />
-          <FlatButton icon={<ActionSearch />} onClick={() => console.log(this.state.searchValue)} />
+          <FlatButton icon={<ActionSearch />} onClick={this.searchKweets(this.state.searchValue) /*=> console.log(this.state.searchValue)*/} />
         </ToolbarGroup>
         <ToolbarGroup>
           <ToolbarSeparator />
