@@ -1,4 +1,5 @@
 import { callApiGet, callApiPut, callApiPost } from '../middleware/api';
+import { loginUser } from './authentication';
 
 export function usersHasErrored(bool) {
     return {
@@ -19,6 +20,13 @@ export function usersFetchDataSuccess(users) {
         type: 'USERS_FETCH_DATA_SUCCESS',
         payload: users
     };
+}
+
+export function userRegisteredSuccess(user) {
+    return {
+        type: 'USER_REGISTER_SUCCESS',
+        payload: user
+    }
 }
 
 export function followersIsLoading(bool) {
@@ -96,67 +104,89 @@ export function userUnfollowedFailed() {
     }
 }
 
+export function registerUser(creds) {
+    return dispatch => {
+        return callApiPost('users', false, creds)
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+
+                return response;
+            })
+            .then((response) => response.json())
+            .then((u) => {
+                console.log('Registered successfully');
+                console.log(u);
+
+                dispatch(userRegisteredSuccess(u));
+                dispatch(loginUser({username: creds.username, password: creds.password }));
+            })
+            .catch((error) => { console.log(error); })
+    }
+}
+
 export function userUpdateWebsite(user) {
     return (dispatch) => {
         callApiPut('users/website', true, user.website)
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            return response;
-        })
-        .then((response) => response.json())
-        .then((u) => dispatch(userUpdateWebsiteSuccess(u)))
-        .catch((error) => { console.log(error); })
+                return response;
+            })
+            .then((response) => response.json())
+            .then((u) => dispatch(userUpdateWebsiteSuccess(u)))
+            .catch((error) => { console.log(error); })
     }
 }
 
 export function userUpdateLocation(user) {
     return (dispatch) => {
         callApiPut('users/location', true, user.location)
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            return response;
-        })
-        .then((response) => response.json())
-        .then((u) => dispatch(userUpdateLocationSuccess(u)))
-        .catch((error) => { console.log(error); })
+                return response;
+            })
+            .then((response) => response.json())
+            .then((u) => dispatch(userUpdateLocationSuccess(u)))
+            .catch((error) => { console.log(error); })
     }
 }
 
 export function userUpdateDisplayname(user) {
     return (dispatch) => {
         callApiPut('users/displayname', true, user.displayname)
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            return response;
-        })
-        .then((response) => response.json())
-        .then((u) => dispatch(userUpdateDisplaynameSuccess(u)))
-        .catch((error) => { console.log(error); })
+                return response;
+            })
+            .then((response) => response.json())
+            .then((u) => dispatch(userUpdateDisplaynameSuccess(u)))
+            .catch((error) => { console.log(error); })
     }
 }
 
 export function userUpdateBio(user) {
     return (dispatch) => {
         callApiPut('users/bio', true, user.bio)
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            return response;
-        })
-        .then((response) => response.json())
-        .then((u) => dispatch(userUpdateBioSuccess(u)))
-        .catch((error) => { console.log(error); })
+                return response;
+            })
+            .then((response) => response.json())
+            .then((u) => dispatch(userUpdateBioSuccess(u)))
+            .catch((error) => { console.log(error); })
     }
 }
 
@@ -180,46 +210,46 @@ export function usersFetchAll() {
 export function usersFetchFollowers(user) {
     return (dispatch) => {
         dispatch(followersIsLoading(true));
-        callApiGet(`users/${user.username}/followers`, false) 
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+        callApiGet(`users/${user.username}/followers`, false)
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            dispatch(followersIsLoading(false));
-            return response;
-        })
-        .then((response) => response.json())
-        .then((followers) => dispatch(followersFetchDataSuccess(user, followers)))
-        .catch(() => dispatch(followersHasErrored(true)));
+                dispatch(followersIsLoading(false));
+                return response;
+            })
+            .then((response) => response.json())
+            .then((followers) => dispatch(followersFetchDataSuccess(user, followers)))
+            .catch(() => dispatch(followersHasErrored(true)));
     }
 }
 
 export function followUser(userToFollow) {
     return (dispatch) => {
         callApiPost(`users/${userToFollow.username}/follow`, true, null)
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            dispatch(userFollowedSuccess(getUsernameFromJwt(), userToFollow));
-        })
-        .catch(() => dispatch(userFollowedFailed()));
+                dispatch(userFollowedSuccess(getUsernameFromJwt(), userToFollow));
+            })
+            .catch(() => dispatch(userFollowedFailed()));
     }
 }
 
 export function unfollowUser(userToUnfollow) {
     return (dispatch) => {
         callApiPost(`users/${userToUnfollow.username}/unfollow`, true, null)
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
 
-            dispatch(userUnfollowedSuccess(getUsernameFromJwt(), userToUnfollow));
-        })
-        .catch(() => dispatch(userUnfollowedFailed()));
+                dispatch(userUnfollowedSuccess(getUsernameFromJwt(), userToUnfollow));
+            })
+            .catch(() => dispatch(userUnfollowedFailed()));
     }
 }
 

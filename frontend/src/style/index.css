@@ -16,6 +16,16 @@ body {
   padding-left: 10px;
 }
 
+.navbarButtons {
+  display: inline-flex;
+  padding-left: 15px;
+}
+
+.registerDialog > div > div > div {
+  width: 50%;
+  margin: 0 auto;
+}
+
 .profileCard {
   width: 75%;
   margin: 0 auto;

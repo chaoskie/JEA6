@@ -47,6 +47,10 @@ export function users(state = [], action) {
             return state.map(u => u.id === user.id ? user : u);
         }
 
+        case 'USER_REGISTER_SUCCESS': {
+            return [...state, action.payload];
+        }
+
         case 'USERS_UPDATE_BIO_SUCCESS':
         case 'USERS_UPDATE_LOCATION_SUCCESS':
         case 'USERS_UPDATE_DISPLAYNAME_SUCCESS':
