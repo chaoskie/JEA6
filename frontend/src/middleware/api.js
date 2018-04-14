@@ -35,7 +35,7 @@ export function callApiPost(endpoint, authenticated, body) {
         method: "POST",
         body: (typeof body === 'string') ? body : JSON.stringify(body)
     };
-
+    
     return callApi(endpoint, authenticated, config);
 }
 

@@ -77,8 +77,10 @@ public class KweetController extends Application {
         }
     }
 
-    @DELETE
-    @Path("/{id}")
+    @POST
+    @Path("/del/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Secured
     public Response deleteKweet(@PathParam("id") int id) {
         try {
