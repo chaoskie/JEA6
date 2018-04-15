@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
 import { kweetCreation } from '../actions/kweets';
+import KweetList from './KweetList';
 
 import {
     usersFetchFollowers, getUsernameFromJwt,
@@ -36,7 +37,7 @@ class Timeline extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(getTimeline())
+    this.props.dispatch(getTimeline());
   }
 
   render() {

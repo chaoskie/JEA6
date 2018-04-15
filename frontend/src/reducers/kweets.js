@@ -19,7 +19,7 @@ export function kweetsIsLoading(state = false, action) {
 export function kweets(state = [], action) {
     switch (action.type) {
         case 'KWEETS_FETCH_DATA_SUCCESS':
-            return action.payload;
+            return merge(state, action.payload);
         case 'KWEET_CREATED_SUCCESS':        
             return [action.payload, ...state];
         case 'KWEET_LIKED_SUCCESS':
@@ -33,3 +33,25 @@ export function kweets(state = [], action) {
             return state;
     }
 }
+
+
+function merge(old,updated) {
+    var o = {};
+    
+    old.forEach(function(v) { 
+      o[v.id] = v; 
+    })
+    
+    updated.forEach(function(v) { 
+      o[v.id] = v; 
+    })
+    
+    var r = [];
+    
+    for(var p in o) { 
+      if(o.hasOwnProperty(p)) 
+        r.push(o[p]); 
+    }
+    
+    return r;
+  }

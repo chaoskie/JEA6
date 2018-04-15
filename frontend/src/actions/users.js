@@ -198,13 +198,27 @@ export function usersFetchAll() {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-                dispatch(usersIsLoading(false));
+                
                 return response;
             })
             .then((response) => response.json())
-            .then((users) => dispatch(usersFetchDataSuccess(users)))
+            .then((users) => { dispatch(usersFetchDataSuccess(users)); dispatch(usersIsLoading(false)); })
             .catch(() => dispatch(usersHasErrored(true)));
     };
+}
+
+export function userFetchByUsername(username) {
+    return (dispatch) => {
+    dispatch(usersIsLoading(true));
+    callApiGet('users/' + username, false)
+    .then((response) => {
+        if (!response.ok) { throw Error(response.statusText) }
+        return response;
+    })
+    .then((response) => response.json())
+    .then((user) => { dispatch(usersFetchDataSuccess([user])); dispatch(usersIsLoading(false)); })
+    .catch(() => dispatch(usersHasErrored(true)))
+};
 }
 
 export function usersFetchFollowers(user) {

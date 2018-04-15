@@ -38,7 +38,7 @@ export function users(state = [], action) {
     switch (action.type) {
         case 'USERS_FETCH_DATA_SUCCESS':
         {
-            return action.payload;
+            return merge(state, action.payload);
         }
 
         case 'FOLLOWERS_FETCH_DATA_SUCCESS':
@@ -93,3 +93,24 @@ export function users(state = [], action) {
             return state;
     }
 }
+
+function merge(old,updated) {
+    var o = {};
+    
+    old.forEach(function(v) { 
+      o[v.id] = v; 
+    })
+    
+    updated.forEach(function(v) { 
+      o[v.id] = v; 
+    })
+    
+    var r = [];
+    
+    for(var p in o) { 
+      if(o.hasOwnProperty(p)) 
+        r.push(o[p]); 
+    }
+    
+    return r;
+  }

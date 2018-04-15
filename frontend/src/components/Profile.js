@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import {
-    usersFetchFollowers, getUsernameFromJwt,
+    usersFetchFollowers, getUsernameFromJwt, userFetchByUsername,
     userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
     followUser, unfollowUser, isModeratorFromJwt
 } from '../actions/users';
@@ -18,12 +18,13 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import Message from 'material-ui/svg-icons/communication/message';
 import People from 'material-ui/svg-icons/social/people';
 import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
-import {likeTheKweet, unlikeTheKweet, deleteTheKweet} from '../actions/kweets';
+import {likeTheKweet, unlikeTheKweet, deleteTheKweet, kweetsFetchUser} from '../actions/kweets';
 import { Link } from 'react-router-dom'
 
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        profileName: state.router.location.pathname.substring(1),
         user: ownProps.user,
         kweets: state.kweets,
         hasErrored: state.usersHasErrored,
@@ -52,10 +53,12 @@ class Profile extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {        
         if (!nextProps) { return null; }
 
-        console.log(nextProps);
+        if (!nextProps.user && nextProps.profileName && !nextProps.isLoading) {
+            nextProps.dispatch(userFetchByUsername(nextProps.profileName));
+            return null;
+        }
 
         if (nextProps.user && !nextProps.user.followers && !nextProps.followersIsLoading) {
-            console.log('Fetching followers');
             nextProps.dispatch(usersFetchFollowers(nextProps.user));
             return null;
         }
@@ -66,7 +69,9 @@ class Profile extends Component {
     userIsFollowing(user) {
         return (
             this.props.isAuthenticated
-                && this.props.loggedInUser.following.find(f => f.username === user.username) ? true : false)
+            && this.props.loggedInUser
+            && this.props.loggedInUser.following.find(f => f.username === user.username)
+                ? true : false);
     }
 
     userIsMyself(user) {
@@ -137,7 +142,6 @@ class Profile extends Component {
         }
         
         return (
-
             <div key={this.props.user.id}>
                 <Card className="profileCard">
                     <CardHeader
