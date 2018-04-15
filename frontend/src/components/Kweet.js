@@ -44,7 +44,7 @@ export const Kweet = ({ kweet, likeKweet, canLike, loggedIn, deleteKweet }) => (
 
         </CardText>
         <CardActions>
-            <RaisedButton label={canLike() ? "Unlike" : "Like"} secondary={true} icon={<ActionFavorite color={pinkA100} />} onClick={likeKweet} disabled={!loggedIn} />
+            <RaisedButton label={(canLike() ? "Unlike" : "Like") + ` (${kweet.likes.length})`} secondary={true} icon={<ActionFavorite color={pinkA100} />} onClick={likeKweet} disabled={!loggedIn} />
             <RaisedButton label={"Remove"} secondary={true} icon={<ActionDelete />} onClick={deleteKweet} disabled={!loggedIn} />
         </CardActions>
     </Card>
