@@ -52,6 +52,8 @@ class Profile extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {        
         if (!nextProps) { return prevState; }
+        console.log(nextProps.profileName);
+        console.log(nextProps);
 
         if (!nextProps.user && nextProps.profileName && !nextProps.isLoading && !nextProps.hasErrored) {
             nextProps.dispatch(userFetchByUsername(nextProps.profileName));
@@ -140,11 +142,11 @@ class Profile extends Component {
 
     render() {
         if (this.props.hasErrored) {
-            return <p>Sorry! There was an error loading the profile</p>;
+            return <p className="timeline">Sorry! There was an error loading the profile</p>;
         }
 
         if (this.props.isLoading || !this.props.user) {
-            return <p>Loading…</p>;
+            return <p className="timeline">Loading…</p>;
         }
         
         return (

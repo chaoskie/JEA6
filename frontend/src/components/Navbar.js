@@ -62,13 +62,8 @@ class Navbar extends React.Component {
     }
   }
 
- /* createKweet() {
-    let kweet = { message: this.state.searchValue };
-    this.props.dispatch(kweetCreation(kweet));
-  }*/
-
   searchKweets(s){
-    //this.props.dispatch(findKweet(this.state.searchValue));
+    this.props.dispatch(push("/search?v=" + this.state.searchValue));
   }
 
   render() {
@@ -110,7 +105,7 @@ class Navbar extends React.Component {
       <Toolbar className="navbar">
         <ToolbarGroup className="navbarSearch" firstChild={true}>
           <TextField hintText="Search kweets" fullWidth={true} value={this.state.searchValue} onChange={(e, v) => this.setState({ searchValue: v })} />
-          <FlatButton icon={<ActionSearch />} onClick={this.searchKweets(this.state.searchValue) /*=> console.log(this.state.searchValue)*/} />
+          <FlatButton icon={<ActionSearch />} onClick={() => this.searchKweets(this.state.searchValue)} />
         </ToolbarGroup>
         <ToolbarGroup>
           <ToolbarSeparator />

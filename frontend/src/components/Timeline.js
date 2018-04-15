@@ -36,7 +36,12 @@ class Timeline extends React.Component {
     };
   }
 
-  componentDidMount() { }
+  componentDidMount() {
+    this.interval = setInterval(() => this.props.dispatch(kweetsFetchTimeline(this.props.username)), 5000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
   
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!nextProps) { return prevState; }

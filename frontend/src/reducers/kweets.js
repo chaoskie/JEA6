@@ -35,21 +35,28 @@ export function kweets(state = [], action) {
 }
 
 
-function merge(old,updated) {
-    var o = {};
-    
-    old.forEach(function(v) { 
+function merge(old, updated) {
+    let o = {};
+    let copyOfOld = [...old];
+
+    if (old.length > updated.length) {
+        // basically removes deleted kweets if they are found
+        copyOfOld = old.filter(ol => updated.map(up => up.id).includes(ol.id));
+    }
+
+    copyOfOld.forEach(function(v) { 
       o[v.id] = v; 
-    })
+    });
     
     updated.forEach(function(v) { 
       o[v.id] = v; 
-    })
+    });
     
-    var r = [];
     
-    for(var p in o) { 
-      if(o.hasOwnProperty(p)) 
+    let r = [];
+    
+    for(let p in o) { 
+      if(o.hasOwnProperty(p))
         r.push(o[p]); 
     }
     

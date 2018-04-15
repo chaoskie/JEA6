@@ -1,11 +1,21 @@
 body {
   font-family: sans-serif;
   overflow-y: scroll;
-} 
+}
 
 #root > div {
   margin: 0 auto;
   width: 75%;
+}
+
+.fade-enter {
+  opacity: 0;
+  z-index: 1;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 90ms ease-in;
 }
 
 .appBar {
@@ -89,6 +99,15 @@ body {
   top: -90px;
   right: -87%;
   color: rgba(0, 0, 0, 0.54);
+}
+
+.hashtag {
+  color: #AD2828;
+  text-decoration: none;
+}
+
+.hashtag:hover {
+  text-decoration: underline;
 }
 
 .kweetCreate {

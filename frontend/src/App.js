@@ -3,15 +3,18 @@ import Navbar from './components/Navbar';
 import CreateKweet from './components/CreateKweet';
 import Profile from './components/Profile';
 import Timeline from './components/Timeline';
+import Search from './components/Search';
 import { WelcomePage } from './components/WelcomePage';
 import { connect } from 'react-redux';
 import { usersFetchAll, userFetchByUsername, getUsernameFromJwt } from './actions/users';
 import { kweetsFetchAll } from './actions/kweets';
-import { Route } from 'react-router';
+import { Switch, Route } from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import Home from 'material-ui/svg-icons/action/home';
 import { push } from 'react-router-redux';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+
 
 const mapStateToProps = (state, ownProps) => {
   return {...state};
@@ -32,6 +35,11 @@ getPageTitle() {
     return this.props.authentication.isAuthenticated ? "Timeline" : "Welcome to Kwetter!"
   } else {
     let username = this.props.router.location.pathname.substring(1);
+
+    if(username.startsWith("search")) {
+      return "Search result";
+    }
+
     return `Profile of ${username}`;
   }
 
@@ -49,18 +57,25 @@ getPageTitle() {
           className="appBar"
         />
         <Navbar />
-        <Route path="/:username" render={() => 
-          <div>
-            <Profile user={this.props.users.find(u => u.username === this.props.router.location.pathname.substring(1))} />
-          </div>}
-        />
-        <Route exact path="/" render={() => {
-          return this.props.authentication.isAuthenticated
-            ? <Timeline />
-            : <WelcomePage />
-          }
-          
-        } />
+
+        <Switch>
+          <Route exact path="/" render={() => {
+            return this.props.authentication.isAuthenticated
+              ? <Timeline />
+              : <WelcomePage />
+          }}/>
+      
+          <Route exact path="/search" render={() => {
+            {return this.props.router.location.search.startsWith("?v=")
+            ? <Search query={this.props.router.location.search.substring(3)} />
+            : <div>Invalid search query.</div>
+          }}} />
+
+          <Route path="/:username+" render={() => 
+            <div>
+              <Profile user={this.props.users.find(u => u.username === this.props.router.location.pathname.substring(1))} />
+            </div>}/>
+        </Switch>
       </div>
     );
   }

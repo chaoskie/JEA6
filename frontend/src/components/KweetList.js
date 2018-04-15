@@ -57,9 +57,7 @@ class KweetList extends Component {
         if (this.props.hasErrored) {
             return <p>Sorry! There was an error loading the kweets</p>;
         }
-        if (this.props.isLoading) {
-            return <p>Loading…</p>;
-        }
+
         return (
             <div>
                 {this.props.kweets.map((kweet) => (

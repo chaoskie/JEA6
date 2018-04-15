@@ -31,7 +31,7 @@ public class KweetDaoJPA implements KweetDao {
 
     public List<Kweet> searchKweets(String content) {
         TypedQuery<Kweet> query = em.createQuery("SELECT k FROM Kweet k WHERE k.message LIKE :content", Kweet.class);
-        query.setParameter("content", content);
+        query.setParameter("content", "%" + content + "%");
         return query.getResultList();
     }
 
@@ -53,7 +53,7 @@ public class KweetDaoJPA implements KweetDao {
         }
 
         // Sort by date in reverse order
-        kweets.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+        kweets.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
 
         return kweets;
     }
