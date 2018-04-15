@@ -36,8 +36,17 @@ class Timeline extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.props.dispatch(getTimeline());
+  componentDidMount() { }
+  
+  static getDerivedStateFromProps(nextProps, prevState) {        
+    if (!nextProps) { return null; }
+
+    return null;
+  }
+
+  getTimelineKweets() {
+    let kweets = this.props.kweets.filter(kweet => kweet.user.username === this.props.username);
+    return kweets;
   }
 
   render() {

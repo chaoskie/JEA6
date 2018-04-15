@@ -22,9 +22,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 class KweetList extends Component {
-    componentDidMount() {
-        this.props.dispatch(kweetsFetchAll());
-    }
+    componentDidMount() { }
 
     handleLike(kweet) {
         if (this.userAlreadyLike(kweet)) {

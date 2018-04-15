@@ -28,7 +28,7 @@ const mapStateToProps = (state, ownProps) => {
         user: ownProps.user,
         kweets: state.kweets,
         hasErrored: state.usersHasErrored,
-        isLoading: state.usersIsLoading,
+        isLoading: state.usersIsLoading || state.kweetsIsLoading,
         followersIsLoading: state.followersIsLoading,
         isAuthenticated: state.authentication.isAuthenticated,
         username: state.authentication.isAuthenticated ? getUsernameFromJwt() : '',
@@ -51,19 +51,24 @@ class Profile extends Component {
     componentDidMount() { }
 
     static getDerivedStateFromProps(nextProps, prevState) {        
-        if (!nextProps) { return null; }
+        if (!nextProps) { return prevState; }
 
         if (!nextProps.user && nextProps.profileName && !nextProps.isLoading && !nextProps.hasErrored) {
             nextProps.dispatch(userFetchByUsername(nextProps.profileName));
-            return null;
+            return prevState;
         }
 
         if (nextProps.user && !nextProps.user.followers && !nextProps.followersIsLoading) {
             nextProps.dispatch(usersFetchFollowers(nextProps.user));
-            return null;
+            return prevState;
         }
 
-        return null;
+        if (nextProps.user && !nextProps.isLoading && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.id === nextProps.user.id).length) {
+            nextProps.dispatch(kweetsFetchUser(nextProps.user));
+            return {...prevState, loadedKweets: true}
+        }
+
+        return prevState;
       }
 
     userIsFollowing(user) {

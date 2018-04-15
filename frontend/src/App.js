@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Navbar from './components/Navbar';
 import CreateKweet from './components/CreateKweet';
 import Profile from './components/Profile';
+import Timeline from './components/Timeline';
 import { connect } from 'react-redux';
 import { usersFetchAll, userFetchByUsername, getUsernameFromJwt } from './actions/users';
 import { kweetsFetchAll } from './actions/kweets';
@@ -24,13 +25,18 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Route path="/" render={() => 
+        <Navbar />
+        <Route path="/:username" render={() => 
           <div>
-            <Navbar />
             <Profile user={this.props.users.find(u => u.username === this.props.router.location.pathname.substring(1))} />
-            <CreateKweet />
-          </div>
-        } />
+          </div>}
+        />
+        <Route exact path="/" render={() => {
+          {this.props.authentication.isAuthenticated 
+            ? <Timeline />
+            : "pls login"
+          }
+        }} />
       </div>
     );
   }
