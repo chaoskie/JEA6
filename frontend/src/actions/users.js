@@ -216,11 +216,10 @@ export function usersFetchFollowers(user) {
                     throw Error(response.statusText);
                 }
 
-                dispatch(followersIsLoading(false));
                 return response;
             })
             .then((response) => response.json())
-            .then((followers) => dispatch(followersFetchDataSuccess(user, followers)))
+            .then((followers) => { dispatch(followersFetchDataSuccess(user, followers)); dispatch(followersIsLoading(false)); })
             .catch(() => dispatch(followersHasErrored(true)));
     }
 }

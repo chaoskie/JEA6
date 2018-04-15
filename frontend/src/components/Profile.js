@@ -10,6 +10,7 @@ import {
 } from '../actions/users';
 import { Kweet } from './Kweet';
 import UserList from './UserList';
+import KweetList from './KweetList';
 import Avatar from 'material-ui/Avatar';
 import DeviceGPS from 'material-ui/svg-icons/device/gps-fixed';
 import Website from 'material-ui/svg-icons/action/language';
@@ -23,13 +24,14 @@ import { Link } from 'react-router-dom'
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        users: state.users,
         user: ownProps.user,
         kweets: state.kweets,
         hasErrored: state.usersHasErrored,
         isLoading: state.usersIsLoading,
+        followersIsLoading: state.followersIsLoading,
         isAuthenticated: state.authentication.isAuthenticated,
         username: state.authentication.isAuthenticated ? getUsernameFromJwt() : '',
+        loggedInUser: state.authentication.isAuthenticated ? state.users.find(u => u.username === getUsernameFromJwt()) : null
     };
 };
 
@@ -47,10 +49,12 @@ class Profile extends Component {
 
     componentDidMount() { }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps, prevState) {        
         if (!nextProps) { return null; }
 
-        if (nextProps.user && !nextProps.user.followers) {
+        console.log(nextProps);
+
+        if (nextProps.user && !nextProps.user.followers && !nextProps.followersIsLoading) {
             console.log('Fetching followers');
             nextProps.dispatch(usersFetchFollowers(nextProps.user));
             return null;
@@ -62,9 +66,7 @@ class Profile extends Component {
     userIsFollowing(user) {
         return (
             this.props.isAuthenticated
-                && this.props.users.find(u => u.username === this.props.username)
-                    .following.find(f => f.username === user.username)
-                ? true : false)
+                && this.props.loggedInUser.following.find(f => f.username === user.username) ? true : false)
     }
 
     userIsMyself(user) {
@@ -125,45 +127,15 @@ class Profile extends Component {
         }
     }
 
-    handleLike(kweet) {
-        if (this.userAlreadyLike(kweet)) {
-            // unlike
-           
-            this.props.dispatch(unlikeTheKweet(kweet, this.props.users.find(u => u.username===this.props.username)));
-        } else {
-            // like
-            this.props.dispatch(likeTheKweet(kweet, this.props.users.find(u => u.username===this.props.username)));
-        }
-    }
-
-    deleteKweet(kweet){
-        console.log('starting delete procedure');
-        if(this.userOwnKweet(kweet)){
-            this.props.dispatch(deleteTheKweet(kweet));
-        }
-    }
-
-    userOwnKweet(kweet){
-        console.log('Do I own this '+isModeratorFromJwt());        
-        return (            
-            this.props.isAuthenticated && ( kweet.user.username===this.props.username || isModeratorFromJwt())
-        );
-    }
-
-    userAlreadyLike(kweet) {
-        return (
-            this.props.isAuthenticated
-                && kweet.likes.find(u => u.username === this.props.username)                    
-                ? true : false)
-    }
-
     render() {
-        if (this.props.hasErrored || !this.props.user) {
+        if (this.props.hasErrored) {
             return <p>Sorry! There was an error loading the profile</p>;
         }
-        if (this.props.isLoading) {
+
+        if (this.props.isLoading || !this.props.user) {
             return <p>Loading…</p>;
         }
+        
         return (
 
             <div key={this.props.user.id}>
@@ -239,19 +211,7 @@ class Profile extends Component {
                     <Tab
                         icon={<Message />}
                         label={`Kweets (${this.getUserKweets().length})`}>
-                        {this.getUserKweets().map(kweet => 
-                            <Kweet key={kweet.id} 
-                            canLike={() => this.userAlreadyLike(kweet)} 
-                            kweet={kweet} 
-                            likeKweet={() => {                               
-                                this.handleLike(kweet);                                
-                            }}
-                            loggedIn={this.props.isAuthenticated} 
-                            deleteKweet={() => {   
-                                this.deleteKweet(kweet);                                
-                            }} 
-                            />
-                        )}                        
+                        <KweetList kweets={this.getUserKweets()} />
                     </Tab>
                     <Tab
                         icon={<People />}

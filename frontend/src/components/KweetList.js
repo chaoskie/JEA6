@@ -2,27 +2,57 @@ import React, { Component } from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import { kweetsFetchAll } from '../actions/kweets';
+import { kweetsFetchAll, likeTheKweet, unlikeTheKweet, deleteTheKweet } from '../actions/kweets';
 import { Kweet } from './Kweet';
+import {
+    usersFetchFollowers, getUsernameFromJwt,
+    userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
+    followUser, unfollowUser, isModeratorFromJwt
+} from '../actions/users';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
     return {
-        kweets: state.kweets,
+        kweets: ownProps.kweets,
         hasErrored: state.kweetsHasErrored,
-        isLoading: state.kweetsIsLoading
+        isLoading: state.kweetsIsLoading,
+        isAuthenticated: state.authentication.isAuthenticated,
+        username: state.authentication.isAuthenticated ? getUsernameFromJwt() : '',
+        user: state.authentication.isAuthenticated ? state.users.find(u => u.username === getUsernameFromJwt()) : null
     };
 };
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         fetchData: dispatch(kweetsFetchAll())
-//     };
-// }
-
 
 class KweetList extends Component {
     componentDidMount() {
         this.props.dispatch(kweetsFetchAll());
+    }
+
+    handleLike(kweet) {
+        if (this.userAlreadyLike(kweet)) {
+            // unlike
+            this.props.dispatch(unlikeTheKweet(kweet, this.props.user));
+        } else {
+            // like
+            this.props.dispatch(likeTheKweet(kweet, this.props.user));
+        }
+    }
+
+    deleteKweet(kweet){
+        if(this.userOwnKweet(kweet)){
+            this.props.dispatch(deleteTheKweet(kweet));
+        }
+    }
+
+    userOwnKweet(kweet){
+        return (            
+            this.props.isAuthenticated && ( kweet.user.username === this.props.username || isModeratorFromJwt())
+        );
+    }
+
+    userAlreadyLike(kweet) {
+        return (
+            this.props.isAuthenticated
+                && kweet.likes.find(u => u.username === this.props.username)                    
+                ? true : false)
     }
 
     render() {
@@ -35,9 +65,14 @@ class KweetList extends Component {
         return (
             <div>
                 {this.props.kweets.map((kweet) => (
-                    <div key={kweet.id}>
-                        <Kweet kweet={kweet} />
-                    </div>
+                    <Kweet
+                        key={kweet.id} 
+                        kweet={kweet} 
+                        loggedIn={this.props.isAuthenticated}
+                        likeKweet={() => { this.handleLike(kweet); }}
+                        canLike={() => this.userAlreadyLike(kweet)} 
+                        deleteKweet={() => { this.deleteKweet(kweet); }}
+                    />
                 ))}
             </div>
         );
