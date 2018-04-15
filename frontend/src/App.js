@@ -32,7 +32,7 @@ class App extends Component {
           </div>}
         />
         <Route exact path="/" render={() => {
-          {this.props.authentication.isAuthenticated 
+          { return this.props.authentication.isAuthenticated 
             ? <Timeline />
             : "pls login"
           }

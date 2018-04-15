@@ -114,3 +114,13 @@ export function kweetsFetchUser(user) {
         .catch(error => { dispatch(kweetsHasErrored(true)) });
     }
 }
+
+export function kweetsFetchTimeline(username) {
+    return (dispatch) => {
+        dispatch(kweetsIsLoading(true));
+        callApiGet('kweets/' + username + '/timeline', false)
+        .then(response => { return response.json(); })
+        .then(json => { dispatch(kweetsFetchDataSuccess(json)); dispatch(kweetsIsLoading(false)); })
+        .catch(error => { dispatch(kweetsHasErrored(true)) });
+    }
+}

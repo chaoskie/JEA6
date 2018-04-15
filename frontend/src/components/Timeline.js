@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
-import { kweetCreation } from '../actions/kweets';
+import { kweetCreation, kweetsFetchTimeline } from '../actions/kweets';
 import KweetList from './KweetList';
 
 import {
@@ -19,11 +19,10 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
   return {
-    isFetching: state.authentication.isFetching,
     isAuthenticated: state.authentication.isAuthenticated,
-    errorMessage: state.authentication.errorMessage,
     kweets: state.kweets,
     username: state.authentication.isAuthenticated ? getUsernameFromJwt() : '',
+    loggedInUser: state.authentication.isAuthenticated ? state.users.find(u => u.username === getUsernameFromJwt()) : null
   };
 };
 
@@ -39,13 +38,19 @@ class Timeline extends React.Component {
   componentDidMount() { }
   
   static getDerivedStateFromProps(nextProps, prevState) {        
-    if (!nextProps) { return null; }
+    if (!nextProps) { return prevState; }
 
-    return null;
+    if (nextProps.username && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
+        nextProps.dispatch(kweetsFetchTimeline(nextProps.username));
+        return {...prevState, loadedKweets: true};
+    }
+
+    return prevState;
   }
 
   getTimelineKweets() {
-    let kweets = this.props.kweets.filter(kweet => kweet.user.username === this.props.username);
+    if (!this.props.loggedInUser) { return []; }
+    let kweets = this.props.kweets.filter(kweet => kweet.user.username === this.props.username || this.props.loggedInUser.following.find(f => f.id === kweet.user.id));
     return kweets;
   }
 
@@ -56,7 +61,7 @@ class Timeline extends React.Component {
 
     return (
     <div>
-        
+        <KweetList kweets={this.getTimelineKweets()} />
     </div>)
   }
 
