@@ -69,9 +69,12 @@ export function users(state = [], action) {
         case 'USER_FOLLOW_SUCCESS':
         {
             let user = state.find(u => u.username === action.payload.username);
+            let followedUser = action.payload.userFollowed;
+            followedUser = {...followedUser, followers: [...followedUser.followers, user]};
             user = {...user, following: [...user.following, action.payload.userFollowed]};
-                    
-            return state.map(u => u.id === user.id ? user : u);
+
+            let newState = state.map(u => u.id === user.id ? user : u);
+            return newState.map(u => u.id === followedUser.id ? followedUser : u);
         }
 
         case 'USER_FOLLOW_FAILED':
@@ -81,9 +84,12 @@ export function users(state = [], action) {
         case 'USER_UNFOLLOW_SUCCESS':
         {
             let user = state.find(u => u.username === action.payload.username);
+            let unfollowedUser = action.payload.userUnfollowed;
+            unfollowedUser = {...unfollowedUser, followers: unfollowedUser.followers.filter(u => u.id !== user.id)};
             user = {...user, following: user.following.filter(u => u.id !== action.payload.userUnfollowed.id)}
-
-            return state.map(u => u.id === user.id ? user : u);
+            
+            let newState = state.map(u => u.id === user.id ? user : u);
+            return newState.map(u => u.id === unfollowedUser.id ? unfollowedUser : u);
         }
         case 'USER_UNFOLLOW_FAILED':
             console.log("Unfollow failed");

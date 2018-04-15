@@ -20,7 +20,7 @@ ReactDOM.render(
     <Provider store={store}>
         <MuiThemeProvider>
             <ConnectedRouter history={history}>
-                <Route path="/" component={App} />
+                <App />
             </ConnectedRouter>
         </MuiThemeProvider>
     </Provider>,

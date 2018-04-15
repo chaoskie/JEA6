@@ -5,6 +5,7 @@ import Profile from './components/Profile';
 import { connect } from 'react-redux';
 import { usersFetchAll, userFetchByUsername, getUsernameFromJwt } from './actions/users';
 import { kweetsFetchAll } from './actions/kweets';
+import { Route } from 'react-router';
 
 const mapStateToProps = (state, ownProps) => {
   return {...state};
@@ -23,9 +24,13 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar />
-        <Profile user={this.props.users.find(u => u.username === this.props.router.location.pathname.substring(1))} />
-        <CreateKweet />
+        <Route path="/" render={() => 
+          <div>
+            <Navbar />
+            <Profile user={this.props.users.find(u => u.username === this.props.router.location.pathname.substring(1))} />
+            <CreateKweet />
+          </div>
+        } />
       </div>
     );
   }
