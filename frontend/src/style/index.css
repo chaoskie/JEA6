@@ -8,6 +8,27 @@ body {
   width: 75%;
 }
 
+.appBar {
+  width: 75% !important;
+  margin: 0 auto;
+}
+
+.homeButton {
+  display: inline-block;
+  color: rgb(255, 255, 255);
+  fill: rgb(255, 255, 255);
+  height: 24px;
+  width: 24px;
+  user-select: none;
+  transition: all 450ms 
+}
+
+.navbar {
+  width: 75%;
+  margin: 0 auto;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px;
+}
+
 .navbarSearch {
   width: 100%
 }
@@ -26,10 +47,15 @@ body {
   margin: 0 auto;
 }
 
+.timeline {
+  width: 75%;
+  margin: 0 auto;
+}
+
 .profileCard {
   width: 75%;
   margin: 0 auto;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   /* margin-bottom: 20px; */
 }
 
@@ -71,12 +97,10 @@ body {
 
 .kweetCreate {
   background-color:#fff;
-  font:bold 14px;
+  font: bold 14px;
   color:#1E88E5;
-  width:100%;
-  height:auto;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
   padding:1%;
-  border-top:1px solid #1E88E5;
-  bottom: 0; 
-  position: fixed;  
+  margin-bottom:20px;
+
 }

@@ -8,6 +8,7 @@ import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
 import { kweetCreation, kweetsFetchTimeline } from '../actions/kweets';
 import KweetList from './KweetList';
+import CreateKweet from './CreateKweet';
 
 import {
     usersFetchFollowers, getUsernameFromJwt,
@@ -37,7 +38,7 @@ class Timeline extends React.Component {
 
   componentDidMount() { }
   
-  static getDerivedStateFromProps(nextProps, prevState) {        
+  static getDerivedStateFromProps(nextProps, prevState) {
     if (!nextProps) { return prevState; }
 
     if (nextProps.username && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
@@ -60,7 +61,8 @@ class Timeline extends React.Component {
     }
 
     return (
-    <div>
+    <div className="timeline">
+        <CreateKweet />
         <KweetList kweets={this.getTimelineKweets()} />
     </div>)
   }

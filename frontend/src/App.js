@@ -7,6 +7,9 @@ import { connect } from 'react-redux';
 import { usersFetchAll, userFetchByUsername, getUsernameFromJwt } from './actions/users';
 import { kweetsFetchAll } from './actions/kweets';
 import { Route } from 'react-router';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import Home from 'material-ui/svg-icons/action/home';
 
 const mapStateToProps = (state, ownProps) => {
   return {...state};
@@ -21,10 +24,15 @@ class App extends Component {
       }
     }
 }
+
+getPageTitle() {
+  return "Title";
+}
   
   render() {
     return (
       <div>
+        <AppBar title={this.getPageTitle()} iconElementLeft={<IconButton><Home /></IconButton>} className="appBar" />
         <Navbar />
         <Route path="/:username" render={() => 
           <div>

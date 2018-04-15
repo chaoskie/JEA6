@@ -19,7 +19,7 @@ export function kweetsIsLoading(state = false, action) {
 export function kweets(state = [], action) {
     switch (action.type) {
         case 'KWEETS_FETCH_DATA_SUCCESS':
-            return merge(state, action.payload);
+            return merge(state, action.payload).sort((a, b) => new Date(b.date) - new Date(a.date));
         case 'KWEET_CREATED_SUCCESS':        
             return [action.payload, ...state];
         case 'KWEET_LIKED_SUCCESS':
