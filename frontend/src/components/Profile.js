@@ -53,7 +53,7 @@ class Profile extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {        
         if (!nextProps) { return null; }
 
-        if (!nextProps.user && nextProps.profileName && !nextProps.isLoading) {
+        if (!nextProps.user && nextProps.profileName && !nextProps.isLoading && !nextProps.hasErrored) {
             nextProps.dispatch(userFetchByUsername(nextProps.profileName));
             return null;
         }
