@@ -47,6 +47,19 @@ public class KweetController extends Application {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("search")
+    public Response findKweets(@QueryParam("v") String searchme) {
+        try {
+            return Response.status(Response.Status.OK).entity(new GenericEntity<List<Kweet>>(kweetService.searchKweets(searchme)) {}).build();
+        }  catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/timeline")
     public Response getTimeline(@PathParam("username") String username) {
         try {
