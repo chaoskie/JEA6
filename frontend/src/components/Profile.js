@@ -6,9 +6,8 @@ import { connect } from 'react-redux';
 import {
     usersFetchFollowers, getUsernameFromJwt, userFetchByUsername,
     userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
-    followUser, unfollowUser, isModeratorFromJwt
+    followUser, unfollowUser
 } from '../actions/users';
-import { Kweet } from './Kweet';
 import UserList from './UserList';
 import KweetList from './KweetList';
 import Avatar from 'material-ui/Avatar';
@@ -18,7 +17,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import Message from 'material-ui/svg-icons/communication/message';
 import People from 'material-ui/svg-icons/social/people';
 import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
-import {likeTheKweet, unlikeTheKweet, deleteTheKweet, kweetsFetchUser} from '../actions/kweets';
+import { kweetsFetchUser } from '../actions/kweets';
 import { Link } from 'react-router-dom'
 
 

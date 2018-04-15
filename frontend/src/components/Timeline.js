@@ -1,19 +1,10 @@
 import React from 'react';
-import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import ActionSearch from 'material-ui/svg-icons/action/search';
-import Snackbar from 'material-ui/Snackbar';
-import { kweetCreation, kweetsFetchTimeline } from '../actions/kweets';
+import { kweetsFetchTimeline } from '../actions/kweets';
 import KweetList from './KweetList';
 import CreateKweet from './CreateKweet';
 
 import {
-    usersFetchFollowers, getUsernameFromJwt,
-    userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
-    followUser, unfollowUser, isModeratorFromJwt
+    getUsernameFromJwt
 } from '../actions/users';
 
 import { connect } from 'react-redux';

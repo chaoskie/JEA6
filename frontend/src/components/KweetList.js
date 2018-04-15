@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import { kweetsFetchAll, likeTheKweet, unlikeTheKweet, deleteTheKweet } from '../actions/kweets';
+import { likeTheKweet, unlikeTheKweet, deleteTheKweet } from '../actions/kweets';
 import { Kweet } from './Kweet';
 import {
-    usersFetchFollowers, getUsernameFromJwt,
-    userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
-    followUser, unfollowUser, isModeratorFromJwt
+    getUsernameFromJwt, isModeratorFromJwt
 } from '../actions/users';
 
 const mapStateToProps = (state, ownProps) => {

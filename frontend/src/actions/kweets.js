@@ -1,4 +1,4 @@
-import { callApiGet, callApiPost, callApiDelete } from '../middleware/api';
+import { callApiGet, callApiPost } from '../middleware/api';
 
 export function kweetsHasErrored(bool) {
     return {

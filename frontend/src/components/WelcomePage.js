@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardText } from 'material-ui/Card';
 
 export const WelcomePage = () => (
     <Card className="welcomeCard">

@@ -6,8 +6,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import Snackbar from 'material-ui/Snackbar';
-import { kweetCreation, findKweet } from '../actions/kweets';
-
 import { loginUser, logoutUser } from '../actions/authentication';
 import { registerUser, getUsernameFromJwt } from '../actions/users';
 import { push } from 'react-router-redux';

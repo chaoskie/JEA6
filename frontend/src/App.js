@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import Navbar from './components/Navbar';
-import CreateKweet from './components/CreateKweet';
 import Profile from './components/Profile';
 import Timeline from './components/Timeline';
 import Search from './components/Search';
 import { WelcomePage } from './components/WelcomePage';
 import { connect } from 'react-redux';
-import { usersFetchAll, userFetchByUsername, getUsernameFromJwt } from './actions/users';
-import { kweetsFetchAll } from './actions/kweets';
+import { userFetchByUsername, getUsernameFromJwt } from './actions/users';
 import { Switch, Route } from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import Home from 'material-ui/svg-icons/action/home';
 import { push } from 'react-router-redux';
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-
 
 const mapStateToProps = (state, ownProps) => {
   return {...state};
@@ -42,9 +38,6 @@ getPageTitle() {
 
     return `Profile of ${username}`;
   }
-
-  return "Title";
-  
 }
   
   render() {
@@ -66,10 +59,10 @@ getPageTitle() {
           }}/>
       
           <Route exact path="/search" render={() => {
-            {return this.props.router.location.search.startsWith("?v=")
+            return this.props.router.location.search.startsWith("?v=")
             ? <Search query={this.props.router.location.search.substring(3)} />
             : <div>Invalid search query.</div>
-          }}} />
+          }} />
 
           <Route path="/:username+" render={() => 
             <div>
