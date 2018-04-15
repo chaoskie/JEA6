@@ -51,13 +51,11 @@ export function kweetDeleteSuccess(kweet, user) {
 
 
 export function kweetCreation(kweet){
-    //console.log('kweet creation');
     return (dispatch) => {
-       // dispatch(kweetsIsLoading(true));
         callApiPost('kweets', true, kweet)
-        .then(response => {console.log('response'); /*dispatch(kweetsIsLoading(false)); */return response.json(); })
+        .then(response => { return response.json(); })
         .then(json => { dispatch(kweetCreatedSuccess(json))})
-        .catch(error => { console.log(error); /*dispatch(kweetsHasErrored(true))*/ });
+        .catch(error => { console.log(error); });
     };
 }
 
@@ -65,7 +63,6 @@ export function deleteTheKweet(kweet, user){
     console.log('action delete');
     return (dispatch) => {
         callApiPost(`kweets/del/${kweet.id}`, true, null)
-        //.then(response => {return response.json(); })
         .then((response) => {
             if (!response.ok) {
                 throw Error(response.statusText);
@@ -80,7 +77,7 @@ export function deleteTheKweet(kweet, user){
 export function unlikeTheKweet(kweet, user){
     return (dispatch) => {
         callApiPost(`kweets/${kweet.id}/unlike`, true, null)
-        .then(response => {console.log('response'); return response.json(); })
+        .then(response => { return response.json(); })
         .then(json => { dispatch(kweetUnlikedSuccess(json, user))})
         .catch(error => { console.log(error); });
     };
@@ -89,7 +86,7 @@ export function unlikeTheKweet(kweet, user){
 export function likeTheKweet(kweet, user){
     return (dispatch) => {
         callApiPost(`kweets/${kweet.id}/like`, true, null)
-        .then(response => {console.log('response'); return response.json(); })
+        .then(response => { return response.json(); })
         .then(json => { dispatch(kweetLikedSuccess(json, user))})
         .catch(error => { console.log(error); });
     };

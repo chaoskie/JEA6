@@ -9,8 +9,8 @@ import Snackbar from 'material-ui/Snackbar';
 import { kweetCreation } from '../actions/kweets';
 
 import { loginUser, logoutUser } from '../actions/authentication';
-import { registerUser } from '../actions/users';
-
+import { registerUser, getUsernameFromJwt } from '../actions/users';
+import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -64,7 +64,6 @@ class Navbar extends React.Component {
   createKweet() {
     let kweet = { message: this.state.searchValue };
     this.props.dispatch(kweetCreation(kweet));
-
   }
 
   render() {
@@ -115,7 +114,10 @@ class Navbar extends React.Component {
                 <RaisedButton label="Login" primary={true} onClick={() => this.handleLoginOpen()} />
                 <RaisedButton label="Register" onClick={() => this.handleRegisterOpen()} />
               </div>
-            : <RaisedButton label="Logout" primary={true} onClick={() => this.props.dispatch(logoutUser())} />
+            : <div className="navbarButtons">
+                <RaisedButton label="Profile" primary={true} onClick={() => this.props.dispatch(push("/" + getUsernameFromJwt()))} />
+                <RaisedButton label="Logout" onClick={() => this.props.dispatch(logoutUser())} />
+              </div>
           }
         </ToolbarGroup>
 

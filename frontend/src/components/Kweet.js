@@ -32,16 +32,11 @@ export const Kweet = ({ kweet, likeKweet, canLike, loggedIn, deleteKweet }) => (
             subtitle={'@' + kweet.user.username}
         />
         <CardText>
-
-
-            {/* {kweet.message.replace(/#(\S*)/g, <Link to={`#$1`} activeClassName="active">$1</Link>)} */}
             {convertHashtags(kweet.message)}
 
             <div className="kweetDate">
                 {dateDisplay(new Date(kweet.date))}
             </div>
-
-
         </CardText>
         <CardActions>
             <RaisedButton label={(canLike() ? "Unlike" : "Like") + ` (${kweet.likes.length})`} secondary={true} icon={<ActionFavorite color={pinkA100} />} onClick={likeKweet} disabled={!loggedIn} />

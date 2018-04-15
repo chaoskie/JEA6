@@ -64,7 +64,7 @@ class Profile extends Component {
         }
 
         if (nextProps.user && !nextProps.isLoading && prevState.loadedKweets !== nextProps.profileName && !nextProps.kweets.filter(kweet => kweet.user.id === nextProps.user.id).length) {
-            console.log('fetching kweets');
+
             nextProps.dispatch(kweetsFetchUser(nextProps.user));
             return {...prevState, loadedKweets: nextProps.profileName }
         }

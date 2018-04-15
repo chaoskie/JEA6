@@ -1,4 +1,5 @@
 import { callApiPost } from '../middleware/api';
+import { userFetchByUsername } from './users';
 
 export function requestLogin(creds) {
   return {
@@ -62,6 +63,7 @@ export function loginUser(creds) {
         localStorage.setItem('id_token', token);
         // Dispatch the success action
         dispatch(receiveLogin(token));
+        dispatch(userFetchByUsername(creds.username));
       }
     }).catch(err => console.log("Error: ", err))
   }

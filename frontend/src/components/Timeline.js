@@ -41,7 +41,7 @@ class Timeline extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!nextProps) { return prevState; }
 
-    if (nextProps.username && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
+    if (nextProps.username && nextProps.isAuthenticated && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
         nextProps.dispatch(kweetsFetchTimeline(nextProps.username));
         return {...prevState, loadedKweets: true};
     }
@@ -51,13 +51,14 @@ class Timeline extends React.Component {
 
   getTimelineKweets() {
     if (!this.props.loggedInUser) { return []; }
+    
     let kweets = this.props.kweets.filter(kweet => kweet.user.username === this.props.username || this.props.loggedInUser.following.find(f => f.id === kweet.user.id));
     return kweets;
   }
 
   render() {
     if (!this.props.isAuthenticated) {
-        return <h1>You must be logged in order to view the timeline!</h1>
+        return <h1>You must be logged in in order to view your timeline!</h1>
     }
 
     return (

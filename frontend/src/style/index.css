@@ -13,16 +13,6 @@ body {
   margin: 0 auto;
 }
 
-.homeButton {
-  display: inline-block;
-  color: rgb(255, 255, 255);
-  fill: rgb(255, 255, 255);
-  height: 24px;
-  width: 24px;
-  user-select: none;
-  transition: all 450ms 
-}
-
 .navbar {
   width: 75%;
   margin: 0 auto;
@@ -40,6 +30,12 @@ body {
 .navbarButtons {
   display: inline-flex;
   padding-left: 15px;
+}
+
+.welcomeCard {
+  width: 75%;
+  height: 90%;
+  margin: 0 auto;
 }
 
 .registerDialog > div > div > div {
@@ -102,5 +98,4 @@ body {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
   padding:1%;
   margin-bottom:20px;
-
 }
