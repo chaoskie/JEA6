@@ -12,12 +12,11 @@ const mapStateToProps = (state, ownProps) => {
 
 class App extends Component {
   componentDidMount() {
-    if(this.props.router.location.pathname.substring(1)) {
-      this.props.dispatch(userFetchByUsername(this.props.router.location.pathname.substring(1)));
-    }
-
     if (this.props.authentication.isAuthenticated) {
-      this.props.dispatch(userFetchByUsername(getUsernameFromJwt()));
+      let username = this.props.router.location.pathname.substring(1);
+      if (!this.props.users.find(u => u.username === username)) {
+        this.props.dispatch(userFetchByUsername(getUsernameFromJwt()));
+      }
     }
 }
   

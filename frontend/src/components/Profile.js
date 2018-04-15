@@ -123,7 +123,7 @@ class Profile extends Component {
     }
 
     handleFollow(user) {
-        if (this.userIsFollowing()) {
+        if (this.userIsFollowing(user)) {
             // Unfollow
             this.props.dispatch(unfollowUser(user));
         } else {

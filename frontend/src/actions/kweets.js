@@ -99,8 +99,8 @@ export function kweetsFetchAll() {
     return (dispatch) => {
         dispatch(kweetsIsLoading(true));
         callApiGet('kweets', false)
-        .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
-        .then(json => { dispatch(kweetsFetchDataSuccess(json))})
+        .then(response => { return response.json(); })
+        .then(json => { dispatch(kweetsFetchDataSuccess(json)); dispatch(kweetsIsLoading(false)); })
         .catch(error => { dispatch(kweetsHasErrored(true)) });
     };
 }
@@ -109,8 +109,8 @@ export function kweetsFetchUser(user) {
     return (dispatch) => {
         dispatch(kweetsIsLoading(true));
         callApiGet('kweets/' + user.username, false)
-        .then(response => { dispatch(kweetsIsLoading(false)); return response.json(); })
-        .then(json => { dispatch(kweetsFetchDataSuccess(json))})
+        .then(response => { return response.json(); })
+        .then(json => { dispatch(kweetsFetchDataSuccess(json)); dispatch(kweetsIsLoading(false)); })
         .catch(error => { dispatch(kweetsHasErrored(true)) });
     }
 }
