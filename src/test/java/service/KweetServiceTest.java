@@ -223,7 +223,7 @@ public class KweetServiceTest {
         kweetService.deleteKweet(userB, kweetC.getId());
     }
 
-    @Test
+/*    @Test
     public void likeKweetTest()throws InvalidActionException, KweetNotFoundException{
         when(kweetDao.getKweetById(anyInt())).thenReturn(kweetB);
         when(kweetDao.likeKweet(anyObject(), anyObject())).thenReturn(kweetA);
@@ -245,7 +245,7 @@ public class KweetServiceTest {
         when(kweetDao.getKweetById(anyInt())).thenReturn(kweetD);
         when(kweetDao.likeKweet(anyObject(), anyObject())).thenReturn(kweetA);
         kweetService.likeKweet(userB, kweetD.getId());
-    }
+    }*/
 
    /* @Test
     public void unlikeKweetTest()throws InvalidActionException, KweetNotFoundException{
