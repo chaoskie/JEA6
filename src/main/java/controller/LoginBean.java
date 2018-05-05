@@ -22,15 +22,15 @@ import java.security.AccessController;
 import java.security.Principal;
 import java.util.Set;
 
-@ManagedBean(name = "indexController", eager = true)
-public class IndexController {
+@ManagedBean(name = "loginBean", eager = true)
+public class LoginBean {
     private String username;
     private String password;
 
     @Inject
     UserService userService;
 
-    public IndexController() { }
+    public LoginBean() { }
 
     public String getUsername() {
         return username;
@@ -55,6 +55,7 @@ public class IndexController {
             HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
             try {
+                boolean successful = userService.login(username, password);
                 request.login(username, password);
 
                 if (!userService.login(username, password)) {

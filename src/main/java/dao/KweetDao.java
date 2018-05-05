@@ -20,7 +20,7 @@ public interface KweetDao {
 
     public void deleteKweet(Kweet k);
 
-    public int likeKweet(Kweet k, User u);
+    public Kweet likeKweet(Kweet k, User u);
 
-    public int unlikeKweet(Kweet k, User u);
+    public Kweet unlikeKweet(Kweet k, User u);
 }

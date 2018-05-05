@@ -1,7 +1,11 @@
 package service;
 
 import dao.*;
+import domain.Role;
 import domain.User;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -19,6 +23,7 @@ public class UserService {
     @Inject @JPA
     KweetDao kweetDao;
 
+    private String secretKey = "kwetterSecretKeyDeluxe";
 
     public List<User> getUsers() {
         return userDao.getUsers();
@@ -118,6 +123,22 @@ public class UserService {
         userDao.updateLocation(user, location);
     }
 
+    public void updateWebsite(User user, String website) {
+        if (user == null || user.getId() <= 0) {
+            throw new IllegalArgumentException("User was invalid");
+        }
+
+        userDao.updateWebsite(user, website);
+    }
+
+    public void updateDisplayname(User user, String displayname) {
+        if (user == null || user.getId() <= 0 || displayname.isEmpty()) {
+            throw new IllegalArgumentException("User was invalid");
+        }
+
+        userDao.updateDisplayname(user, displayname);
+    }
+
     public boolean login(String username, String password) {
         return userDao.login(username, generateSha256(password));
     }
@@ -131,5 +152,21 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             return text;
         }
+    }
+
+    public String issueToken(String username) {
+        User user = getUserByName(username);
+
+        JwtBuilder builder = Jwts.builder().claim("username", username).signWith(SignatureAlgorithm.HS512, secretKey);
+
+        if(user.getRole().contains(Role.Moderator)) {
+            builder.claim("moderator", true);
+        }
+
+        if(user.getRole().contains(Role.Administrator)) {
+            builder.claim("administrator", true);
+        }
+
+        return builder.compact();
     }
 }

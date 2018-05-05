@@ -4,17 +4,23 @@ import Exceptions.InvalidActionException;
 import Exceptions.KweetNotFoundException;
 import Exceptions.KweetNotValidException;
 import Exceptions.UserNotFoundException;
+import controller.annotation.Secured;
 import domain.Kweet;
 import domain.Role;
 import domain.User;
 import service.KweetService;
+import service.MailService;
 import service.UserService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,12 +29,16 @@ import java.util.List;
 @Path("users")
 public class UserController extends Application {
     @Context private HttpServletRequest servletRequest;
+    @Context SecurityContext securityContext;
 
     @Inject
     UserService userService;
 
     @Inject
     KweetService kweetService;
+
+    @Inject
+    MailService mailService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,10 +91,29 @@ public class UserController extends Application {
     }
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registerUser(UserRegisterRequest request) {
+        try {
+            User u = new User(request.getUsername(), request.getPassword(), new ArrayList<Role>(){{add(Role.User); }}, request.getUsername(), "", "", "", "");
+            u.setEmail(request.getEmail());
+            u = userService.createUser(u);
+
+            // Email user
+            mailService.sendEmail(request.getEmail(), "Account successfully created", "Welcome to Kwetter " + u.getUsername() + "!");
+
+            return Response.status(Response.Status.CREATED).entity(u).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @POST
     @Path("{username}/follow")
+    @Secured
     public Response followUser(@PathParam("username") String username) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.followUser(user, username);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -101,9 +130,10 @@ public class UserController extends Application {
 
     @POST
     @Path("{username}/unfollow")
+    @Secured
     public Response unfollowUser(@PathParam("username") String username) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.unfollowUser(user, username);
 
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -118,13 +148,57 @@ public class UserController extends Application {
 
     @PUT
     @Path("/bio")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
     public Response updateBio(String bio) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.updateBio(user, bio);
 
-            return Response.status(Response.Status.NO_CONTENT).build();
+            user.setBio(bio);
+
+            return Response.ok().entity(user).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @PUT
+    @Path("/website")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
+    public Response updateWebsite(String website) {
+        try {
+            User user = getUserFromToken();
+            userService.updateWebsite(user, website);
+
+            user.setWebsite(website);
+
+            return Response.ok().entity(user).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Something went wrong").build();
+        }
+    }
+
+    @PUT
+    @Path("/displayname")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
+    public Response updateDisplayname(String displayname) {
+        try {
+            User user = getUserFromToken();
+            userService.updateDisplayname(user, displayname);
+
+            user.setDisplayname(displayname);
+
+            return Response.ok().entity(user).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
@@ -134,13 +208,17 @@ public class UserController extends Application {
 
     @PUT
     @Path("/location")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Secured
     public Response updateLocation(String location) {
         try {
-            User user = getUserFromSession();
+            User user = getUserFromToken();
             userService.updateLocation(user, location);
 
-            return Response.status(Response.Status.NO_CONTENT).build();
+            user.setLocation(location);
+
+            return Response.ok().entity(user).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
@@ -148,6 +226,26 @@ public class UserController extends Application {
         }
     }
 
+    @GET
+    @Path("checkClaims")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Secured
+    public String checkClaims(@Context SecurityContext securityContext) {
+        String result = "";
+        result += "Username: " + securityContext.getUserPrincipal().getName();
+        result += "\r\nModerator: " + securityContext.isUserInRole("moderator");
+        result += "\r\nAdministrator: " + securityContext.isUserInRole("administrator");
+
+        return result;
+    }
+
+    @GET
+    @Path("demoMail/{email}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String demoMail(@PathParam("email") String email) throws UnsupportedEncodingException, MessagingException {
+        mailService.sendEmail(email, "Test Email from Kwetter", "This is a test email from Kwetter");
+        return "ok";
+    }
 
     @GET
     @Path("demoAdd")
@@ -176,13 +274,40 @@ public class UserController extends Application {
         return "ok";
     }
 
-    private User getUserFromSession() {
-        Object user = servletRequest.getSession().getAttribute("user");
+    private User getUserFromToken() {
+        Principal principal = securityContext.getUserPrincipal();
+        String username = principal.getName();
 
-        if (user == null || !(user instanceof User)) {
-            return null;
-        }
+        return userService.getUserByName(username);
+    }
+}
 
-        return (User) user;
+class UserRegisterRequest implements Serializable {
+    private String username;
+    private String password;
+    private String email;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

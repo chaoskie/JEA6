@@ -79,7 +79,7 @@ public class KweetService {
         kweetDao.deleteKweet(k);
     }
 
-    public int likeKweet(User user, int kweetId) throws InvalidActionException, KweetNotFoundException {
+    public Kweet likeKweet(User user, int kweetId) throws InvalidActionException, KweetNotFoundException {
         Kweet k = kweetDao.getKweetById(kweetId);
 
         if (k == null) {
@@ -93,7 +93,7 @@ public class KweetService {
         return kweetDao.likeKweet(k, user);
     }
 
-    public int unlikeKweet(User user, int kweetId) throws InvalidActionException, KweetNotFoundException {
+    public Kweet unlikeKweet(User user, int kweetId) throws InvalidActionException, KweetNotFoundException {
         Kweet k = kweetDao.getKweetById(kweetId);
 
         if (k == null) {

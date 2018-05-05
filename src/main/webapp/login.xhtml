@@ -13,13 +13,13 @@
 
     <h:panelGrid columns="2" cellpadding="5">
         <h:outputLabel for="username" value="Username:" />
-        <p:inputText id="username" value="#{indexController.username}" required="true" label="username" />
+        <p:inputText id="username" value="#{loginBean.username}" required="true" label="username" />
 
         <h:outputLabel for="password" value="Password:" />
-        <p:password id="password" value="#{indexController.password}" required="true" label="password" />
+        <p:password id="password" value="#{loginBean.password}" required="true" label="password" />
 
         <f:facet name="footer">
-            <p:commandButton value="Login" update="growl" actionListener="#{indexController.login}"  />
+            <p:commandButton value="Login" update="growl" actionListener="#{loginBean.login}"  />
         </f:facet>
     </h:panelGrid>
 </h:form>

@@ -1,0 +1,120 @@
+body {
+  font-family: sans-serif;
+  overflow-y: scroll;
+}
+
+#root > div {
+  margin: 0 auto;
+  width: 75%;
+}
+
+.fade-enter {
+  opacity: 0;
+  z-index: 1;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 90ms ease-in;
+}
+
+.appBar {
+  width: 75% !important;
+  margin: 0 auto;
+}
+
+.navbar {
+  width: 75%;
+  margin: 0 auto;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px;
+}
+
+.navbarSearch {
+  width: 100%
+}
+
+.navbarSearch > div:first-child {
+  padding-left: 10px;
+}
+
+.navbarButtons {
+  display: inline-flex;
+  padding-left: 15px;
+}
+
+.welcomeCard {
+  width: 75%;
+  height: 90%;
+  margin: 0 auto;
+}
+
+.registerDialog > div > div > div {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.timeline {
+  width: 75%;
+  margin: 0 auto;
+}
+
+.profileCard {
+  width: 75%;
+  margin: 0 auto;
+  /* margin-top: 10px; */
+  /* margin-bottom: 20px; */
+}
+
+.profileEditField {
+  margin-left: 5px;
+}
+
+.profileField {
+  display: inline;
+  vertical-align: super;
+  margin-left: 5px;
+}
+
+.profileTabs {
+  width: 75%;
+  margin: 0 auto;
+  padding-bottom: 200px;
+}
+
+.profileLink {
+  color: rgba(0, 0, 0, 0.87);
+  display: block;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.kweetCard {
+  /* width: 75%; */
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.kweetDate {
+  position: relative;
+  top: -90px;
+  right: -87%;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.hashtag {
+  color: #AD2828;
+  text-decoration: none;
+}
+
+.hashtag:hover {
+  text-decoration: underline;
+}
+
+.kweetCreate {
+  background-color:#fff;
+  font: bold 14px;
+  color:#1E88E5;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  padding:1%;
+  margin-bottom:20px;
+}
