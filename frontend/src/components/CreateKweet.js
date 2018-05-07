@@ -6,8 +6,9 @@ import {kweetCreation} from '../actions/kweets';
 
 import { connect } from 'react-redux';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
     return {
+        socket: ownProps.socket,
         isFetching: state.authentication.isFetching,
         isAuthenticated: state.authentication.isAuthenticated,
         errorMessage: state.authentication.errorMessage
@@ -26,10 +27,14 @@ class CreateKweet extends React.Component {
       componentWillReceiveProps(props) { }
 
       createKweet() {
+        let socket = this.props.socket;
+
+        // TODO: do stuff with websocket instead of pushing to REST API
+
         let kweet= {message:this.state.kweetValue};
         this.props.dispatch(kweetCreation(kweet));
         this.setState({kweetValue:""});
-        }
+      }
 
   render() {
         return (

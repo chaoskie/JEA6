@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -65,7 +66,7 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    @XmlTransient
+    @XmlTransient @JsonbTransient
     public String getPassword() {
         return password;
     }
@@ -122,7 +123,7 @@ public class User implements Serializable {
         this.website = website;
     }
 
-    //@XmlTransient
+    @XmlTransient @JsonbTransient
     public List<User> getFollowing() {
         return following;
     }

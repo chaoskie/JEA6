@@ -28,10 +28,17 @@ class Timeline extends React.Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.props.dispatch(kweetsFetchTimeline(this.props.username)), 5000);
+    //this.interval = setInterval(() => this.props.dispatch(kweetsFetchTimeline(this.props.username)), 5000);
+    this.websocket = new WebSocket("ws://localhost:8080/Kwetter-Gamma/ws/timeline?" + localStorage["id_token"]);
+    this.websocket.onopen = (ev) => { 
+      //this.websocket.send("Hello world");
+      //console.log('sent message');
+    };
+
   }
   componentWillUnmount() {
-    clearInterval(this.interval);
+    //clearInterval(this.interval);
+    this.websocket.close();
   }
   
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -59,7 +66,7 @@ class Timeline extends React.Component {
 
     return (
     <div className="timeline">
-        <CreateKweet />
+        <CreateKweet socket={this.websocket} />
         <KweetList kweets={this.getTimelineKweets()} />
     </div>)
   }
