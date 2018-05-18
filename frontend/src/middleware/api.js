@@ -1,6 +1,6 @@
 // See: https://auth0.com/blog/secure-your-react-and-redux-app-with-jwt-authentication/
 
-const BASE_URL = 'http://localhost:8080/Kwetter-Gamma/api/v1/';
+const BASE_URL = 'http://localhost:8080/Kwetter-SNAPSHOT_Gamma/api/v1/';
 
 function callApi(endpoint, authenticated, config) {
 

@@ -31,8 +31,9 @@ class CreateKweet extends React.Component {
 
         // TODO: do stuff with websocket instead of pushing to REST API
 
+
         let kweet= {message:this.state.kweetValue};
-        this.props.dispatch(kweetCreation(kweet));
+        kweetCreation(kweet, socket);
         this.setState({kweetValue:""});
       }
 
