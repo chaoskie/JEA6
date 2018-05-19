@@ -51,26 +51,21 @@ export function kweetDeleteSuccess(kweet, user) {
 
 
 export function kweetCreation(kweet, socket) {
-    var obj = {
+    let obj = {
         type: "createKweet",
         kweet: kweet
     };
-    console.log(socket);
-    console.log('about to send kweet like this ' + JSON.stringify(obj));
-    socket.send(JSON.stringify(obj));    
-    
+
+    socket.send(JSON.stringify(obj));
 }
 
 export function deleteTheKweet(kweet, socket) {
-
-    var obj = {
+    let obj = {
         type: "deleteKweet",
         kweet: kweet,
     };
 
     socket.send(JSON.stringify(obj));
-
-    console.log('action delete');
 }
 
 export function unlikeTheKweet(kweet, user) {

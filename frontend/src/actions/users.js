@@ -44,8 +44,7 @@ export function followingHasErrored(bool) {
 }
 
 export function followingFetchDataSuccess(user, following) {
-    console.log('fetching following data succes end of fetch');
-    return {        
+    return {
         type: 'FOLLOWING_FETCH_DATA_SUCCESS',
         payload: { user, following }
     }
@@ -138,11 +137,8 @@ export function registerUser(creds) {
             })
             .then((response) => response.json())
             .then((u) => {
-                console.log('Registered successfully');
-                console.log(u);
-
                 dispatch(userRegisteredSuccess(u));
-                dispatch(loginUser({username: creds.username, password: creds.password }));
+                dispatch(loginUser({ username: creds.username, password: creds.password }));
             })
             .catch((error) => { console.log(error); })
     }
@@ -214,13 +210,13 @@ export function userUpdateBio(user) {
 
 export function usersFetchAll() {
     return (dispatch) => {
-        dispatch( usersIsLoading(true) );
+        dispatch(usersIsLoading(true));
         callApiGet('users', false)
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-                
+
                 return response;
             })
             .then((response) => response.json())
@@ -231,34 +227,32 @@ export function usersFetchAll() {
 
 export function userFetchByUsername(username) {
     return (dispatch) => {
-    dispatch(usersIsLoading(true));
-    callApiGet('users/' + username, false)
-    .then((response) => {
-        if (!response.ok) { throw Error(response.statusText) }
-        return response;
-    })
-    .then((response) => response.json())
-    .then((user) => { dispatch(usersFetchDataSuccess([user])); dispatch(usersIsLoading(false)); })
-    .catch(() => dispatch(usersHasErrored(true)))
-};
+        dispatch(usersIsLoading(true));
+        callApiGet('users/' + username, false)
+            .then((response) => {
+                if (!response.ok) { throw Error(response.statusText) }
+                return response;
+            })
+            .then((response) => response.json())
+            .then((user) => { dispatch(usersFetchDataSuccess([user])); dispatch(usersIsLoading(false)); })
+            .catch(() => dispatch(usersHasErrored(true)))
+    };
 }
 
 export function usersFetchFollowing(user) {
-    //console.log(user);
     return (dispatch) => {
         dispatch(followingIsLoading(true));
-        callApiGet("users/" + user + "/following"/*user.followingURL*/, false)
+        callApiGet(user.followingURL, false)
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-                console.log(response);
+
                 return response;
             })
             .then((response) => response.json())
             .then((following) => { dispatch(followingFetchDataSuccess(user, following)); dispatch(followingIsLoading(false)); })
             .catch(() => dispatch(followingHasErrored(true)));
-            console.log("user fetch following success");
     }
 }
 
@@ -277,7 +271,6 @@ export function usersFetchFollowers(user) {
             .then((followers) => { dispatch(followersFetchDataSuccess(user, followers)); dispatch(followersIsLoading(false)); })
             .catch(() => dispatch(followersHasErrored(true)));
     }
-    console.log("user fetch followers success");
 }
 
 export function followUser(userToFollow) {
@@ -290,7 +283,7 @@ export function followUser(userToFollow) {
 
                 dispatch(userFollowedSuccess(getUsernameFromJwt(), userToFollow));
             })
-            .catch(() => dispatch(userFollowedFailed()));
+            .catch((error) => { dispatch(userFollowedFailed()) });
     }
 }
 

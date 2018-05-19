@@ -69,8 +69,8 @@ public class TimelineWebsocketEndpoint {
 
         WebSocketResponse response = new WebSocketResponse();
         response.setType("deleteKweet");
-        response.setKweet( kweet );
-        response.setUser( user );
+        response.setKweet(kweet);
+        response.setUser(user);
 
         Gson gson = new Gson();
         String responseJson = gson.toJson(response);

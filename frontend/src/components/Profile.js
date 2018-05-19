@@ -78,8 +78,10 @@ class Profile extends Component {
         return (
             this.props.isAuthenticated
                 && this.props.loggedInUser
-                && this.props.loggedInUser.following
-                && this.props.loggedInUser.following.find(f => f.username === user.username)
+                && (
+                    (this.props.loggedInUser.following && this.props.loggedInUser.following.find(f => f.username === user.username))
+                    || (user.followers && user.followers.find(f => f.username === this.props.loggedInUser.username))
+                )
                 ? true : false);
     }
 

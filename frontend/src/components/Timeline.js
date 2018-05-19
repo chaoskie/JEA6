@@ -22,48 +22,33 @@ const mapStateToProps = (state) => {
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       searchValue: ""
     };
-  }
 
-  componentDidMount() {
-    //this.interval = setInterval(() => this.props.dispatch(kweetsFetchTimeline(this.props.username)), 5000);
     this.websocket = new WebSocket("ws://localhost:8080/Kwetter-SNAPSHOT_Gamma/ws/timeline?" + localStorage["id_token"]);
-    this.websocket.onopen = (ev) => {
-      //this.websocket.send("Hello world");
-      console.log('socket mount');
-    };
-
-    this.websocket.addEventListener("message", function (event) {
-      var data = JSON.parse(event.data);
-      console.log(data);
+    this.websocket.onopen = (ev) => { };
+    this.websocket.onmessage = (ev) => {
+      console.log(ev);
+      let data = JSON.parse(ev.data);
       switch (data.type) {
         case "createKweet":
           {
             this.props.dispatch(kweetCreatedSuccess(data.kweet));
+            break;
           }
-          break;
         case "deleteKweet":
           {
-            console.log(data);
-
             this.props.dispatch(kweetDeleteSuccess(data.kweet, data.user));
+            break;
           }
-          break;
-          case "fetching following":
-          {
-            this.props.dispatch(usersFetchFollowing(this.props.username));
-          }
+        default:
           break;
       }
-    }.bind(this));
-
+    }
   }
+
   componentWillUnmount() {
-    console.log('socket dead');
-    //clearInterval(this.interval);
     this.websocket.close();
   }
 
@@ -71,31 +56,23 @@ class Timeline extends React.Component {
     if (!nextProps) { return prevState; }
 
     if (nextProps.loggedInUser && !nextProps.loggedInUser.following && !nextProps.followingIsLoading && !prevState.loadedFollowing) {
-      console.log('fetching following '+ nextProps.username);
-      nextProps.dispatch(usersFetchFollowing(nextProps.username));
+      nextProps.dispatch(usersFetchFollowing(nextProps.loggedInUser));
       return { ...prevState, loadedFollowing: true };
-  }
+    }
 
-    console.log("username " + nextProps.username + " authenticated " + nextProps.isAuthenticated + " previous state following loaded " + !prevState.loadedFollowing + " previous state is not loaded kweets " + !prevState.loadedKweets + " searching something" + !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length )  
-    console.log("entering kweets fetch check");
+
     if (nextProps.username && nextProps.isAuthenticated && prevState.loadedFollowing && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
-      console.log('fetching kweets '+ nextProps.username);
       nextProps.dispatch(kweetsFetchTimeline(nextProps.username));
       return { ...prevState, loadedKweets: true };
     }
-    console.log("kweets fetch check ended");
 
     return prevState;
   }
 
   getTimelineKweets() {
-    if (!this.props.loggedInUser) { return []; }
-    console.log(this.props.kweets);
-    console.log(this.props.loggedInUser);
-
-    let allKweets = this.props.kweets.filter(kweet => kweet.user.username === this.props.username || this.props.loggedInUser.following.filter(f => f === kweet.user.id));
-    console.log(allKweets);
-    return allKweets;
+    return this.props.kweets.filter(kweet =>
+      kweet.user.username === this.props.username
+      || (this.props.loggedInUser.following && this.props.loggedInUser.following.filter(f => f === kweet.user.id)));
   }
 
   render() {
