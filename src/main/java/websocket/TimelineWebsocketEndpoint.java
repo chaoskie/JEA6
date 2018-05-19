@@ -82,8 +82,8 @@ public class TimelineWebsocketEndpoint {
         for(Map.Entry<Session, User> entry : sessions.entrySet()) {
             User u = entry.getValue();
 
-            if (u.getFollowing().contains(user)) {
-                // Send response to user informing them about a kweet of a user they follow
+            if (u.getFollowing().contains(user) || kweet.getUser().getId() == u.getId()) {
+                // Send response to user informing them about a kweet of a user they follow or if it's their own
                 entry.getKey().getBasicRemote().sendText(responseJson);
             }
         }
