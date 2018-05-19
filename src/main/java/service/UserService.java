@@ -1,5 +1,6 @@
 package service;
 
+import com.google.gson.Gson;
 import dao.*;
 import domain.Role;
 import domain.User;

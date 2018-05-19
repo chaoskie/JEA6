@@ -29,9 +29,31 @@ export function userRegisteredSuccess(user) {
     }
 }
 
+export function followingIsLoading(bool) {
+    return {
+        type: 'FOLLOWING_IS_LOADING',
+        isLoading: bool
+    }
+}
+
+export function followingHasErrored(bool) {
+    return {
+        type: 'FOLLOWING_HAS_ERRORED',
+        hasErrored: bool
+    }
+}
+
+export function followingFetchDataSuccess(user, following) {
+    console.log('fetching following data succes end of fetch');
+    return {        
+        type: 'FOLLOWING_FETCH_DATA_SUCCESS',
+        payload: { user, following }
+    }
+}
+
 export function followersIsLoading(bool) {
     return {
-        type: 'FOLLOWERS_IS_LOADING',
+        type: 'FOLLOWING_IS_LOADING',
         isLoading: bool
     }
 }
@@ -192,7 +214,7 @@ export function userUpdateBio(user) {
 
 export function usersFetchAll() {
     return (dispatch) => {
-        dispatch(usersIsLoading(true));
+        dispatch( usersIsLoading(true) );
         callApiGet('users', false)
             .then((response) => {
                 if (!response.ok) {
@@ -221,6 +243,25 @@ export function userFetchByUsername(username) {
 };
 }
 
+export function usersFetchFollowing(user) {
+    //console.log(user);
+    return (dispatch) => {
+        dispatch(followingIsLoading(true));
+        callApiGet("users/" + user + "/following"/*user.followingURL*/, false)
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                console.log(response);
+                return response;
+            })
+            .then((response) => response.json())
+            .then((following) => { dispatch(followingFetchDataSuccess(user, following)); dispatch(followingIsLoading(false)); })
+            .catch(() => dispatch(followingHasErrored(true)));
+            console.log("user fetch following success");
+    }
+}
+
 export function usersFetchFollowers(user) {
     return (dispatch) => {
         dispatch(followersIsLoading(true));
@@ -236,6 +277,7 @@ export function usersFetchFollowers(user) {
             .then((followers) => { dispatch(followersFetchDataSuccess(user, followers)); dispatch(followersIsLoading(false)); })
             .catch(() => dispatch(followersHasErrored(true)));
     }
+    console.log("user fetch followers success");
 }
 
 export function followUser(userToFollow) {

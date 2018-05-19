@@ -37,6 +37,9 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     private List<User> following;
 
+    @Column(nullable = false, unique = true)
+    private String followingURL;
+
     protected User() { }
 
     public User(String username, String password, List<Role> roles, String displayname, String profilePhoto, String bio, String location, String website) {
@@ -48,6 +51,7 @@ public class User implements Serializable {
         this.bio = bio;
         this.location = location;
         this.website = website;
+        this.followingURL = "users/"+ username+"/following";
     }
 
     public int getId() {
@@ -155,5 +159,13 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFollowingURL() {
+        return followingURL;
+    }
+
+    public void setFollowingURL(String followingURL) {
+        this.followingURL = followingURL;
     }
 }

@@ -4,6 +4,7 @@ import Exceptions.InvalidActionException;
 import Exceptions.KweetNotFoundException;
 import Exceptions.KweetNotValidException;
 import Exceptions.UserNotFoundException;
+import com.google.gson.Gson;
 import controller.annotation.Secured;
 import domain.Kweet;
 import domain.Role;
@@ -43,7 +44,8 @@ public class UserController extends Application {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getUsers() {
-        return userService.getUsers();
+        List<User> users = userService.getUsers();
+        return users;
     }
 
     @GET

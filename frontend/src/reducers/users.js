@@ -16,6 +16,24 @@ export function usersIsLoading(state = false, action) {
     }
 }
 
+export function followingHasErrored(state = false, action) {
+    switch (action.type) {
+        case 'FOLLOWING_HAS_ERRORED':
+            return action.hasErrored;
+        default:
+            return state;
+    }
+}
+
+export function followingIsLoading(state = false, action) {
+    switch (action.type) {
+        case 'FOLLOWING_IS_LOADING':
+            return action.isLoading;
+        default:
+            return state;
+    }
+}
+
 export function followersHasErrored(state = false, action) {
     switch (action.type) {
         case 'FOLLOWERS_HAS_ERRORED':
@@ -39,6 +57,12 @@ export function users(state = [], action) {
         case 'USERS_FETCH_DATA_SUCCESS':
         {
             return merge(state, action.payload);
+        }
+
+        case 'FOLLOWING_FETCH_DATA_SUCCESS':
+        {
+            let user = {...action.payload.user, following: action.payload.following };
+            return state.map(u => u.id === user.id ? user : u);
         }
 
         case 'FOLLOWERS_FETCH_DATA_SUCCESS':

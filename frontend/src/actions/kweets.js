@@ -55,8 +55,10 @@ export function kweetCreation(kweet, socket) {
         type: "createKweet",
         kweet: kweet
     };
-
-    socket.send(JSON.stringify(obj));
+    console.log(socket);
+    console.log('about to send kweet like this ' + JSON.stringify(obj));
+    socket.send(JSON.stringify(obj));    
+    
 }
 
 export function deleteTheKweet(kweet, socket) {
