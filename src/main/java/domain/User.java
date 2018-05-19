@@ -176,15 +176,12 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
-        return username.equals(user.username);
+        return id == user.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + username.hashCode();
-        return result;
+        return id;
     }
 }

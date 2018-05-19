@@ -28,9 +28,10 @@ class Timeline extends React.Component {
 
     this.websocket = new WebSocket("ws://localhost:8080/Kwetter-SNAPSHOT_Gamma/ws/timeline?" + localStorage["id_token"]);
     this.websocket.onopen = (ev) => { };
-    this.websocket.onmessage = (ev) => {
-      console.log(ev);
-      let data = JSON.parse(ev.data);
+    console.log('constructor');
+    this.websocket.onmessage = (event) => {
+      console.log(event);
+      let data = JSON.parse(event.data);
       switch (data.type) {
         case "createKweet":
           {

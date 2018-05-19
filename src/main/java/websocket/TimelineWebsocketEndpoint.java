@@ -11,7 +11,10 @@ import service.KweetService;
 import service.UserService;
 
 import javax.inject.Inject;
-import javax.websocket.*;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
@@ -67,6 +70,8 @@ public class TimelineWebsocketEndpoint {
         User user = sessions.get(session);
         kweetService.deleteKweet(user, kweet.getId());
 
+        user.setFollowing(null);
+
         WebSocketResponse response = new WebSocketResponse();
         response.setType("deleteKweet");
         response.setKweet(kweet);
@@ -90,6 +95,7 @@ public class TimelineWebsocketEndpoint {
     }
 
     private void handleKweetCreation(Kweet kweet, Session session) throws KweetNotValidException, UserNotFoundException, IOException {
+
         User user = sessions.get(session);
         Kweet createdKweet = kweetService.createKweet(user, kweet.getMessage());
 
@@ -97,6 +103,7 @@ public class TimelineWebsocketEndpoint {
         response.setKweet(createdKweet);
         response.setType("createKweet");
 
+        createdKweet.getUser().setFollowing(null);
         Gson gson = new Gson();
         String responseJson = gson.toJson(response);
 
@@ -113,12 +120,6 @@ public class TimelineWebsocketEndpoint {
             }
         }
 
-
-    }
-
-    @OnError
-    public void onError(Throwable t) {
-        System.out.println(t.getMessage());
     }
 }
 
