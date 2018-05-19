@@ -1,11 +1,13 @@
 package service;
 
+import com.google.gson.Gson;
 import dao.*;
 import domain.Role;
 import domain.User;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -168,5 +170,10 @@ public class UserService {
         }
 
         return builder.compact();
+    }
+
+    public User parseUserFromToken(String token) {
+        DefaultClaims t = (DefaultClaims) Jwts.parser().setSigningKey(secretKey).parse(token).getBody();
+        return getUserByName((String) t.get("username"));
     }
 }

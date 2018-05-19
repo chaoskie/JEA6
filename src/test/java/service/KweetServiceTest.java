@@ -255,13 +255,13 @@ public class KweetServiceTest {
         assertTrue(likesBefore>afterLike);
     }*/
 
-    @Test(expected = KweetNotFoundException.class)
+   /* @Test(expected = KweetNotFoundException.class)
     public void unlikeKweetTest2()throws InvalidActionException, KweetNotFoundException{
         when(kweetDao.getKweetById(anyInt())).thenReturn(null);
         when(kweetDao.unlikeKweet(anyObject(), anyObject())).thenReturn(0);
         kweetService.unlikeKweet(userB, kweetC.getId());
-    }
-
+    }*/
+/*
     @Test(expected = InvalidActionException.class)
     public void unlikeKweetTest3()throws InvalidActionException, KweetNotFoundException{
         //kweetD.addLike(userB);

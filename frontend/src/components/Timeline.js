@@ -1,10 +1,11 @@
 import React from 'react';
-import { kweetsFetchTimeline } from '../actions/kweets';
+import { usersFetchFollowing } from '../actions/users';
+import { kweetsFetchTimeline, kweetCreatedSuccess, kweetDeleteSuccess } from '../actions/kweets';
 import KweetList from './KweetList';
 import CreateKweet from './CreateKweet';
 
 import {
-    getUsernameFromJwt
+  getUsernameFromJwt
 } from '../actions/users';
 
 import { connect } from 'react-redux';
@@ -21,47 +22,70 @@ const mapStateToProps = (state) => {
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       searchValue: ""
     };
+
+    this.websocket = new WebSocket("ws://localhost:8080/Kwetter-SNAPSHOT_Gamma/ws/timeline?" + localStorage["id_token"]);
+    this.websocket.onopen = (ev) => { };
+    console.log('constructor');
+    this.websocket.onmessage = (event) => {
+      console.log(event);
+      let data = JSON.parse(event.data);
+      switch (data.type) {
+        case "createKweet":
+          {
+            this.props.dispatch(kweetCreatedSuccess(data.kweet));
+            break;
+          }
+        case "deleteKweet":
+          {
+            this.props.dispatch(kweetDeleteSuccess(data.kweet, data.user));
+            break;
+          }
+        default:
+          break;
+      }
+    }
   }
 
-  componentDidMount() {
-    this.interval = setInterval(() => this.props.dispatch(kweetsFetchTimeline(this.props.username)), 5000);
-  }
   componentWillUnmount() {
-    clearInterval(this.interval);
+    this.websocket.close();
   }
-  
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!nextProps) { return prevState; }
 
-    if (nextProps.username && nextProps.isAuthenticated && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
-        nextProps.dispatch(kweetsFetchTimeline(nextProps.username));
-        return {...prevState, loadedKweets: true};
+    if (nextProps.loggedInUser && !nextProps.loggedInUser.following && !nextProps.followingIsLoading && !prevState.loadedFollowing) {
+      nextProps.dispatch(usersFetchFollowing(nextProps.loggedInUser));
+      return { ...prevState, loadedFollowing: true };
+    }
+
+
+    if (nextProps.username && nextProps.isAuthenticated && prevState.loadedFollowing && !prevState.loadedKweets && !nextProps.kweets.filter(kweet => kweet.user.username === nextProps.username).length) {
+      nextProps.dispatch(kweetsFetchTimeline(nextProps.username));
+      return { ...prevState, loadedKweets: true };
     }
 
     return prevState;
   }
 
   getTimelineKweets() {
-    if (!this.props.loggedInUser) { return []; }
-    
-    let kweets = this.props.kweets.filter(kweet => kweet.user.username === this.props.username || this.props.loggedInUser.following.find(f => f.id === kweet.user.id));
-    return kweets;
+    return this.props.kweets.filter(kweet =>
+      kweet.user.username === this.props.username
+      || (this.props.loggedInUser.following && this.props.loggedInUser.following.filter(f => f === kweet.user.id)));
   }
 
   render() {
     if (!this.props.isAuthenticated) {
-        return <h1>You must be logged in in order to view your timeline!</h1>
+      return <h1>You must be logged in in order to view your timeline!</h1>
     }
 
     return (
-    <div className="timeline">
-        <CreateKweet />
-        <KweetList kweets={this.getTimelineKweets()} />
-    </div>)
+      <div className="timeline">
+        <CreateKweet socket={this.websocket} />
+        <KweetList kweets={this.getTimelineKweets()} socket={this.websocket} />
+      </div>)
   }
 
 }

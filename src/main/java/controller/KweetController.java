@@ -78,7 +78,7 @@ public class KweetController extends Application {
     public Response createKweet(Kweet k) {
         try {
             User user = getUserFromToken();
-            Kweet result =  kweetService.createKweet(user, k.getMessage());
+            Kweet result = kweetService.createKweet(user, k.getMessage());
 
             return Response.status(Response.Status.CREATED).entity(result).build();
         } catch (NotFoundException e) {

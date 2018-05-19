@@ -9,6 +9,7 @@ import {
 const mapStateToProps = (state, ownProps) => {
     return {
         kweets: ownProps.kweets,
+        socket: ownProps.socket,
         hasErrored: state.kweetsHasErrored,
         isLoading: state.kweetsIsLoading,
         isAuthenticated: state.authentication.isAuthenticated,
@@ -30,22 +31,22 @@ class KweetList extends Component {
         }
     }
 
-    deleteKweet(kweet){
-        if(this.userOwnKweet(kweet)){
-            this.props.dispatch(deleteTheKweet(kweet));
+    deleteKweet(kweet) {
+        if (this.userOwnKweet(kweet)) {
+            deleteTheKweet(kweet, this.props.socket)            
         }
     }
 
-    userOwnKweet(kweet){
-        return (            
-            this.props.isAuthenticated && ( kweet.user.username === this.props.username || isModeratorFromJwt())
+    userOwnKweet(kweet) {
+        return (
+            this.props.isAuthenticated && (kweet.user.username === this.props.username || isModeratorFromJwt())
         );
     }
 
     userAlreadyLike(kweet) {
         return (
             this.props.isAuthenticated
-                && kweet.likes.find(u => u.username === this.props.username)                    
+                && kweet.likes.find(u => u.username === this.props.username)
                 ? true : false)
     }
 
@@ -58,11 +59,11 @@ class KweetList extends Component {
             <div>
                 {this.props.kweets.map((kweet) => (
                     <Kweet
-                        key={kweet.id} 
-                        kweet={kweet} 
+                        key={kweet.id}
+                        kweet={kweet}
                         loggedIn={this.props.isAuthenticated}
                         likeKweet={() => { this.handleLike(kweet); }}
-                        canLike={() => this.userAlreadyLike(kweet)} 
+                        canLike={() => this.userAlreadyLike(kweet)}
                         deleteKweet={() => { this.deleteKweet(kweet); }}
                     />
                 ))}

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {
     usersFetchFollowers, getUsernameFromJwt, userFetchByUsername,
     userUpdateWebsite, userUpdateLocation, userUpdateBio, userUpdateDisplayname,
-    followUser, unfollowUser
+    followUser, unfollowUser, usersFetchFollowing
 } from '../actions/users';
 import UserList from './UserList';
 import KweetList from './KweetList';
@@ -49,11 +49,8 @@ class Profile extends Component {
 
     componentDidMount() { }
 
-    static getDerivedStateFromProps(nextProps, prevState) {        
+    static getDerivedStateFromProps(nextProps, prevState) {
         if (!nextProps) { return prevState; }
-        console.log(nextProps.profileName);
-        console.log(nextProps);
-
         if (!nextProps.user && nextProps.profileName && !nextProps.isLoading && !nextProps.hasErrored) {
             nextProps.dispatch(userFetchByUsername(nextProps.profileName));
             return prevState;
@@ -64,20 +61,27 @@ class Profile extends Component {
             return prevState;
         }
 
-        if (nextProps.user && !nextProps.isLoading && prevState.loadedKweets !== nextProps.profileName && !nextProps.kweets.filter(kweet => kweet.user.id === nextProps.user.id).length) {
+        if (nextProps.user && !nextProps.user.following && !nextProps.followingIsLoading && !prevState.loadedFollowing) {
+            nextProps.dispatch(usersFetchFollowing(nextProps.user));
+            return { ...prevState, loadedFollowing: nextProps.profileName }
+        }
 
+        if (nextProps.user && !nextProps.isLoading && prevState.loadedKweets !== nextProps.profileName && !nextProps.kweets.filter(kweet => kweet.user.id === nextProps.user.id).length) {
             nextProps.dispatch(kweetsFetchUser(nextProps.user));
-            return {...prevState, loadedKweets: nextProps.profileName }
+            return { ...prevState, loadedKweets: nextProps.profileName }
         }
 
         return prevState;
-      }
+    }
 
     userIsFollowing(user) {
         return (
             this.props.isAuthenticated
-            && this.props.loggedInUser
-            && this.props.loggedInUser.following.find(f => f.username === user.username)
+                && this.props.loggedInUser
+                && (
+                    (this.props.loggedInUser.following && this.props.loggedInUser.following.find(f => f.username === user.username))
+                    || (user.followers && user.followers.find(f => f.username === this.props.loggedInUser.username))
+                )
                 ? true : false);
     }
 
@@ -147,7 +151,7 @@ class Profile extends Component {
         if (this.props.isLoading || !this.props.user) {
             return <p className="timeline">Loading…</p>;
         }
-        
+
         return (
             <div key={this.props.user.id}>
                 <Card className="profileCard">
@@ -226,19 +230,19 @@ class Profile extends Component {
                     </Tab>
                     <Tab
                         icon={<People />}
-                        label={`Following (${this.props.user.following.length})`}>
-                        {this.props.user.following.length > 0
-                        ? <UserList users={this.props.user.following} />
-                        : <h1>This user does not follow anyone!</h1> }
-                        </Tab>
+                        label={`Following (${this.props.user.following ? this.props.user.following.length : 0})`}>
+                        {this.props.user.following && this.props.user.following.length > 0
+                            ? <UserList users={this.props.user.following} />
+                            : <h1>This user does not follow anyone!</h1>}
+                    </Tab>
                     <Tab
                         icon={<PeopleOutline />}
                         label={`Followers (${this.props.user.followers ? this.props.user.followers.length : 0})`}>
                         {(this.props.user.followers && this.props.user.followers.length > 0)
-                        ? <UserList users={this.props.user.followers} />
-                        : <h1>This user has no followers!</h1> }
-                        </Tab>
-                    
+                            ? <UserList users={this.props.user.followers} />
+                            : <h1>This user has no followers!</h1>}
+                    </Tab>
+
                 </Tabs>
             </div>
 

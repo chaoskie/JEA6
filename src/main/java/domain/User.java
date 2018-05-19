@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -36,6 +37,9 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     private List<User> following;
 
+    @Column(nullable = false, unique = true)
+    private String followingURL;
+
     protected User() { }
 
     public User(String username, String password, List<Role> roles, String displayname, String profilePhoto, String bio, String location, String website) {
@@ -47,6 +51,7 @@ public class User implements Serializable {
         this.bio = bio;
         this.location = location;
         this.website = website;
+        this.followingURL = "users/"+ username+"/following";
     }
 
     public int getId() {
@@ -65,7 +70,7 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    @XmlTransient
+    @XmlTransient @JsonbTransient
     public String getPassword() {
         return password;
     }
@@ -122,7 +127,7 @@ public class User implements Serializable {
         this.website = website;
     }
 
-    //@XmlTransient
+    @XmlTransient @JsonbTransient
     public List<User> getFollowing() {
         return following;
     }
@@ -154,5 +159,29 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFollowingURL() {
+        return followingURL;
+    }
+
+    public void setFollowingURL(String followingURL) {
+        this.followingURL = followingURL;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id == user.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }
