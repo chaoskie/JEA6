@@ -61,7 +61,7 @@ because we want to be to able to execute mvn sonar:sonar without passing a profi
         <repository>
             <id>prime-repo</id>
             <name>PrimeFaces Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
+            <url>https://repository.primefaces.org</url>
             <layout>default</layout>
         </repository>
     </repositories>
@@ -313,12 +313,12 @@ because we want to be to able to execute mvn sonar:sonar without passing a profi
         <repository>
             <id>deployment</id>
             <name>Internal release</name>
-            <url>http://192.168.2.10:18081/repository/KWETTER_REL/</url>
+            <url>https://192.168.2.10:18081/repository/KWETTER_REL/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
             <name>Internal snapshot</name>
-            <url>http://192.168.2.10:18081/repository/KWETTER_SNAP/</url>
+            <url>https://192.168.2.10:18081/repository/KWETTER_SNAP/</url>
         </snapshotRepository>
     </distributionManagement>
     
